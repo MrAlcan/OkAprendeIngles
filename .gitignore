@@ -1,2 +1,6 @@
 /venv/
 .env
+**/__pycache__/
+separador_datos.py
+app/static/vendors/
+app/static/build/
