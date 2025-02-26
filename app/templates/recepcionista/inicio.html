@@ -1,0 +1,31 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+    
+    <link rel="stylesheet" href="{{url_for('static',filename='assets/css/slicknav.min.css')}}">
+
+    
+{% endblock %}
+
+{% block titulo_contenido %}
+    <h3>Inicio</h3>
+{% endblock %}
+
+{% block contenido %}
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia ad vero deleniti provident saepe, a ratione, nulla totam aliquid id amet doloremque voluptatum, ea magni odit iure itaque error eius?</p>
+    
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nav_inicio = document.getElementById('nav_inicio');
+            nav_inicio.classList.add('current-page');  
+        });
+    </script>
+{% endblock %}

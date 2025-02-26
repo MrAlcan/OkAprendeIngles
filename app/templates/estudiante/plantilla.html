@@ -17,11 +17,9 @@
     <!-- NProgress -->
     <link href="{{url_for('static', filename='vendors/nprogress/nprogress.css')}}" rel="stylesheet">
 
-    {% block cabecera %}{% endblock %}
-
     <!-- Custom Theme Style -->
     <link href="{{url_for('static', filename='build/css/custom.min.css')}}" rel="stylesheet">
-    
+    {% block cabecera %}{% endblock %}
 </head>
 
 <body class="nav-md">
@@ -30,7 +28,7 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="/administrador/inicio" class="site_title"><i class="fa fa-paw"></i> <span>Ok Aprende Ingles</span></a>
+                        <a href="/estudiante/inicio" class="site_title"><i class="fa fa-paw"></i> <span>Ok Aprende Ingles</span></a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -62,20 +60,20 @@
                                         <li><a href="index3.html">Dashboard3</a></li>
                                     </ul>
                                 </li--><!--EJEMPLO DE COMO ACTIVAR LAS PESTAÑAS DE MANERA INDIVIDUAL O GRUPAL ^    -->
-                                <li id="nav_inicio"><a href="/administrador/inicio"><i class="fa fa-home"></i> Inicio </a></li>
+                                <li id="nav_inicio"><a href="/estudiante/inicio"><i class="fa fa-home"></i> Inicio </a></li>
                                 <li id="nav_grupo_usuarios"><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li id="nav_usuarios"><a href="/administrador/usuarios">Usuarios</a></li>
-                                        <li id="nav_administradores"><a href="/administrador/usuarios/administradores">Administradores</a></li>
-                                        <li id="nav_recepcionistas"><a href="/administrador/usuarios/recepcionistas">Recepcionistas</a></li>
-                                        <li id="nav_docentes"><a href="/administrador/usuarios/docentes">Docentes</a></li>
-                                        <li id="nav_estudiantes"><a href="/administrador/usuarios/estudiantes">Estudiantes</a></li>
+                                        <li id="nav_usuarios"><a href="/estudiante/usuarios">Usuarios</a></li>
+                                        <li id="nav_administradores"><a href="/estudiante/usuarios/administradores">Administradores</a></li>
+                                        <li id="nav_recepcionistas"><a href="/estudiante/usuarios/recepcionistas">Recepcionistas</a></li>
+                                        <li id="nav_docentes"><a href="/estudiante/usuarios/docentes">Docentes</a></li>
+                                        <li id="nav_estudiantes"><a href="/estudiante/usuarios/estudiantes">Estudiantes</a></li>
                                     </ul>
                                 </li>
                                 <li><a><i class="fa fa-graduation-cap"></i> Sesiones <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="/administrador/sesiones">Lista Sesiones</a></li>
-                                        <li><a href="/administrador/etc">Etc</a></li>
+                                        <li><a href="/estudiante/sesiones">Lista Sesiones</a></li>
+                                        <li><a href="/estudiante/etc">Etc</a></li>
                                     </ul>
                                 </li>
                                 
@@ -135,8 +133,8 @@
                                 </a>
                                 <div class="dropdown-menu dropdown-usermenu pull-right"
                                     aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="/administrador/perfil"> Perfil</a>
-                                    <a class="dropdown-item" href="/administrador/configuracion">
+                                    <a class="dropdown-item" href="/estudiante/perfil"> Perfil</a>
+                                    <a class="dropdown-item" href="/estudiante/configuracion">
                                         <span>Configuración</span>
                                     </a>
                                     <!--a class="dropdown-item" href="javascript:;">Ayuda</a-->
@@ -260,8 +258,6 @@
     <script src="{{url_for('static', filename='vendors/fastclick/lib/fastclick.js')}}"></script>
     <!-- NProgress -->
     <script src="{{url_for('static', filename='vendors/nprogress/nprogress.js')}}"></script>
-
-    {% block scripts_final %}{% endblock %}
 
     <!-- Custom Theme Scripts -->
     <script src="{{url_for('static', filename='build/js/custom.min.js')}}"></script>

@@ -31,16 +31,22 @@
         <div class="login_wrapper">
             <div class="animate form login_form">
                 <section class="login_content">
-                    <form action="/autenticar/ingresar" method="POST" enctype="multipart/form-data">
+                    <form action="/inicio/ingresar" method="POST" enctype="multipart/form-data">
                         <h1>Inicio de Sesión</h1>
                         <div>
-                            <input type="text" class="form-control" placeholder="Nombre de Usuario" required="" id="nombre_usuario"/>
+                            <input type="text" class="form-control" placeholder="Nombre de Usuario" required="" name="nombre_usuario" value="{{nombre_usuario or ''}}"/>
+                            {% if usuario_mensaje %}
+                                <p style="color: red;">{{ usuario_mensaje }}</p>
+                            {% endif %}
                         </div>
                         <div>
-                            <input type="password" class="form-control" placeholder="Contraseña" required="" id="contrasena"/>
+                            <input type="password" class="form-control" placeholder="Contraseña" required="" name="contrasena" value="{{contrasena or ''}}"/>
+                            {% if contrasena_mensaje %}
+                                <p style="color: red;">{{ contrasena_mensaje }}</p>
+                            {% endif %}
                         </div>
                         <div>
-                            <a class="btn btn-default submit">Iniciar Sesión</a>
+                            <button class="btn btn-success" type="submit">Iniciar Sesion</button>
                             <!--a class="reset_pass" href="#">Lost your password?</a-->
                         </div>
 
