@@ -18,6 +18,6 @@ class serviciosAdministrador():
         
     def obtener_todos():
         datos = Administrador.query.all()
-        datos_requeridos = ['id_usuario', 'nombre_usuario', 'contrasena_hash', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal']
+        datos_requeridos = ['id_administrador', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta

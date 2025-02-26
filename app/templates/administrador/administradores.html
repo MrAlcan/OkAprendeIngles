@@ -1,0 +1,58 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+    
+    <link rel="stylesheet" href="{{url_for('static',filename='assets/css/slicknav.min.css')}}">
+
+    
+{% endblock %}
+
+{% block titulo_contenido %}
+    <h3>Inicio</h3>
+{% endblock %}
+
+{% block contenido %}
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia ad vero deleniti provident saepe, a ratione, nulla totam aliquid id amet doloremque voluptatum, ea magni odit iure itaque error eius?</p>
+
+    <table>
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>nombres</td>
+                <td>apellidos</td>
+                <td>nombre de usuario</td>
+            </tr>
+            
+        </thead>
+        <tbody>
+            {% for administrador in administradores %}
+                <tr>
+                    <td>{{administrador.id_administrador}}</td>
+                    <td>{{administrador.nombres}}</td>
+                    <td>{{administrador.apellidos}}</td>
+                    <td>{{administrador.nombre_usuario}}</td>
+                </tr>
+                
+            {% endfor %}
+        </tbody>
+    </table>
+    
+
+
+
+
+
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nav_grupo = document.getElementById('nav_grupo_usuarios');
+            nav_grupo.classList.add('active');
+            const bloque = document.querySelector('#nav_grupo_usuarios ul');
+            bloque.setAttribute('style', 'display: block;')
+            const nav_administradores = document.getElementById('nav_administradores');
+            nav_administradores.classList.add('current-page');  
+        });
+    </script>
+{% endblock %}
