@@ -2,8 +2,6 @@ from app.services.serviciosAdministrador import serviciosAdministrador
 
 from datetime import date, time
 
-
-
 def iniciar_datos():
 
     administrador = serviciosAdministrador.obtener_todos()
