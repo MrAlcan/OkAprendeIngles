@@ -5,7 +5,7 @@ class Horario(db.Model):
 
     id_horario = db.Column(db.Integer, primary_key=True)
     id_docente = db.Column(db.Integer, db.ForeignKey('docentes.id_docente'), nullable=False)
-    dia = db.Column(db.String, nullable=False)
+    dia = db.Column(db.String(10), nullable=False)
     hora_inicio = db.Column(db.Time, nullable=False)
     hora_final = db.Column(db.Time, nullable=False)
 

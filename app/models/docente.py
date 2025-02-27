@@ -11,5 +11,6 @@ class Docente(Usuario):
         'polymorphic_identity': 'docente'
     }
 
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono):
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, asignacion_tutor=None):
         super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='docente')
+        self.asignacion_tutor = asignacion_tutor
