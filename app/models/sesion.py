@@ -11,6 +11,7 @@ class Sesion(db.Model):
     seccion = db.Column(db.String(20), nullable=False)
     nivel = db.Column(db.Integer, nullable=False, default=0)
     cupos_disponibles = db.Column(db.Integer, nullable=False, default=6)
+    activo = db.Column(db.Integer, nullable=False, default=1)
     #Estudiantes Registrados
 
     def __init__(self, fecha, hora, docente, seccion, nivel=None, cupos=None):

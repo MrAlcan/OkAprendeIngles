@@ -6,6 +6,7 @@ class Docente(Usuario):
 
     id_docente = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True)
     asignacion_tutor = db.Column(db.String(10), nullable=True, unique=False, default='TUTOR 1')
+    activo = db.Column(db.Integer, nullable=False, default=1)
 
     __mapper_args__ = {
         'polymorphic_identity': 'docente'

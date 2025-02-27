@@ -10,6 +10,7 @@ class Actividad(db.Model):
     descripcion = db.Column(db.Text, nullable=False)
     nivel = db.Column(db.String(10), nullable=False, default='1-5')
     cupos_disponibles = db.Column(db.Integer, nullable=True, default=0)
+    activo = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, fecha, hora, docente, descripcion, nivel, cupos):
         self.fecha = fecha

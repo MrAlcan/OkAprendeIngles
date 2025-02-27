@@ -13,6 +13,7 @@ class Estudiante(Usuario):
     working_completado = db.Column(db.Integer, nullable=True, default=0)
     essential_completado = db.Column(db.Integer, nullable=True, default=0)
     welcome_completado = db.Column(db.Integer, nullable=True, default = 0)
+    activo = db.Column(db.Integer, nullable=False, default=1)
     # ver de la lista de ids
 
     __mapper_args__ = {

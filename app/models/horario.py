@@ -8,6 +8,7 @@ class Horario(db.Model):
     dia = db.Column(db.String(10), nullable=False)
     hora_inicio = db.Column(db.Time, nullable=False)
     hora_final = db.Column(db.Time, nullable=False)
+    activo = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, docente, dia, inicio, final):
         self.id_docente = docente

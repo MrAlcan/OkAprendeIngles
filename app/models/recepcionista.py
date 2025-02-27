@@ -6,6 +6,7 @@ class Recepcionista(Usuario):
 
     id_recepcionista = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True)
     telefono_personal = db.Column(db.Integer, nullable=True)
+    activo = db.Column(db.Integer, nullable=False, default=1)
 
     __mapper_args__ = {
         'polymorphic_identity': 'recepcionista'
