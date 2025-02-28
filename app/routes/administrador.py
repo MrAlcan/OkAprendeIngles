@@ -11,7 +11,7 @@ administrador_bp = Blueprint('administrador_bp', __name__)
 @token_requerido
 def obtener_administradores(datos_usuario):
     administradores = serviciosAdministrador.obtener_todos()
-    print(administradores)
+    #print(administradores)
     #return jsonify({'mensaje': administradores}), 201
     return render_template('administrador/tabla_muestra.html', datos = administradores)
 
@@ -78,8 +78,114 @@ def vista_lista_docentes(datos_usuario):
 @token_requerido
 def crear_docente(datos_usuario):
     datos = request.form
-    nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
-    if nuevo_administrador:
-        return redirect(url_for('administrador_bp.vista_lista_docentes'))
-    else:
-        return jsonify({'codigo': 400})
+    dias = []
+    horas_inicio = []
+    horas_final = []
+
+    for clave, valor in datos.items():
+        if clave.startswith('dia_'):
+            id_dia = int(clave.split('_')[1])
+            dias.append((id_dia, valor))
+        elif clave.startswith('h_inicio_'):
+            id_h_inicio = int(clave.split('_')[2])
+            horas_inicio.append((id_h_inicio, valor))
+        elif clave.startswith('h_final_'):
+            id_h_final = int(clave.split('_')[2])
+            horas_final.append((id_h_final, valor))
+    
+    dias_ordenados = sorted(dias, key=lambda x: x[0])
+    lista_dias = [valor for dia, valor in dias_ordenados]
+
+    horas_inicio_ordenados = sorted(horas_inicio, key=lambda x: x[0])
+    lista_horas_inicio = [valor for hora, valor in horas_inicio_ordenados]
+
+    horas_final_ordenados = sorted(horas_final, key=lambda x: x[0])
+    lista_horas_final = [valor for hora, valor in horas_final_ordenados]
+
+    nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final)
+
+    #nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+    #if nuevo_administrador:
+    #    return redirect(url_for('administrador_bp.vista_lista_docentes'))
+    #else:
+    #    return jsonify({'codigo': 400})
+    return redirect(url_for('administrador_bp.vista_lista_docentes'))
+
+@administrador_bp.route('/editar/docente/<id>', methods=['POST'])
+@token_requerido
+def editar_docente(datos_usuario, id):
+    datos = request.form
+
+    ids_horarios_eliminados = datos['input_horarios_eliminados'].split('_')[0:-1]
+    '''print('*/'*100)
+    print(datos)
+    print(datos['input_horarios_eliminados'].split('_')[0:-1])'''
+    
+    dias = []
+    horas_inicio = []
+    horas_final = []
+
+    dias_existentes = []
+    horas_inicio_existentes = []
+    horas_final_existentes = []
+    ids_horarios_existentes = []
+
+    for clave, valor in datos.items():
+        if clave.startswith('dia_'):
+            id_dia = int(clave.split('_')[1])
+            dias.append((id_dia, valor))
+        elif clave.startswith('h_inicio_'):
+            id_h_inicio = int(clave.split('_')[2])
+            horas_inicio.append((id_h_inicio, valor))
+        elif clave.startswith('h_final_'):
+            id_h_final = int(clave.split('_')[2])
+            horas_final.append((id_h_final, valor))
+        elif clave.startswith('o_dia_'):
+            id_dia = int(clave.split('_')[2])
+            dias_existentes.append((id_dia, valor))
+            ids_horarios_existentes.append(id_dia)
+        elif clave.startswith('o_h_inicio_'):
+            id_h_inicio = int(clave.split('_')[3])
+            horas_inicio_existentes.append((id_h_inicio, valor))
+        elif clave.startswith('o_h_final_'):
+            id_h_final = int(clave.split('_')[3])
+            horas_final_existentes.append((id_h_final, valor))
+    
+    dias_ordenados = sorted(dias, key=lambda x: x[0])
+    lista_dias = [valor for dia, valor in dias_ordenados]
+
+    horas_inicio_ordenados = sorted(horas_inicio, key=lambda x: x[0])
+    lista_horas_inicio = [valor for hora, valor in horas_inicio_ordenados]
+
+    horas_final_ordenados = sorted(horas_final, key=lambda x: x[0])
+    lista_horas_final = [valor for hora, valor in horas_final_ordenados]
+
+    dias_ordenados_existentes = sorted(dias_existentes, key=lambda x: x[0])
+    lista_dias_existentes = [valor for dia, valor in dias_ordenados_existentes]
+
+    horas_inicio_ordenados_existentes = sorted(horas_inicio_existentes, key=lambda x: x[0])
+    lista_horas_inicio_existentes = [valor for hora, valor in horas_inicio_ordenados_existentes]
+
+    horas_final_ordenados_existentes = sorted(horas_final_existentes, key=lambda x: x[0])
+    lista_horas_final_existentes = [valor for hora, valor in horas_final_ordenados_existentes]
+
+    lista_ids_existentes_ordenados = sorted(ids_horarios_existentes)
+    '''print('*/-'*100)
+    print(lista_ids_existentes_ordenados)
+    print(dias_ordenados_existentes)
+    print(horas_inicio_ordenados_existentes)
+    print(horas_final_ordenados_existentes)'''
+
+    docente = ServiciosDocente.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, ids_horarios_eliminados, lista_ids_existentes_ordenados, lista_dias_existentes, lista_horas_inicio_existentes, lista_horas_final_existentes)
+
+    #nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final)
+
+    
+    
+    return redirect(url_for('administrador_bp.vista_lista_docentes'))
+
+@administrador_bp.route('/docente/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_docente(datos_usuario, id):
+    docente = ServiciosDocente.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_docentes'))
