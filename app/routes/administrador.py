@@ -4,6 +4,7 @@ from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
+from app.services.serviciosUsuario import ServiciosUsuario
 
 administrador_bp = Blueprint('administrador_bp', __name__)
 
@@ -23,6 +24,29 @@ def vista_inicio(datos_usuario):
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
     return render_template('administrador/inicio.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+
+@administrador_bp.route('/usuarios', methods=['GET'])
+@token_requerido
+def vista_lista_usuarios(datos_usuario):
+    usuarios = ServiciosUsuario.obtener_todos()
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    return render_template('administrador/usuarios.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, usuarios = usuarios)
+
+@administrador_bp.route('/usuarios/habilitar/<id>', methods=['GET'])
+@token_requerido
+def habilitar_usuario(datos_usuario, id):
+    usuario = ServiciosUsuario.activar_usuario(id)
+    return redirect(url_for('administrador_bp.vista_lista_usuarios'))
+
+@administrador_bp.route('/usuarios/deshabilitar/<id>', methods=['GET'])
+@token_requerido
+def deshabilitar_usuario(datos_usuario, id):
+    usuario = ServiciosUsuario.desactivar_usuario(id)
+    return redirect(url_for('administrador_bp.vista_lista_usuarios'))
+
 
 @administrador_bp.route('/usuarios/administradores', methods=['GET'])
 @token_requerido
