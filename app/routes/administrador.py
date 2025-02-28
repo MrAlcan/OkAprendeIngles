@@ -213,3 +213,20 @@ def editar_docente(datos_usuario, id):
 def eliminar_docente(datos_usuario, id):
     docente = ServiciosDocente.eliminar(id)
     return redirect(url_for('administrador_bp.vista_lista_docentes'))
+
+
+
+
+# ----------------------- GESTION SESIONES ----------------------------------
+
+@administrador_bp.route('/sesiones', methods=['GET'])
+@token_requerido
+def vista_lista_sesiones(datos_usuario):
+    docentes = ServiciosDocente.obtener_todos()
+    print('/*-'*100)
+    print(docentes)
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    return render_template('administrador/sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
