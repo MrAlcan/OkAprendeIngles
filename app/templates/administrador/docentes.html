@@ -269,15 +269,17 @@
                                 <td>
                                     <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
                                         data-target=".modal_editar_docente_{{docente.id_docente}}"><i class="fa fa-edit"></i></button>
-                                    <a href="/administrador/docente/eliminar/{{docente.id_docente}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a>
+                                        <a href="/administrador/administradores/eliminar/{{ administrador.id_administrador }}" 
+                                        class="btn btn-danger btn-xs">
+                                         <i class="fa fa-trash"></i>
+                                     </a>
+                                     
                                 </td>
                             </tr>
                             {% endfor %}
                         {% endif %}
 
-                        
-
-
+                      
                     </tbody>
                 </table>
 

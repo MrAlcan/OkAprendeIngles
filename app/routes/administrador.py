@@ -36,20 +36,7 @@ def vista_lista_usuarios(datos_usuario):
     return render_template('administrador/usuarios.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, usuarios = usuarios)
 
 
-# Ruta para editar un administrador
-@administrador_bp.route('/editar_administrador/<int:id>', methods=['POST'])
-@token_requerido
-def editar_administrador(id, datos_usuario):
-    # Recibir los nuevos datos del formulario
-    datos_nuevos = request.json  # Los datos se deben enviar como un JSON
-    resultado = serviciosAdministrador.editar_administrador(id, datos_nuevos)
-    return jsonify(resultado)
 
-@administrador_bp.route('/administrador/eliminar/<id>', methods=['GET'])
-@token_requerido
-def eliminar_administrador(datos_usuario, id):
-    administrador = serviciosAdministrador.eliminar_administrador(id)
-    return redirect(url_for('administrador_bp.vista_lista_docentes'))
 
 @administrador_bp.route('/usuarios/habilitar/<id>', methods=['GET'])
 @token_requerido
@@ -230,8 +217,33 @@ def eliminar_docente(datos_usuario, id):
     docente = ServiciosDocente.eliminar(id)
     return redirect(url_for('administrador_bp.vista_lista_docentes'))
 
+@administrador_bp.route('/editar/recepcionista/<id>', methods=['POST'])
+@token_requerido
+def editar_recepcionista(datos_usuario, id):
+    datos = request.form
+    recepcionista = serviciosRecepcionista.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
 
+    return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
 
+@administrador_bp.route('/recepcionista/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_recepcionista(datos_usuario, id):
+    recepcionista = serviciosRecepcionista.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
+
+@administrador_bp.route('/editar/administrador/<id>', methods=['POST'])
+@token_requerido
+def editar_administrador(datos_usuario, id):
+    datos = request.form
+    administrador = serviciosAdministrador.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
+
+    return redirect(url_for('administrador_bp.vista_lista_administradores'))
+
+@administrador_bp.route('/administtrador/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_administrador(datos_usuario, id):
+    administrador = serviciosAdministrador.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_administradores'))
 
 # ----------------------- GESTION SESIONES ----------------------------------
 

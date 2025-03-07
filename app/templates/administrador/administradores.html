@@ -180,65 +180,118 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                        {% for administrador in administradores %}
-                        <tr>
-                            <td>{{administrador.id_administrador}}</td>
-                            <td>{{administrador.nombres}}</td>
-                            <td>{{administrador.apellidos}}</td>
-                            <td>{{administrador.telefono}}</td>
-                            <td>{{administrador.correo}}</td>
-                            <td>
-                                <button class="btn btn-danger btn-sm" onclick="eliminarAdministrador('{{ administrador.id_administrador }}')">
-                                    Eliminar
-                                </button>
-                                <button class="btn btn-primary btn-sm" onclick="abrirEditarModal('{{ administrador.id_administrador }}', '{{ administrador.nombres }}', '{{ administrador.apellidos }}', '{{ administrador.telefono }}', '{{ administrador.correo }}')">
-                                    Editar
-                                </button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-
-
+                        {% if administradores %}  
+                            {% for administrador in administradores %}  
+                            <tr>
+                                <td>{{ administrador.id_administrador }}</td>
+                                <td>{{ administrador.nombres }}</td>
+                                <td>{{ administrador.apellidos }}</td>
+                                <td>{{ administrador.telefono }}</td>
+                                <td>{{ administrador.correo }}</td>
+                                <td>{{ administrador.nombre_usuario }}</td>
+                                <td>{{ administrador.carnet }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                        data-target=".modal_editar_administrador_{{ administrador.id_administrador }}">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <a href="/administrador/administradores/eliminar/{{ administrador.id_administrador }}">
+                                        <button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center">No hay administradores registrados.</td>
+                            </tr>
+                        {% endif %}
                     </tbody>
+                    
                 </table>
-                <!-- Modal para Editar Administrador -->
-                <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Editar Administrador</h4>
-                                <button type="button" class="close" data-dismiss="modal">×</button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editarFormulario" action="/editar_administrador" method="POST">
-                                    <input type="hidden" id="edit_id" name="id">
-                                    <div class="form-group">
-                                        <label>Nombres</label>
-                                        <input type="text" class="form-control" id="edit_nombres" name="nombres" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Apellidos</label>
-                                        <input type="text" class="form-control" id="edit_apellidos" name="apellidos" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Teléfono</label>
-                                        <input type="text" class="form-control" id="edit_telefono" name="telefono" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Correo</label>
-                                        <input type="email" class="form-control" id="edit_correo" name="correo" required>
-                                    </div>
-                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                                </form>
+                {% if administradores %}
+                {% for administrador in administradores %}
+                    <div class="modal fade modal_editar_administrador_{{ administrador.id_administrador }}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+            
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Editar Administrador</h4>
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                                </div>
+            
+                                <div class="modal-body">
+                                    <form class="form-label-left input_mask formulario_administrador formulario_administrador_editar"
+                                          action="/administrador/editar/administrador/{{ administrador.id_administrador }}" 
+                                          method="POST" enctype="multipart/form-data">
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="text" class="form-control has-feedback-left" 
+                                                   placeholder="Nombres" name="nombres" value="{{ administrador.nombres }}">
+                                            <span class="fa fa-user form-control-feedback left"></span>
+                                        </div>
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="text" class="form-control" 
+                                                   placeholder="Apellidos" name="apellidos" value="{{ administrador.apellidos }}">
+                                            <span class="fa fa-user form-control-feedback right"></span>
+                                        </div>
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="email" class="form-control has-feedback-left" 
+                                                   placeholder="Correo" name="correo" value="{{ administrador.correo }}">
+                                            <span class="fa fa-envelope form-control-feedback left"></span>
+                                        </div>
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="number" class="form-control" 
+                                                   placeholder="Telefono" name="telefono" min="60000000" max="79999999" 
+                                                   value="{{ administrador.telefono }}">
+                                            <span class="fa fa-phone form-control-feedback right"></span>
+                                        </div>
+            
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-3 col-sm-3">Nombre de Usuario</label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control" 
+                                                       placeholder="Nombre de Usuario" name="nombre_usuario" value="{{ administrador.nombre_usuario }}">
+                                            </div>
+                                        </div>
+            
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-3 col-sm-3">Carnet</label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control" 
+                                                       placeholder="Carnet de Identidad" name="carnet" value="{{ administrador.carnet_identidad }}">
+                                            </div>
+                                        </div>
+            
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group row">
+                                            <div class="col-md-9 col-sm-9 offset-md-3">
+                                                <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                            </div>
+                                        </div>
+            
+                                    </form>
+                                </div>
+            
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                </div>
+            
                             </div>
                         </div>
                     </div>
-                </div>
-
+                {% endfor %}
+            {% endif %}
+            
             </div>
-        </div>
+
+         </div>
     </div>
+</div>
 
 
 {% endblock %}
@@ -273,33 +326,7 @@
 
     }
 
-    function eliminarAdministrador(id) {
-        if (confirm("¿Estás seguro de que deseas eliminar este administrador?")) {
-            fetch(`/eliminar_administrador/${id}`, {
-                method: "POST"
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert("Administrador eliminado con éxito.");
-                    location.reload(); 
-                } else {
-                    alert("Error al eliminar el administrador.");
-                }
-            })
-            .catch(error => console.error("Error:", error));
-        }
-    }
 
-    
-    function abrirEditarModal(id, nombres, apellidos, telefono, correo) {
-        document.getElementById("edit_id").value = id;
-        document.getElementById("edit_nombres").value = nombres;
-        document.getElementById("edit_apellidos").value = apellidos;
-        document.getElementById("edit_telefono").value = telefono;
-        document.getElementById("edit_correo").value = correo;
-        $("#editarModal").modal("show"); 
-    }
 </script>
 
 <!-- iCheck -->

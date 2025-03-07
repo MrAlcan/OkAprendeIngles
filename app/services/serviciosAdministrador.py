@@ -36,33 +36,30 @@ class serviciosAdministrador():
         else:
             return "no se encontro el administrador"
 
-    @staticmethod
-    def editar_administrador(id, datos_nuevos):
-        administrador = Administrador.query.get(id)
-        if not administrador:
-            return {"status": "error", "message": "Administrador no encontrado"}
-        
+    def actualizar(id_administrador, nombre_usuario, correo, nombres, apellidos, carnet, telefono):
         try:
-            for clave, valor in datos_nuevos.items():
-                if hasattr(administrador, clave):
-                    setattr(administrador, clave, valor)
 
+            administrador = Administrador.query.get(id_administrador)
+            administrador.nombre_usuario = nombre_usuario
+            administrador.correo = correo
+            administrador.nombres = nombres
+            administrador.apellidos = apellidos
+            administrador.carnet_identidad = carnet
+            administrador.telefono = telefono
+            
             db.session.commit()
-            return {"status": "success", "message": "Administrador actualizado correctamente"}
+
+            return {"status": "success", "message": "Administradores modificados exitosamente"}
+    
         except SQLAlchemyError as e:
             db.session.rollback()
             return {"status": "error", "message": str(e)}
+    
+    def eliminar(id_administrador):
+        administrador = Administrador.query.get(id_administrador)
 
-    @staticmethod
-    def eliminar_administrador(id):
-        administrador = Administrador.query.get(id)
-        if not administrador:
-            return {"status": "error", "message": "Administrador no encontrado"}
-        
-        try:
-            db.session.delete(administrador)
+        if administrador:
+            administrador.activo = 0
             db.session.commit()
-            return {"status": "success", "message": "Administrador eliminado correctamente"}
-        except SQLAlchemyError as e:
-            db.session.rollback()
-            return {"status": "error", "message": str(e)}
+        return {"status": "success", "message": "Administrador eliminado exitosamente"}
+
