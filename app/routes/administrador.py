@@ -35,6 +35,22 @@ def vista_lista_usuarios(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
     return render_template('administrador/usuarios.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, usuarios = usuarios)
 
+
+# Ruta para editar un administrador
+@administrador_bp.route('/editar_administrador/<int:id>', methods=['POST'])
+@token_requerido
+def editar_administrador(id, datos_usuario):
+    # Recibir los nuevos datos del formulario
+    datos_nuevos = request.json  # Los datos se deben enviar como un JSON
+    resultado = serviciosAdministrador.editar_administrador(id, datos_nuevos)
+    return jsonify(resultado)
+
+@administrador_bp.route('/administrador/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_administrador(datos_usuario, id):
+    administrador = serviciosAdministrador.eliminar_administrador(id)
+    return redirect(url_for('administrador_bp.vista_lista_docentes'))
+
 @administrador_bp.route('/usuarios/habilitar/<id>', methods=['GET'])
 @token_requerido
 def habilitar_usuario(datos_usuario, id):

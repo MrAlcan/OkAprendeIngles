@@ -35,14 +35,14 @@
                     Tabla de Usuarios Recepcionistas
                 </p>
                 <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
-                    data-target=".modal_agregar_administrador">Agregar Recepcionista</button>
+                    data-target=".modal_agregar_administrador">Agregar recepcionista</button>
 
                 <div class="modal fade modal_agregar_administrador" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
 
                             <div class="modal-header">
-                                <h4 class="modal-title" id="myModalLabel">Crear Recepcionista</h4>
+                                <h4 class="modal-title" id="myModalLabel">Crear recepcionista</h4>
                                 <button type="button" class="close" data-dismiss="modal"><span
                                         aria-hidden="true">×</span>
                                 </button>
@@ -50,50 +50,75 @@
                             <div class="modal-body">
                                 <form class="form-label-left input_mask" action="/administrador/crear/recepcionista" method="POST" enctype="multipart/form-data">
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres">
+<div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres"
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
                                         <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos"
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
                                         <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo"
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                            title="Ingrese un correo válido con @" 
+                                            onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')" required>
                                         <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono" min="60000000" max="79999999">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono"
+                                            pattern="[0-9]{8}" title="Solo números de 8 dígitos"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')" required>
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario">
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
+                                                pattern="^[a-zA-Z_]+$"
+                                                title="Solo se permiten letras y barra baja (_)"
+                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet">
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet"
+                                                pattern="^[0-9]+$"
+                                                title="Solo se permiten números. No coloque extensiones."
+                                                onfocus="this.setAttribute('title', 'Ingrese solo números sin extensiones')" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Telefono Personal</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="number" class="form-control" placeholder="Telefono Personal" name="telefono_personal">
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="number" class="form-control" placeholder="Telefono Personal" name="telefono_personal"
+                                                pattern="[0-9]{8}" title="Solo números de 8 dígitos"
+                                                onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input class="form-control" type="password" id="password1" name="contrasena" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" title="Minimo 8 Caracteres Incluyento por lo menos una Letra Mayuscula y una Minuscula, un Numero y un caracter Especial" required />
+                                            <input class="form-control" type="password" id="password1" name="contrasena"
+                                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
+                                                title="Mínimo 8 caracteres, incluyendo al menos una letra mayúscula, una minúscula, un número y un carácter especial"
+                                                onfocus="this.setAttribute('title', 'Debe contener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial')" required>
                                             
-                                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()" >
+                                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()">
                                                 <i id="slash" class="fa fa-eye-slash"></i>
                                                 <i id="eye" class="fa fa-eye"></i>
                                             </span>

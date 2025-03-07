@@ -35,3 +35,34 @@ class serviciosAdministrador():
                 return "contrasena no coincide"
         else:
             return "no se encontro el administrador"
+
+    @staticmethod
+    def editar_administrador(id, datos_nuevos):
+        administrador = Administrador.query.get(id)
+        if not administrador:
+            return {"status": "error", "message": "Administrador no encontrado"}
+        
+        try:
+            for clave, valor in datos_nuevos.items():
+                if hasattr(administrador, clave):
+                    setattr(administrador, clave, valor)
+
+            db.session.commit()
+            return {"status": "success", "message": "Administrador actualizado correctamente"}
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"status": "error", "message": str(e)}
+
+    @staticmethod
+    def eliminar_administrador(id):
+        administrador = Administrador.query.get(id)
+        if not administrador:
+            return {"status": "error", "message": "Administrador no encontrado"}
+        
+        try:
+            db.session.delete(administrador)
+            db.session.commit()
+            return {"status": "success", "message": "Administrador eliminado correctamente"}
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"status": "error", "message": str(e)}
