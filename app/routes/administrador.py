@@ -221,14 +221,14 @@ def eliminar_docente(datos_usuario, id):
 @token_requerido
 def editar_recepcionista(datos_usuario, id):
     datos = request.form
-    recepcionista = serviciosRecepcionista.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
+    recepcionista = ServiciosRecepcionista.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
 
     return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
 
 @administrador_bp.route('/recepcionista/eliminar/<id>', methods=['GET'])
 @token_requerido
 def eliminar_recepcionista(datos_usuario, id):
-    recepcionista = serviciosRecepcionista.eliminar(id)
+    recepcionista = ServiciosRecepcionista.eliminar(id)
     return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
 
 @administrador_bp.route('/editar/administrador/<id>', methods=['POST'])
@@ -239,7 +239,7 @@ def editar_administrador(datos_usuario, id):
 
     return redirect(url_for('administrador_bp.vista_lista_administradores'))
 
-@administrador_bp.route('/administtrador/eliminar/<id>', methods=['GET'])
+@administrador_bp.route('/administradores/eliminar/<id>', methods=['GET'])
 @token_requerido
 def eliminar_administrador(datos_usuario, id):
     administrador = serviciosAdministrador.eliminar(id)

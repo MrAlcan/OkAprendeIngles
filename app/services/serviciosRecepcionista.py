@@ -17,7 +17,7 @@ class ServiciosRecepcionista():
             return {"status": "error", "message": str(e)}
         
     def obtener_todos():
-        datos = Recepcionista.query.all()
+        datos = Recepcionista.query.filter_by(activo = 1)
         datos_requeridos = ['id_recepcionista', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
@@ -26,7 +26,7 @@ class ServiciosRecepcionista():
         try:
 
             recepcionista = Recepcionista.query.get(id_recepcionista)
-            recepcionistadministrador.nombre_usuario = nombre_usuario
+            recepcionista.nombre_usuario = nombre_usuario
             recepcionista.correo = correo
             recepcionista.nombres = nombres
             recepcionista.apellidos = apellidos
