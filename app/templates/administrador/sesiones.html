@@ -48,18 +48,13 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                fecha
-                                hora
-                                id_docente
-                                seccion
-                                nivel
-                                cupos_disponibles
+                                
                                 
                                 <form class="form-label-left input_mask formulario_sesiones" action="/administrador/sesiones/crear" method="POST" enctype="multipart/form-data">
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Sección</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control" name="seccion" required>
+                                            <select class="form-control select_seccion" name="seccion" required>
                                                 <option>Escoge una Opción</option>
                                                 <option value="Welcome">Welcome</option>
                                                 <option value="Speak Out">Speak Out</option>
@@ -102,7 +97,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control" name="nivel" required>
+                                            <select class="form-control select_nivel" name="nivel" required>
                                                 <option>Escoge una Opción</option>
                                                 <option value="1-5">1 - 5</option>
                                                 <option value="6-15">6 - 15</option>
@@ -145,20 +140,144 @@
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>Nombres</th>
-                            <th>Apellidos</th>
-                            <th>Telefono</th>
-                            <th>Correo</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Docente</th>
+                            <th>Seccion</th>
+                            <th>Niveles</th>
+                            <th>Cupos Disponibles</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% if sesiones %}
+                            {% for sesion in sesiones %}
+                                <tr>
+                                    <td>{{sesion.id_sesion}}</td>
+                                    <td>{{sesion.fecha}}</td>
+                                    <td>{{sesion.hora}}</td>
+                                    <td>{{sesion.id_docente}}</td>
+                                    <td>{{sesion.seccion}}</td>
+                                    <td>{{sesion.nivel}}</td>
+                                    <td>{{sesion.cupos_disponibles}}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target=".modal_editar_sesion_{{sesion.id_sesion}}"><i class="fa fa-edit"></i></button>
+                                        <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
 
                         
 
 
                     </tbody>
                 </table>
+
+                {% if sesiones %}
+                    {% for sesion in sesiones %}
+                        <div class="modal fade modal_editar_sesion_{{sesion.id_sesion}}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+        
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel">Editar Sesion</h4>
+                                        <button type="button" class="close" data-dismiss="modal"><span
+                                                aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-label-left input_mask formulario_sesiones formulario_sesiones_editar" action="/administrador/sesiones/editar/{{sesion.id_sesion}}" method="POST" enctype="multipart/form-data">
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Sección</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <select class="form-control select_seccion" name="seccion" required>
+                                                        <option>Escoge una Opción</option>
+                                                        <option value="Welcome" {% if sesion.seccion == 'Welcome' %}Selected{% endif %}>Welcome</option>
+                                                        <option value="Speak Out" {% if sesion.seccion == 'Speak Out' %}Selected{% endif %}>Speak Out</option>
+                                                        <option value="Working" {% if sesion.seccion == 'Working' %}Selected{% endif %}>Working</option>
+                                                        <option value="Essential" {% if sesion.seccion == 'Essential' %}Selected{% endif %}>Essential</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3">Fecha</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <input type="date" class="form-control fecha_sesion" name="fecha" required value="{{sesion.fecha}}">
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3">Día</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <input type="text" class="form-control dia_nombre_sesion" name="ddd" value="" disabled>
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <input type="time" class="form-control hora_sesion" name="hora" step="1800" required value="{{sesion.hora}}">
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Docente</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <select class="form-control docentes_sesion" name="docente" required disabled>
+                                                        <option value="{{sesion.id_docente}}">Seleccione un Docente</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <select class="form-control select_nivel" name="nivel" required>
+                                                        <option>Escoge una Opción</option>
+                                                        {% if sesion.nivel == '0' %}
+                                                            <option value="0" selected>0</option>
+                                                        {% endif %}
+                                                        <option value="1-5" {% if sesion.nivel == '1-5' %}Selected{% endif %}>1 - 5</option>
+                                                        <option value="6-15" {% if sesion.nivel == '6-15' %}Selected{% endif %}>6 - 15</option>
+                                                        <option value="11-15" {% if sesion.nivel == '11-15' %}Selected{% endif %}>11 - 15</option>
+                                                        <option value="16-30" {% if sesion.nivel == '16-30' %}Selected{% endif %}>16 - 30</option>
+                                                        <option value="31-50" {% if sesion.nivel == '31-50' %}Selected{% endif %}>31 - 50</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Cupos</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <input type="number" class="form-control" name="cupos" min="1" max="10" step="1" required value="{{sesion.cupos_disponibles}}">
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="ln_solid"></div>
+                                            <div class="form-group row">
+                                                <div class="col-md-9 col-sm-9  offset-md-3">
+                                                    <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                                </div>
+                                            </div>
+        
+                                        </form>
+                                        
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                        <!--button type="button" class="btn btn-primary">Save changes</button-->
+                                    </div>
+        
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
 
             </div>
@@ -191,7 +310,7 @@
 
 <script>
     let formularios_sesiones = document.querySelectorAll(".formulario_sesiones");
-    const docentes = {{docentes | tojson()}};
+    const docentes = {{ docentes | tojson() }};
     /*docentes.forEach(function(doce) {
                     console.log(doce.horarios['Jueves']);
                 });*/
@@ -221,13 +340,13 @@
                 docentes.forEach(function(doce) {
                     if(doce.horarios[nombre_dia]){
                         doce.horarios[nombre_dia].forEach(function(horario_d) {
-                            console.log(horario_d.hora_inicio);
+                            //console.log(horario_d.hora_inicio);
                             const hora_i = horario_d.hora_inicio;
                             const hora_f = horario_d.hora_final;
                             if(hora_seleccionada>=hora_i && hora_seleccionada<hora_f){
                                 const opcion = document.createElement('option');
                                 opcion.value = doce.id_docente;
-                                opcion.textContent = doce.nombres + doce.apellidos;
+                                opcion.textContent = doce.nombres + ' ' + doce.apellidos;
                                 select_docente.appendChild(opcion);
                                 contador++;
                             }
@@ -244,11 +363,167 @@
             }
         }
 
+        function bloquear_select(event){
+            event.preventDefault();
+        }
+
+        function actualizarNivelWorking(){
+            
+            const selectSeccion = formulario.querySelector('.select_seccion');
+
+            const selectNivel = formulario.querySelector('.select_nivel');
+
+            
+
+            if(selectSeccion.value == 'Welcome'){
+                
+                const opcion_nivel_cero = document.createElement('option');
+                opcion_nivel_cero.value = '0';
+                opcion_nivel_cero.textContent = '0';
+                opcion_nivel_cero.selected = true;
+                selectNivel.appendChild(opcion_nivel_cero);
+
+                //selectNivel.selected = '0';
+
+                //selectNivel.readonly = true;
+
+                selectNivel.addEventListener('mousedown', bloquear_select);
+
+            }else{
+                //selectNivel.readonly = false;
+                selectNivel.removeEventListener('mousedown', bloquear_select);
+
+                const opciones_nivel = formulario.querySelectorAll('.select_nivel option')
+                
+                opciones_nivel.forEach(function(opcion) {
+                    if(opcion.value == '0'){
+                        opcion.remove();
+                    }
+                });
+
+            }
+            
+            
+
+        }
+
 
         formulario.querySelector(".fecha_sesion").addEventListener('change', actualizarSelectDocente);
         formulario.querySelector(".hora_sesion").addEventListener('change', actualizarSelectDocente);
+        formulario.querySelector(".select_seccion").addEventListener('change', actualizarNivelWorking);
 
+    });
 
+    document.addEventListener('DOMContentLoaded', () => {
+        let formularios_sesiones_editar = document.querySelectorAll(".formulario_sesiones_editar");
+        //console.log(formularios_sesiones);
+        formularios_sesiones_editar.forEach(function(formulario) {
+            function actualizarSelectDocente(){
+                const input_fecha = formulario.querySelector(".fecha_sesion");
+                const input_hora = formulario.querySelector(".hora_sesion");
+                const select_docente = formulario.querySelector(".docentes_sesion");
+                const dia_nombre_sesion = formulario.querySelector(".dia_nombre_sesion");
+
+                const aux_opcion = formulario.querySelector(".docentes_sesion option");
+                //console.log(aux_opcion.value);
+
+                //console.log(input_fecha);
+                //console.log(input_hora);
+
+                if(input_fecha.value && input_hora.value){
+                    select_docente.disabled = false;
+                    const nombre_dia = obtenerNombreDia(input_fecha.value);
+                    select_docente.innerHTML = '<option value="">Seleccione un Docente</option>';
+                    const hora_seleccionada = input_hora.value;
+                    dia_nombre_sesion.value = nombre_dia;
+
+                    let contador = 0;
+
+                    docentes.forEach(function(doce) {
+                        if(doce.horarios[nombre_dia]){
+                            doce.horarios[nombre_dia].forEach(function(horario_d) {
+                                //console.log(horario_d.hora_inicio);
+                                const hora_i = horario_d.hora_inicio;
+                                const hora_f = horario_d.hora_final;
+                                if(hora_seleccionada>=hora_i && hora_seleccionada<hora_f){
+                                    const opcion = document.createElement('option');
+                                    opcion.value = doce.id_docente;
+                                    opcion.textContent = doce.nombres + ' ' + doce.apellidos;
+                                    if(aux_opcion.value == doce.id_docente){
+                                        opcion.selected = true;
+                                    }
+                                    select_docente.appendChild(opcion);
+                                    contador++;
+                                }
+
+                            });
+                        }
+                        
+                        //console.log(doce.horarios[nombre_dia]);
+                    });
+                    if(contador<=0){
+                        select_docente.innerHTML = '<option value="">Seleccione un Docente</option>';
+                        select_docente.disabled = true;
+                    }
+                }
+            }
+
+            function bloquear_select(event){
+                event.preventDefault();
+            }
+
+            function actualizarNivelWorking(){
+                
+                const selectSeccion = formulario.querySelector('.select_seccion');
+
+                const selectNivel = formulario.querySelector('.select_nivel');
+
+                
+
+                if(selectSeccion.value == 'Welcome'){
+                    
+                    const opcion_nivel_cero = document.createElement('option');
+                    opcion_nivel_cero.value = '0';
+                    opcion_nivel_cero.textContent = '0';
+                    opcion_nivel_cero.selected = true;
+                    selectNivel.appendChild(opcion_nivel_cero);
+
+                    //selectNivel.selected = '0';
+
+                    //selectNivel.readonly = true;
+
+                    selectNivel.addEventListener('mousedown', bloquear_select);
+
+                }else{
+                    //selectNivel.readonly = false;
+                    selectNivel.removeEventListener('mousedown', bloquear_select);
+
+                    const opciones_nivel = formulario.querySelectorAll('.select_nivel option')
+                    
+                    opciones_nivel.forEach(function(opcion) {
+                        if(opcion.value == '0'){
+                            opcion.remove();
+                        }
+                    });
+
+                }
+                
+                
+
+            }
+
+            //console.log(formulario.querySelector(".fecha_sesion"));
+
+            //let aux_fecha_sesion = formulario.querySelector(".fecha_sesion"); //.addEventListener('input', actualizarSelectDocente);
+            //let aux_hora_sesion = formulario.querySelector(".hora_sesion"); //.addEventListener('input', actualizarSelectDocente);
+            //let aux_select_seccion = formulario.querySelector(".select_seccion"); //.addEventListener('input', actualizarNivelWorking);
+
+            actualizarSelectDocente();
+            //actualizarNivelWorking();
+            
+
+        });
+        
     });
 
 </script>
