@@ -5,6 +5,8 @@ from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 from app.services.serviciosUsuario import ServiciosUsuario
+from app.services.serviciosSesion import ServiciosSesion
+from datetime import datetime
 
 administrador_bp = Blueprint('administrador_bp', __name__)
 
@@ -229,4 +231,70 @@ def vista_lista_sesiones(datos_usuario):
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('administrador/sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
+
+    sesiones = ServiciosSesion.obtener_todos()
+    return render_template('administrador/sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones)
+
+@administrador_bp.route('/sesiones/crear', methods=['POST'])
+@token_requerido
+def crear_sesion(datos_usuario):
+    id_usuario = str(datos_usuario['id_usuario'])
+
+    datos = request.form
+
+    sesion = ServiciosSesion.crear(datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
+
+    return redirect(url_for('administrador_bp.vista_lista_sesiones'))
+
+@administrador_bp.route('/sesiones/editar/<id>', methods=['POST'])
+@token_requerido
+def editar_sesion(datos_usuario, id):
+    datos = request.form
+
+    sesion = ServiciosSesion.actualizar(id, datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
+
+    return redirect(url_for('administrador_bp.vista_lista_sesiones'))
+
+@administrador_bp.route('/sesiones/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_sesion(datos_usuario, id):
+    sesion = ServiciosSesion.eliminar(id)
+
+    return redirect(url_for('administrador_bp.vista_lista_sesiones'))
+
+@administrador_bp.route('/sesiones/dia', methods = ['GET'])
+@token_requerido
+def vista_lista_sesiones_dia(datos_usuario):
+    
+    fecha_actual = datetime.now()
+    dia_hoy = fecha_actual.strftime("%A")
+    fecha_actual = fecha_actual.strftime("%Y-%m-%d")
+    
+    dias_espanol = {
+        'Monday': 'Lunes',
+        'Tuesday': 'Martes',
+        'Wednesday': 'Miercoles',
+        'Thursday': 'Jueves',
+        'Friday': 'Viernes',
+        'Saturday': 'Sabado',
+        'Sunday': 'Domingo'
+    }
+
+    dia_actual = dias_espanol[dia_hoy]
+    fecha_actual = '2025-03-14'
+    dia_actual = 'Viernes'
+    print(dia_actual)
+    print(fecha_actual)
+    docentes = ServiciosDocente.obtener_por_dia(dia_actual)
+    print('/*-'*100)
+    print(docentes)
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    lista_horas = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30']
+
+    sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
+    print(sesiones)
+    return render_template('administrador/sesion_dia.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas)

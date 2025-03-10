@@ -118,3 +118,29 @@ class ServiciosDocente():
         
 
         return respuesta
+    
+    def obtener_por_dia(dia):
+        datos = Docente.query.filter_by(activo = 1)
+
+        datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor']
+        respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+        
+        for docente in respuesta:
+            horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1, dia=dia).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
+            datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
+            respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
+            #print(respuesta_h)
+            horario_por_dia = []
+            if respuesta_h:
+                for horario in respuesta_h:
+                    
+                    horario_por_dia.append({
+                        'id_horario' : horario['id_horario'],
+                        'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
+                        'hora_final' : horario['hora_final'].strftime('%H:%M')
+                    })
+                docente['horarios'] = horario_por_dia
+            else:
+                docente['horarios'] = []
+        
+        return respuesta
