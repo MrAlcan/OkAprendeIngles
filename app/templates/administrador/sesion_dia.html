@@ -40,7 +40,7 @@
                     Tabla de Sesiones
                 </p>
                 <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
-                    data-target=".modal_agregar_sesion">Agregar Sesión</button>
+                    data-target=".modal_agregar_sesion" id="boton_agregar_sesion">Agregar Sesión</button>
 
                 <div class="modal fade modal_agregar_sesion" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
@@ -73,7 +73,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3">Fecha</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="date" class="form-control fecha_sesion" name="fecha" required>
+                                            <input type="date" class="form-control fecha_sesion" name="fecha" id="input_agregar_fecha" required>
                                         </div>
                                     </div>
 
@@ -81,7 +81,7 @@
                                         <label class="col-form-label col-md-3 col-sm-3">Día</label>
                                         <div class="col-md-9 col-sm-9 ">
                                             <input type="text" class="form-control dia_nombre_sesion" name="ddd"
-                                                value="" disabled>
+                                                value="" id="input_agregar_dia" disabled>
                                         </div>
                                     </div>
 
@@ -89,7 +89,7 @@
                                         <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
                                         <div class="col-md-9 col-sm-9 ">
                                             <input type="time" class="form-control hora_sesion" name="hora" step="1800"
-                                                required>
+                                            id="input_agregar_hora" required>
                                         </div>
                                     </div>
 
@@ -97,7 +97,7 @@
                                         <label class="col-form-label col-md-3 col-sm-3 ">Docente</label>
                                         <div class="col-md-9 col-sm-9 ">
                                             <select class="form-control docentes_sesion" name="docente" required
-                                                disabled>
+                                            id="input_agregar_docente" disabled>
                                                 <option value="">Seleccione un Docente</option>
                                             </select>
                                         </div>
@@ -149,7 +149,7 @@
                     <div class="col-md-12 col-sm-12  ">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2>Bordered table <small>Bordered table subtitle</small></h2>
+                                <h2>{{dia_actual}}, {{fecha_actual}}</h2>
                                 
                                 <div class="clearfix"></div>
                             </div>
@@ -161,7 +161,7 @@
                                             <th>Hora</th>
                                             {% if docentes %}
                                                 {% for docente in docentes %}
-                                                    <th>{{docente.nombres}}</th>
+                                                    <th>{{docente.nombres}} {{docente.apellidos}}</th>
                                                 {% endfor %}
                                             {% endif %}
                                         </tr>
@@ -169,10 +169,40 @@
                                     <tbody>
                                         {% for hora_d in lista_horas %}
                                             <tr>
-                                                <th scope="row">{{hora_d}}</th>
+                                                <th scope="row" class="fila_hora">{{hora_d}}</th>
                                                 {% if docentes %}
                                                     {% for docente in docentes %}
-                                                        {% if sesiones %}
+                                                        {% if docente.horarios %}
+                                                            {% if docente.horarios[hora_d] %}
+
+                                                                {% if docente.horarios[hora_d]=='horario' %}
+                                                                    <td style="background-color: {{docente.color}}">
+                                                                        <button type="button" class="agregar_{{docente.id_docente}}_{{hora_d}}_{{fecha_actual}}_{{dia_actual}} btn btn-warning btn-sm ">Agregar<i class="fa fa-edit"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                {% elif docente.horarios[hora_d]=='sesion' %}
+
+                                                                {% else %}
+                                                                    <td rowspan="2" style="background-color: {{docente.color}}">
+                                                                        {{docente.horarios[hora_d].seccion}} {{docente.horarios[hora_d].nivel}}<br>
+                                                                        Cupos: {{docente.horarios[hora_d].cupos_disponibles}}<br>
+                                                                        
+                                                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                                            data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
+                                                                        </button>
+                                                                    </td>
+                                                                {% endif %}
+
+                                                            {% else %}
+                                                                <td></td>
+                                                            {% endif %}
+
+                                                        {% else %}
+                                                            <td></td>
+                                                        {% endif %}
+
+
+                                                        <!--{% if sesiones %}
                                                             {% for sesion in sesiones %}
                                                                 {% if sesion.id_docente==docente.id_docente and sesion.hora==hora_d %}
                                                                     <td>sesin</td>
@@ -180,7 +210,9 @@
                                                                     <td></td>
                                                                 {% endif %}
                                                             {% endfor %}
-                                                        {% endif %}
+                                                        {% endif %}-->
+
+
                                                     {% endfor %}
                                                 {% endif %}
                                             </tr>
@@ -198,7 +230,7 @@
                 
 
                 <div> <!--CALENTADRIO ARREGLAR -->
-                    <div class="fc fc-unthemed fc-ltr">
+                    <!--div class="fc fc-unthemed fc-ltr">
                         <div class="fc-toolbar fc-header-toolbar">
                             
                             <div class="fc-center">
@@ -274,11 +306,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <hr class="fc-divider fc-widget-header">
+                                                <hr class="fc-divider fc-widget-header"-->
                                                 <!-- fc-scroller aqui abajo-->
                                                 <!--div class="fc-scroller fc-time-grid-container"
                                                     style="overflow: hidden scroll; height: 134px;"-->
-                                                <div class="fc-time-grid-container">
+                                                <!--div class="fc-time-grid-container">
                                                     <div class="fc-time-grid fc-unselectable">
                                                         <div class="fc-bg">
                                                             <table>
@@ -640,7 +672,7 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
+                    </div-->
                 </div>
 
                 <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
@@ -838,7 +870,7 @@
 
 <script>
     let formularios_sesiones = document.querySelectorAll(".formulario_sesiones");
-    const docentes = {{ docentes | tojson() }};
+    const docentes = {{ docentes_horarios | tojson() }};
     /*docentes.forEach(function(doce) {
                     console.log(doce.horarios['Jueves']);
                 });*/
@@ -945,8 +977,8 @@
     document.addEventListener('DOMContentLoaded', () => {
         let formularios_sesiones_editar = document.querySelectorAll(".formulario_sesiones_editar");
         //console.log(formularios_sesiones);
-        formularios_sesiones_editar.forEach(function (formulario) {
-            function actualizarSelectDocente() {
+        formularios_sesiones_editar.forEach(function(formulario) {
+            function actualizarSelectDocente(){
                 const input_fecha = formulario.querySelector(".fecha_sesion");
                 const input_hora = formulario.querySelector(".hora_sesion");
                 const select_docente = formulario.querySelector(".docentes_sesion");
@@ -958,7 +990,7 @@
                 //console.log(input_fecha);
                 //console.log(input_hora);
 
-                if (input_fecha.value && input_hora.value) {
+                if(input_fecha.value && input_hora.value){
                     select_docente.disabled = false;
                     const nombre_dia = obtenerNombreDia(input_fecha.value);
                     select_docente.innerHTML = '<option value="">Seleccione un Docente</option>';
@@ -967,17 +999,17 @@
 
                     let contador = 0;
 
-                    docentes.forEach(function (doce) {
-                        if (doce.horarios[nombre_dia]) {
-                            doce.horarios[nombre_dia].forEach(function (horario_d) {
+                    docentes.forEach(function(doce) {
+                        if(doce.horarios[nombre_dia]){
+                            doce.horarios[nombre_dia].forEach(function(horario_d) {
                                 //console.log(horario_d.hora_inicio);
                                 const hora_i = horario_d.hora_inicio;
                                 const hora_f = horario_d.hora_final;
-                                if (hora_seleccionada >= hora_i && hora_seleccionada < hora_f) {
+                                if(hora_seleccionada>=hora_i && hora_seleccionada<hora_f){
                                     const opcion = document.createElement('option');
                                     opcion.value = doce.id_docente;
                                     opcion.textContent = doce.nombres + ' ' + doce.apellidos;
-                                    if (aux_opcion.value == doce.id_docente) {
+                                    if(aux_opcion.value == doce.id_docente){
                                         opcion.selected = true;
                                     }
                                     select_docente.appendChild(opcion);
@@ -986,30 +1018,30 @@
 
                             });
                         }
-
+                        
                         //console.log(doce.horarios[nombre_dia]);
                     });
-                    if (contador <= 0) {
+                    if(contador<=0){
                         select_docente.innerHTML = '<option value="">Seleccione un Docente</option>';
                         select_docente.disabled = true;
                     }
                 }
             }
 
-            function bloquear_select(event) {
+            function bloquear_select(event){
                 event.preventDefault();
             }
 
-            function actualizarNivelWorking() {
-
+            function actualizarNivelWorking(){
+                
                 const selectSeccion = formulario.querySelector('.select_seccion');
 
                 const selectNivel = formulario.querySelector('.select_nivel');
 
+                
 
-
-                if (selectSeccion.value == 'Welcome') {
-
+                if(selectSeccion.value == 'Welcome'){
+                    
                     const opcion_nivel_cero = document.createElement('option');
                     opcion_nivel_cero.value = '0';
                     opcion_nivel_cero.textContent = '0';
@@ -1022,21 +1054,21 @@
 
                     selectNivel.addEventListener('mousedown', bloquear_select);
 
-                } else {
+                }else{
                     //selectNivel.readonly = false;
                     selectNivel.removeEventListener('mousedown', bloquear_select);
 
                     const opciones_nivel = formulario.querySelectorAll('.select_nivel option')
-
-                    opciones_nivel.forEach(function (opcion) {
-                        if (opcion.value == '0') {
+                    
+                    opciones_nivel.forEach(function(opcion) {
+                        if(opcion.value == '0'){
                             opcion.remove();
                         }
                     });
 
                 }
-
-
+                
+                
 
             }
 
@@ -1048,10 +1080,65 @@
 
             actualizarSelectDocente();
             //actualizarNivelWorking();
-
+            
 
         });
+        
+    });
 
+    const boton_agregar_sesion = document.getElementById("boton_agregar_sesion");
+
+    const botones_agregar = document.querySelectorAll('button[class^="agregar_"]');
+
+    const input_agregar_dia = document.getElementById("input_agregar_dia");
+    const input_agregar_docente = document.getElementById("input_agregar_docente");
+    const input_agregar_fecha = document.getElementById("input_agregar_fecha");
+    const input_agregar_hora = document.getElementById("input_agregar_hora");
+
+    botones_agregar.forEach(boton => {
+        boton.addEventListener('click', function() {
+            
+            const clase = boton.classList[0];
+            const id_docente_ag = clase.split('_')[1];
+            const dia_ag = clase.split('_')[4];
+            const fecha_ag = clase.split('_')[3];
+            const hora_ag = clase.split('_')[2];
+
+            input_agregar_dia.value = dia_ag;
+            input_agregar_fecha.value = fecha_ag;
+            input_agregar_hora.value = hora_ag;
+
+            input_agregar_dia.readOnly = true
+            input_agregar_fecha.readOnly = true;
+            input_agregar_hora.readOnly = true;
+
+            let nombres_docentes = '';
+
+            docentes.forEach(docente => {
+                if(docente.id_docente == id_docente_ag){
+                    nombres_docentes = docente.nombres + " " + docente.apellidos;
+                }
+            });
+
+            const opcion_doc = document.createElement('option');
+
+            opcion_doc.value = id_docente_ag;
+            opcion_doc.text = nombres_docentes;
+            opcion_doc.selected = true;
+
+            input_agregar_docente.disabled = false;
+            input_agregar_docente.innerHTML = '';
+
+            input_agregar_docente.appendChild(opcion_doc);
+
+
+
+
+            boton_agregar_sesion.click();
+
+
+            
+        });
     });
 
 </script>
