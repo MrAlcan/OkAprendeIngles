@@ -6,6 +6,7 @@ from app.services.serviciosDocentes import ServiciosDocente
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosSesion import ServiciosSesion
+from app.services.serviciosEstudiante import ServiciosEstudiante
 from datetime import datetime
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -268,6 +269,7 @@ def vista_lista_sesiones_dia(datos_usuario):
     
     fecha_actual = datetime.now()
     dia_hoy = fecha_actual.strftime("%A")
+    hora_actual = fecha_actual.strftime("%H:%M") 
     fecha_actual = fecha_actual.strftime("%Y-%m-%d")
     
     dias_espanol = {
@@ -306,4 +308,40 @@ def vista_lista_sesiones_dia(datos_usuario):
 
 
     print(sesiones)
-    return render_template('administrador/sesion_dia.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas, docentes_horarios = docentes_horarios)
+    return render_template('administrador/sesion_dia.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas, docentes_horarios = docentes_horarios, hora_actual = hora_actual)
+
+
+
+
+#----------------------------------- GESTION ESTUDIANTES ------------------------------------------------
+@administrador_bp.route('/usuarios/estudiantes', methods=['GET'])
+@token_requerido
+def vista_lista_estudiantes(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    estudiantes = ServiciosEstudiante.obtener_todos()
+
+    return render_template('administrador/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes)
+
+
+@administrador_bp.route('/estudiantes/crear', methods = ['POST'])
+@token_requerido
+def crear_estudiante(datos_usuario):
+    datos = request.form
+
+    estudiante = ServiciosEstudiante.crear(datos['nombre_usuario'],
+                                           datos['contrasena'],
+                                           datos['correo'],
+                                           datos['nombres'],
+                                           datos['apellidos'],
+                                           datos['carnet'],
+                                           datos['telefono'],
+                                           datos['telefono_titular'],
+                                           datos['nombres_titular'],
+                                           datos['nombre_nivel'],
+                                           datos['rango_nivel'])
+    
+    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))

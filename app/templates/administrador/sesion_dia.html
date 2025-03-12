@@ -170,6 +170,7 @@
                                         {% for hora_d in lista_horas %}
                                             <tr>
                                                 <th scope="row" class="fila_hora">{{hora_d}}</th>
+                                                
                                                 {% if docentes %}
                                                     {% for docente in docentes %}
                                                         {% if docente.horarios %}
@@ -177,8 +178,13 @@
 
                                                                 {% if docente.horarios[hora_d]=='horario' %}
                                                                     <td style="background-color: {{docente.color}}">
+                                                                    {% if hora_d > hora_actual%}
                                                                         <button type="button" class="agregar_{{docente.id_docente}}_{{hora_d}}_{{fecha_actual}}_{{dia_actual}} btn btn-warning btn-sm ">Agregar<i class="fa fa-edit"></i>
                                                                         </button>
+                                                                    {% endif %}
+                                                                    
+                                                                    
+                                                                        
                                                                     </td>
                                                                 {% elif docente.horarios[hora_d]=='sesion' %}
 
@@ -186,10 +192,11 @@
                                                                     <td rowspan="2" style="background-color: {{docente.color}}">
                                                                         {{docente.horarios[hora_d].seccion}} {{docente.horarios[hora_d].nivel}}<br>
                                                                         Cupos: {{docente.horarios[hora_d].cupos_disponibles}}<br>
-                                                                        
-                                                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                                                            data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
-                                                                        </button>
+                                                                        {% if hora_d > hora_actual%}
+                                                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                                                data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
+                                                                            </button>
+                                                                        {% endif %}
                                                                     </td>
                                                                 {% endif %}
 

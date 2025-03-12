@@ -7,7 +7,7 @@ class Estudiante(Usuario):
     id_estudiante = db.Column(db.Integer, db.ForeignKey('usuarios.id_usuario'), primary_key=True)
     celular_titular = db.Column(db.Integer, nullable=True)
     nombres_titular = db.Column(db.String(100), nullable=False)
-    nombre_nivel = db.Column(db.String(20), nullable=False, default='Basic')
+    nombre_nivel = db.Column(db.String(20), nullable=False, default='Basico')
     rango_nivel = db.Column(db.String(10), nullable=False, default='1-5')
     speakout_completado = db.Column(db.Integer, nullable=True, default=0)
     working_completado = db.Column(db.Integer, nullable=True, default=0)
