@@ -1,15 +1,17 @@
 from app.models.docente import Docente
 from app.models.horario import Horario
+
 from app.config.extensiones import db
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
-from datetime import datetime
+from app.services.serviciosSesion import ServiciosSesion
+from datetime import datetime, timedelta
 
 class ServiciosDocente():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final):
+    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, color):
         try:
-            nuevo_docente = Docente(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, asignacion_tutor)
+            nuevo_docente = Docente(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor)
             db.session.add(nuevo_docente)
             db.session.commit()
 
@@ -33,7 +35,7 @@ class ServiciosDocente():
             db.session.rollback()
             return {"status": "error", "message": str(e)}
     
-    def actualizar(id_docente, nombre_usuario, correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, horarios_eliminados, horarios_modificados, dias_modificados, horas_inicio_modificados, horas_final_modificados):
+    def actualizar(id_docente, nombre_usuario, correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, horarios_eliminados, horarios_modificados, dias_modificados, horas_inicio_modificados, horas_final_modificados, color):
         try:
             docente = Docente.query.get(id_docente)
 
@@ -44,6 +46,7 @@ class ServiciosDocente():
             docente.carnet_identidad = carnet
             docente.telefono = telefono
             docente.asignacion_tutor = asignacion_tutor
+            docente.color = color
 
             #db.session.commit()
 
@@ -96,7 +99,7 @@ class ServiciosDocente():
         datos = Docente.query.filter_by(activo = 1)
         
 
-        datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor']
+        datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor', 'color']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         for docente in respuesta:
             horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
@@ -117,4 +120,108 @@ class ServiciosDocente():
         #print(respuesta)
         
 
+        return respuesta
+    
+    def obtener_por_dia(dia):
+        datos = Docente.query.filter_by(activo = 1)
+
+        datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor', 'color']
+        respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+        
+        for docente in respuesta:
+            horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1, dia=dia).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
+            datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
+            respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
+            #print(respuesta_h)
+            horario_por_dia = []
+            if respuesta_h:
+                for horario in respuesta_h:
+                    
+                    horario_por_dia.append({
+                        'id_horario' : horario['id_horario'],
+                        'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
+                        'hora_final' : horario['hora_final'].strftime('%H:%M')
+                    })
+                docente['horarios'] = horario_por_dia
+            else:
+                docente['horarios'] = []
+        
+        return respuesta
+    
+    def obtener_sesiones_por_fecha(fecha):
+
+        fecha_format = datetime.strptime(fecha, "%Y-%m-%d")
+
+        dia_hoy = fecha_format.strftime("%A")
+        
+        dias_espanol = {
+            'Monday': 'Lunes',
+            'Tuesday': 'Martes',
+            'Wednesday': 'Miercoles',
+            'Thursday': 'Jueves',
+            'Friday': 'Viernes',
+            'Saturday': 'Sabado',
+            'Sunday': 'Domingo'
+        }
+
+        dia = dias_espanol[dia_hoy]
+
+        datos = Docente.query.filter_by(activo = 1)
+
+        #sesiones = ServiciosSesion.obtener_por_fecha(fecha)
+
+        datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor', 'color']
+        respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+        
+        for docente in respuesta:
+            horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1, dia=dia).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
+            datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
+            respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
+            #print(respuesta_h)
+
+            sesiones = ServiciosSesion.obtener_por_fecha_docente(fecha, docente['id_docente'])
+
+            horario_por_dia = {}
+            if respuesta_h:
+                for horario in respuesta_h:
+
+                    hora_inicio = horario['hora_inicio'].strftime('%H:%M')
+                    hora_final = horario['hora_final'].strftime('%H:%M')
+
+                    hora_inicio = datetime.strptime(hora_inicio, '%H:%M')
+                    hora_final = datetime.strptime(hora_final, '%H:%M')
+
+                    hora_control = hora_inicio
+
+                    while hora_control<hora_final:
+                        
+                        hora_string = hora_control.strftime('%H:%M')
+
+                        valor = sesiones.get(hora_string)
+                        print(hora_string)
+                        if valor is not None:
+                            horario_por_dia[hora_string] = sesiones[hora_string]
+                            hora_control = hora_control + timedelta(minutes=30)
+                            hora_string = hora_control.strftime('%H:%M')
+                            horario_por_dia[hora_string] = 'sesion'
+                        else:
+                            horario_por_dia[hora_string] = 'horario'
+                        print(horario_por_dia)
+                        hora_control = hora_control + timedelta(minutes=30)
+
+
+
+                    
+                    '''horario_por_dia.append({
+                        'id_horario' : horario['id_horario'],
+                        'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
+                        'hora_final' : horario['hora_final'].strftime('%H:%M')
+                    })'''
+
+
+
+                docente['horarios'] = horario_por_dia
+            else:
+                docente['horarios'] = None # []
+        
         return respuesta
