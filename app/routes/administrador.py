@@ -242,7 +242,7 @@ def editar_administrador(datos_usuario, id):
 
     return redirect(url_for('administrador_bp.vista_lista_administradores'))
 
-@administrador_bp.route('/administtrador/eliminar/<id>', methods=['GET'])
+@administrador_bp.route('/administradores/eliminar/<id>', methods=['GET'])
 @token_requerido
 def eliminar_administrador(datos_usuario, id):
     administrador = ServiciosAdministrador.eliminar(id)
