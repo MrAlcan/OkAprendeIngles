@@ -26,7 +26,7 @@ class ServiciosRecepcionista():
         try:
 
             recepcionista = Recepcionista.query.get(id_recepcionista)
-            recepcionistadministrador.nombre_usuario = nombre_usuario
+            recepcionista.nombre_usuario = nombre_usuario
             recepcionista.correo = correo
             recepcionista.nombres = nombres
             recepcionista.apellidos = apellidos
