@@ -50,38 +50,66 @@
                             <div class="modal-body">
                                 <form class="form-label-left input_mask" action="/administrador/estudiantes/crear" method="POST" enctype="multipart/form-data">
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres"
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
                                         <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos"
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
                                         <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo"
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                            title="Ingrese un correo válido con @" 
+                                            onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')" required>
                                         <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono" min="60000000" max="79999999">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono"
+                                            pattern="[0-9]{8}" title="Solo números de 8 dígitos"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')" required>
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario">
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
+                                                pattern="^[a-zA-Z_]+$"
+                                                title="Solo se permiten letras y barra baja (_)"
+                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet">
+                                        <div class="col-md-6 col-sm-6">
+                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="numero_carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                        </div>
+                                        <div class="col-md-3 col-sm-3">
+                                            <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
+                                                <option>LP</option>
+                                                <option>CBBA</option>
+                                                <option>SCZ</option>
+                                                <option>PT</option>
+                                                <option>OR</option>
+                                                <option>TJ</option>
+                                                <option>PN</option>
+                                                <option>BN</option>
+                                            </select>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
                                         <div class="col-md-9 col-sm-9 ">
@@ -123,6 +151,46 @@
                                             <input type="number" class="form-control" placeholder="Telefono del Titular" name="telefono_titular">
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Ocupación del Titular</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Ejemplo: Ingeniero, Comerciante, etc." name="ocupacion_titular" title="Ingresa la ocupación del titular. Puede contener letras y números.">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Parentesco del Titular</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <select class="form-control" name="parentesco_titular" title="Selecciona el parentesco con el titular">
+                                                <option>Escoge una Opción</option>
+                                                <option value="Madre">Madre</option>
+                                                <option value="Padre">Padre</option>
+                                                <option value="Titular">Titular</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Número de Contrato</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 123456" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Inicio del Contrato</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="date" class="form-control" name="fecha_inicio_contrato" title="Selecciona la fecha de inicio del contrato">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Expiración del Contrato</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="date" class="form-control" name="fecha_expiracion_contrato" title="Selecciona la fecha de expiración del contrato">
+                                        </div>
+                                    </div>
+
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
