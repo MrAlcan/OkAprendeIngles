@@ -1,0 +1,577 @@
+{% extends 'estudiante/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+    <!-- FullCalendar -->
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.print.css')}}" rel="stylesheet" media="print">
+
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Sesiones</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                <p class="text-muted font-13 m-b-30">
+                    Tabla de Sesiones
+                </p>
+                <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
+                    data-target=".modal_agregar_sesion" id="boton_agregar_sesion">Agregar Sesión</button>
+
+                <div class="modal fade modal_agregar_sesion" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Crear Sesion</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <form class="form-label-left input_mask formulario_sesiones"
+                                    action="/administrador/sesiones/crear" method="POST" enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Sección</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control select_seccion" name="seccion" required>
+                                                <option>Escoge una Opción</option>
+                                                <option value="Welcome">Welcome</option>
+                                                <option value="Speak Out">Speak Out</option>
+                                                <option value="Working">Working</option>
+                                                <option value="Essential">Essential</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3">Fecha</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="date" class="form-control fecha_sesion" name="fecha" id="input_agregar_fecha" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3">Día</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="text" class="form-control dia_nombre_sesion" name="ddd"
+                                                value="" id="input_agregar_dia" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800"
+                                            id="input_agregar_hora" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Docente</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control docentes_sesion" name="docente" required
+                                            id="input_agregar_docente" disabled>
+                                                <option value="">Seleccione un Docente</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control select_nivel" name="nivel" required>
+                                                <option>Escoge una Opción</option>
+                                                <option value="1-5">1 - 5</option>
+                                                <option value="6-15">6 - 15</option>
+                                                <option value="11-15">11 - 15</option>
+                                                <option value="16-30">16 - 30</option>
+                                                <option value="31-50">31 - 50</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Cupos</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="number" class="form-control" name="cupos" min="1" max="10"
+                                                step="1" value="6" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                            <button type="submit" class="btn btn-success">Crear Sesión</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                
+
+
+
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Seccion</th>
+                            <th>Niveles</th>
+                            <th>Cupos Disponibles</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if sesiones %}
+                            {% for sesion in sesiones %}
+                            <tr>
+                                <td>{{sesion.id_sesion}}</td>
+                                <td>{{sesion.fecha}}</td>
+                                <td>{{sesion.hora}}</td>
+                                <td>{{sesion.seccion}}</td>
+                                <td>{{sesion.nivel}}</td>
+                                <td>{{sesion.cupos_disponibles}}</td>
+                                <td>
+                                    <a href="/estudiante/sesiones/inscribirse/{{sesion.id_sesion}}"><button
+                                            class="btn btn-danger btn-xs">Cancelar <i class="fa fa-check-square"></i></button></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+
+
+
+
+                    </tbody>
+                </table>
+
+                <div class="col-md-12 col-sm-12  ">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{dia_actual}}, Semana del {{f_lunes}} al {{f_sabado}}</h2>
+                            
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        <th>Lunes</th>
+                                        <th>Martes</th>
+                                        <th>Miercoles</th>
+                                        <th>Jueves</th>
+                                        <th>Viernes</th>
+                                        <th>Sabado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for hora_d in lista_horas %}
+                                        <tr>
+                                            <th scope="row" class="fila_hora">{{hora_d}}</th>
+
+                                            {% if sesiones_calendario[hora_d] %}
+                                                <td>
+                                                    {% if dia_actual!='Lunes' or hora_d>=hora_actual %}
+
+                                                        {% if sesiones_calendario[hora_d]['Lunes'] %}
+                                                            {% for sesion_c in sesiones_calendario[hora_d]['Lunes'] %}
+                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-danger btn-sm">Cancelar <i class="fa fa-check-square"></i></button></a><br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        
+                                                    {% endif %}
+                                                    
+                                                </td>
+                                                <td>
+                                                    {% if dia_actual!='Martes' or hora_d>=hora_actual %}
+                                                        {% if sesiones_calendario[hora_d]['Martes'] %}
+                                                            {% for sesion_c in sesiones_calendario[hora_d]['Martes'] %}
+                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if dia_actual!='Miercoles' or hora_d>=hora_actual %}
+                                                        {% if sesiones_calendario[hora_d]['Miercoles'] %}
+                                                            {% for sesion_c in sesiones_calendario[hora_d]['Miercoles'] %}
+                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if dia_actual!='Jueves' or hora_d>=hora_actual %}
+                                                        {% if sesiones_calendario[hora_d]['Jueves'] %}
+                                                            {% for sesion_c in sesiones_calendario[hora_d]['Jueves'] %}
+                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if dia_actual!='Viernes' or hora_d>=hora_actual %}
+                                                        {% if sesiones_calendario[hora_d]['Viernes'] %}
+                                                            {% for sesion_c in sesiones_calendario[hora_d]['Viernes'] %}
+                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if dia_actual!='Sabado' or hora_d>=hora_actual %}
+                                                        {% if sesiones_calendario[hora_d]['Sabado'] %}
+                                                            {% for sesion_c in sesiones_calendario[hora_d]['Sabado'] %}
+                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                    {% endif %}
+                                                </td>
+
+                                            {% else %}
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                                <td></td>
+                                            {% endif %}
+                                            
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                
+                        </div>
+                    </div>
+                </div>
+
+                
+
+
+                <!--CALENDATIO HECHO CON TABLA-->
+                <!--div>
+                    <div class="col-md-12 col-sm-12  ">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>{{dia_actual}}, {{fecha_actual}}</h2>
+                                
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                    
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Hora</th>
+                                            {% if docentes %}
+                                                {% for docente in docentes %}
+                                                    <th>{{docente.nombres}} {{docente.apellidos}}</th>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for hora_d in lista_horas %}
+                                            <tr>
+                                                <th scope="row" class="fila_hora">{{hora_d}}</th>
+                                                
+                                                {% if docentes %}
+                                                    {% for docente in docentes %}
+                                                        {% if docente.horarios %}
+                                                            {% if docente.horarios[hora_d] %}
+
+                                                                {% if docente.horarios[hora_d]=='horario' %}
+                                                                    <td style="background-color: {{docente.color}}">
+                                                                    {% if hora_d > hora_actual%}
+                                                                        <button type="button" class="agregar_{{docente.id_docente}}_{{hora_d}}_{{fecha_actual}}_{{dia_actual}} btn btn-warning btn-sm ">Agregar<i class="fa fa-edit"></i>
+                                                                        </button>
+                                                                    {% endif %}
+                                                                    
+                                                                    
+                                                                        
+                                                                    </td>
+                                                                {% elif docente.horarios[hora_d]=='sesion' %}
+
+                                                                {% else %}
+                                                                    <td rowspan="2" style="background-color: {{docente.color}}">
+                                                                        {{docente.horarios[hora_d].seccion}} {{docente.horarios[hora_d].nivel}}<br>
+                                                                        Cupos: {{docente.horarios[hora_d].cupos_disponibles}}<br>
+                                                                        {% if hora_d > hora_actual%}
+                                                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                                                data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
+                                                                            </button>
+                                                                        {% endif %}
+                                                                    </td>
+                                                                {% endif %}
+
+                                                            {% else %}
+                                                                <td></td>
+                                                            {% endif %}
+
+                                                        {% else %}
+                                                            <td></td>
+                                                        {% endif %}
+
+
+                                                        
+
+
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </tr>
+                                        {% endfor %}
+                                        
+                                    </tbody>
+                                </table>
+                    
+                            </div>
+                        </div>
+                    </div>
+                </div-->
+
+                {% if sesiones %}
+                {% for sesion in sesiones %}
+                <div class="modal fade modal_editar_sesion_{{sesion.id_sesion}}" tabindex="-1" role="dialog"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Editar Sesion</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-label-left input_mask formulario_sesiones formulario_sesiones_editar"
+                                    action="/administrador/sesiones/editar/{{sesion.id_sesion}}" method="POST"
+                                    enctype="multipart/form-data">
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Sección</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control select_seccion" name="seccion" required>
+                                                <option>Escoge una Opción</option>
+                                                <option value="Welcome" {% if sesion.seccion=='Welcome' %}Selected{%
+                                                    endif %}>Welcome</option>
+                                                <option value="Speak Out" {% if sesion.seccion=='Speak Out' %}Selected{%
+                                                    endif %}>Speak Out</option>
+                                                <option value="Working" {% if sesion.seccion=='Working' %}Selected{%
+                                                    endif %}>Working</option>
+                                                <option value="Essential" {% if sesion.seccion=='Essential' %}Selected{%
+                                                    endif %}>Essential</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3">Fecha</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="date" class="form-control fecha_sesion" name="fecha" required
+                                                value="{{sesion.fecha}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3">Día</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="text" class="form-control dia_nombre_sesion" name="ddd"
+                                                value="" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800"
+                                                required value="{{sesion.hora}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Docente</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control docentes_sesion" name="docente" required
+                                                disabled>
+                                                <option value="{{sesion.id_docente}}">Seleccione un Docente</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control select_nivel" name="nivel" required>
+                                                <option>Escoge una Opción</option>
+                                                {% if sesion.nivel == '0' %}
+                                                <option value="0" selected>0</option>
+                                                {% endif %}
+                                                <option value="1-5" {% if sesion.nivel=='1-5' %}Selected{% endif %}>1 -
+                                                    5</option>
+                                                <option value="6-15" {% if sesion.nivel=='6-15' %}Selected{% endif %}>6
+                                                    - 15</option>
+                                                <option value="11-15" {% if sesion.nivel=='11-15' %}Selected{% endif %}>
+                                                    11 - 15</option>
+                                                <option value="16-30" {% if sesion.nivel=='16-30' %}Selected{% endif %}>
+                                                    16 - 30</option>
+                                                <option value="31-50" {% if sesion.nivel=='31-50' %}Selected{% endif %}>
+                                                    31 - 50</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Cupos</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="number" class="form-control" name="cupos" min="1" max="10"
+                                                step="1" required value="{{sesion.cupos_disponibles}}">
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_sesiones');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_sesiones ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_sesiones = document.getElementById('nav_sesiones_dia');
+        nav_sesiones.classList.add('current-page');
+    });
+</script>
+
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+
+<!-- FullCalendar -->
+<script src="{{url_for('static', filename='vendors/moment/min/moment.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+{% endblock %}

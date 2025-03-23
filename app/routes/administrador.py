@@ -283,8 +283,8 @@ def vista_lista_sesiones_dia(datos_usuario):
     }
 
     dia_actual = dias_espanol[dia_hoy]
-    fecha_actual = '2025-03-14'
-    dia_actual = 'Viernes'
+    fecha_actual = '2025-03-24'
+    dia_actual = 'Lunes'
     print(dia_actual)
     print(fecha_actual)
     docentes = ServiciosDocente.obtener_por_dia(dia_actual)
