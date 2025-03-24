@@ -12,10 +12,11 @@ class Actividad(db.Model):
     cupos_disponibles = db.Column(db.Integer, nullable=True, default=0)
     activo = db.Column(db.Integer, nullable=False, default=1)
 
-    def __init__(self, fecha, hora, docente, descripcion, nivel, cupos):
+    def __init__(self, fecha, hora, docente, descripcion, nivel, cupos, activo=1):
         self.fecha = fecha
         self.hora = hora
         self.id_docente = docente
         self.descripcion = descripcion
         self.nivel = nivel
         self.cupos_disponibles = cupos
+        self.activo = activo

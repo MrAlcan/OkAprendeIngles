@@ -105,6 +105,8 @@ class ServiciosDocente():
             horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
             datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
             respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
+            respuesta_h = db.session.query(Horarios).all()  # O la consulta que estés usando
+            return respuesta_h if respuesta_h is not None else []
             horario_por_dia = {}
             for horario in respuesta_h:
                 if horario['dia'] not in horario_por_dia:

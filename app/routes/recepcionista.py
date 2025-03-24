@@ -341,3 +341,11 @@ def crear_estudiante(datos_usuario):
                                            datos['rango_nivel'])
     
     return redirect(url_for('recepcionista_bp.vista_lista_estudiantes'))
+#----------------------------------- GESTION ACTIVIDADES ------------------------------------------------
+
+@recepcionista_bp.route('/actividades', methods=['GET'])
+def obtener_actividades():
+    return render_template("recepcionista/actividades.html")
+
+
+
