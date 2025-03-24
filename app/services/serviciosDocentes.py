@@ -9,9 +9,9 @@ from datetime import datetime, timedelta
 
 class ServiciosDocente():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, color):
+    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, color, extension):
         try:
-            nuevo_docente = Docente(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor)
+            nuevo_docente = Docente(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor, extension)
             db.session.add(nuevo_docente)
             db.session.commit()
 
@@ -105,7 +105,7 @@ class ServiciosDocente():
             horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
             datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
             respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
-            respuesta_h = db.session.query(Horarios).all()  # O la consulta que estés usando
+            respuesta_h = db.session.query(Horario).all()  # O la consulta que estés usando
             return respuesta_h if respuesta_h is not None else []
             horario_por_dia = {}
             for horario in respuesta_h:

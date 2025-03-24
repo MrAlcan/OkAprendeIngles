@@ -20,8 +20,8 @@ class Estudiante(Usuario):
         'polymorphic_identity': 'estudiante'
     }
 
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel = None, rango_nivel = None):
-        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='estudiante')
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel = None, rango_nivel = None, extension=None):
+        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='estudiante', extension=extension)
         self.celular_titular = telefono_titular
         self.nombres_titular = nombres_titular
         self.rango_nivel = rango_nivel

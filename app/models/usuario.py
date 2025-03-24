@@ -13,6 +13,7 @@ class Usuario(db.Model):
     carnet_identidad = db.Column(db.String(20), nullable=False, unique=True)
     telefono = db.Column(db.Integer, nullable=False)
     rol = db.Column(db.String(20), nullable=False)
+    extension = db.Column(db.String(4), nullable = False)
     activo = db.Column(db.Integer, nullable=False, default=1)
 
     __mapper_args__ = {
@@ -23,7 +24,7 @@ class Usuario(db.Model):
     def __repr__(self):
         return f"Id Usuario: {self.id_usuario}, nombre_usuario: {self.nombre_usuario}, rol de usuario: {self.rol}"
     
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol):
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol, extension):
         self.nombre_usuario = nombre_usuario
         self.contrasena_hash = bcrypt.generate_password_hash(contrasena).decode('utf-8')
         self.correo = correo
@@ -32,6 +33,7 @@ class Usuario(db.Model):
         self.carnet_identidad = carnet
         self.telefono = telefono
         self.rol = rol
+        self.extension = extension
     
     def validar_contrasena(self, contrasena):
         return bcrypt.check_password_hash(self.contrasena_hash, contrasena)

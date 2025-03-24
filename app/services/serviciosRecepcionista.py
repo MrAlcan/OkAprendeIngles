@@ -5,9 +5,9 @@ from app.serializer.serializadorUniversal import SerializadorUniversal
 
 class ServiciosRecepcionista():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal):
+    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal, extension):
         try:
-            nuevo_recepcionista = Recepcionista(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal)
+            nuevo_recepcionista = Recepcionista(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal, extension)
             db.session.add(nuevo_recepcionista)
             db.session.commit()
             return {"status": "success", "message": "Recepcionista creado exitosamente"}

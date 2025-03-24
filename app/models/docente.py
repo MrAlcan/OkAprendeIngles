@@ -16,7 +16,7 @@ class Docente(Usuario):
     def __repr__(self):
         return self.id_docente
 
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor=None):
-        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='docente')
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor=None, extension=None):
+        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='docente', extension=extension)
         self.asignacion_tutor = asignacion_tutor
         self.color = color

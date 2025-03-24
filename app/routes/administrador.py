@@ -68,7 +68,7 @@ def vista_lista_administradores(datos_usuario):
 @token_requerido
 def crear_administrador(datos_usuario):
     datos = request.form
-    nuevo_administrador = serviciosAdministrador.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+    nuevo_administrador = serviciosAdministrador.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'], datos['departamento_carnet'])
     if nuevo_administrador:
         return redirect(url_for('administrador_bp.vista_lista_administradores'))
     else:
@@ -88,7 +88,7 @@ def vista_lista_recepcionistas(datos_usuario):
 @token_requerido
 def crear_recepcionista(datos_usuario):
     datos = request.form
-    nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+    nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'], 'LP')
     if nuevo_administrador:
         return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
     else:
@@ -132,7 +132,7 @@ def crear_docente(datos_usuario):
     horas_final_ordenados = sorted(horas_final, key=lambda x: x[0])
     lista_horas_final = [valor for hora, valor in horas_final_ordenados]
 
-    nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'])
+    nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'], 'LP')
 
     #nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
     #if nuevo_administrador:
@@ -238,14 +238,14 @@ def eliminar_recepcionista(datos_usuario, id):
 @token_requerido
 def editar_administrador(datos_usuario, id):
     datos = request.form
-    administrador = ServiciosAdministrador.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
+    administrador = serviciosAdministrador.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
 
     return redirect(url_for('administrador_bp.vista_lista_administradores'))
 
 @administrador_bp.route('/administradores/eliminar/<id>', methods=['GET'])
 @token_requerido
 def eliminar_administrador(datos_usuario, id):
-    administrador = ServiciosAdministrador.eliminar(id)
+    administrador = serviciosAdministrador.eliminar(id)
     return redirect(url_for('administrador_bp.vista_lista_administradores'))
 
 # ----------------------- GESTION SESIONES ----------------------------------
@@ -370,6 +370,7 @@ def crear_estudiante(datos_usuario):
                                            datos['telefono_titular'],
                                            datos['nombres_titular'],
                                            datos['nombre_nivel'],
-                                           datos['rango_nivel'])
+                                           datos['rango_nivel'],
+                                           'LP')
     
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))

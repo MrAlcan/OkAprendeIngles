@@ -7,9 +7,9 @@ from datetime import datetime, timedelta, date
 
 class ServiciosEstudiante():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel):
+    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel, extension):
 
-        estudiante = Estudiante(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel)
+        estudiante = Estudiante(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel, extension)
 
         db.session.add(estudiante)
         db.session.commit()

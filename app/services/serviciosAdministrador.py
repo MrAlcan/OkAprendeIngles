@@ -5,9 +5,9 @@ from app.serializer.serializadorUniversal import SerializadorUniversal
 
 class serviciosAdministrador():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal):
+    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal, extension):
         try:
-            nuevo_administrador = Administrador(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal)
+            nuevo_administrador = Administrador(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal, extension)
             db.session.add(nuevo_administrador)
             db.session.commit()
             return {"status": "success", "message": "Administrador creado exitosamente"}
@@ -18,7 +18,7 @@ class serviciosAdministrador():
         
     def obtener_todos():
         datos = Administrador.query.filter_by(activo = 1)
-        datos_requeridos = ['id_administrador', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal']
+        datos_requeridos = ['id_administrador', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal', 'extension']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
     
