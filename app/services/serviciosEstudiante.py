@@ -7,9 +7,38 @@ from datetime import datetime, timedelta, date
 
 class ServiciosEstudiante():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel):
+    def crear(correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel):
 
-        estudiante = Estudiante(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel)
+
+        primer_nombre = str(nombres).split(' ')[0]
+        primer_apellido = str(apellidos).split(' ')[0]
+        segundo_apellido = ''
+        if len(str(apellidos).split(' '))>1:
+            segundo_apellido = str(apellidos).split(' ')[1]
+        primer_nombre = primer_nombre.upper()
+        primer_apellido = primer_apellido.upper()
+        segundo_apellido = segundo_apellido.upper()
+        nombre_usuario = primer_nombre + "." + primer_apellido
+
+        validacion = Estudiante.query.filter(Estudiante.nombre_usuario==nombre_usuario).first()
+        if validacion:
+            nombre_usuario = nombre_usuario + "." + segundo_apellido
+            validacion_2 = Estudiante.query.filter(Estudiante.nombre_usuario==nombre_usuario).first()
+            if validacion_2:
+                numeracion = True
+                contador = 0
+                nombre_usuario = nombre_usuario + "."
+                while numeracion:
+                    contador = contador + 1
+                    nombre_usuario_n = nombre_usuario + str(contador)
+                    validacion_3 = Estudiante.query.filter(Estudiante.nombre_usuario==nombre_usuario_n).first()
+                    if not validacion_3:
+                        numeracion = False
+                        nombre_usuario = nombre_usuario_n
+                        break
+
+
+        estudiante = Estudiante(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel)
 
         db.session.add(estudiante)
         db.session.commit()

@@ -5,9 +5,36 @@ from app.serializer.serializadorUniversal import SerializadorUniversal
 
 class serviciosAdministrador():
 
-    def crear(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal):
+    def crear(correo, nombres, apellidos, carnet, telefono, telefono_personal):
         try:
-            nuevo_administrador = Administrador(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal)
+            primer_nombre = str(nombres).split(' ')[0]
+            primer_apellido = str(apellidos).split(' ')[0]
+            segundo_apellido = ''
+            if len(str(apellidos).split(' '))>1:
+                segundo_apellido = str(apellidos).split(' ')[1]
+            primer_nombre = primer_nombre.upper()
+            primer_apellido = primer_apellido.upper()
+            segundo_apellido = segundo_apellido.upper()
+            nombre_usuario = primer_nombre + "." + primer_apellido
+
+            validacion = Administrador.query.filter(Administrador.nombre_usuario==nombre_usuario).first()
+            if validacion:
+                nombre_usuario = nombre_usuario + "." + segundo_apellido
+                validacion_2 = Administrador.query.filter(Administrador.nombre_usuario==nombre_usuario).first()
+                if validacion_2:
+                    numeracion = True
+                    contador = 0
+                    nombre_usuario = nombre_usuario + "."
+                    while numeracion:
+                        contador = contador + 1
+                        nombre_usuario_n = nombre_usuario + str(contador)
+                        validacion_3 = Administrador.query.filter(Administrador.nombre_usuario==nombre_usuario_n).first()
+                        if not validacion_3:
+                            numeracion = False
+                            nombre_usuario = nombre_usuario_n
+                            break
+
+            nuevo_administrador = Administrador(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_personal)
             db.session.add(nuevo_administrador)
             db.session.commit()
             return {"status": "success", "message": "Administrador creado exitosamente"}

@@ -13,6 +13,7 @@ class Usuario(db.Model):
     carnet_identidad = db.Column(db.String(20), nullable=False, unique=True)
     telefono = db.Column(db.Integer, nullable=False)
     rol = db.Column(db.String(20), nullable=False)
+    extension = db.Column(db.String(4), nullable = False, default='LP')
     activo = db.Column(db.Integer, nullable=False, default=1)
 
     __mapper_args__ = {

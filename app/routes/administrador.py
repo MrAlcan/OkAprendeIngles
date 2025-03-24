@@ -65,7 +65,7 @@ def vista_lista_administradores(datos_usuario):
 @token_requerido
 def crear_administrador(datos_usuario):
     datos = request.form
-    nuevo_administrador = serviciosAdministrador.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+    nuevo_administrador = serviciosAdministrador.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
     if nuevo_administrador:
         return redirect(url_for('administrador_bp.vista_lista_administradores'))
     else:
@@ -85,7 +85,7 @@ def vista_lista_recepcionistas(datos_usuario):
 @token_requerido
 def crear_recepcionista(datos_usuario):
     datos = request.form
-    nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+    nuevo_administrador = ServiciosRecepcionista.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
     if nuevo_administrador:
         return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
     else:
@@ -129,7 +129,7 @@ def crear_docente(datos_usuario):
     horas_final_ordenados = sorted(horas_final, key=lambda x: x[0])
     lista_horas_final = [valor for hora, valor in horas_final_ordenados]
 
-    nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'])
+    nuevo_docente = ServiciosDocente.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'])
 
     #nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
     #if nuevo_administrador:
@@ -332,9 +332,7 @@ def vista_lista_estudiantes(datos_usuario):
 def crear_estudiante(datos_usuario):
     datos = request.form
 
-    estudiante = ServiciosEstudiante.crear(datos['nombre_usuario'],
-                                           datos['contrasena'],
-                                           datos['correo'],
+    estudiante = ServiciosEstudiante.crear(datos['correo'],
                                            datos['nombres'],
                                            datos['apellidos'],
                                            datos['carnet'],
