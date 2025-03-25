@@ -6,6 +6,7 @@ from app.services.serviciosDocentes import ServiciosDocente
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosSesion import ServiciosSesion
+from app.services.serviciosActividad import ServiciosActividad
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from datetime import datetime
 
@@ -313,12 +314,11 @@ def vista_lista_sesiones_dia(datos_usuario):
 @recepcionista_bp.route('/usuarios/estudiantes', methods=['GET'])
 @token_requerido
 def vista_lista_estudiantes(datos_usuario):
-    nombres = str(datos_usuario['primer_nombre'])
-    apellidos = str(datos_usuario['primer_apellido'])
-    primer_nombre = nombres.split(' ')[0]
-    primer_apellido = apellidos.split(' ')[0]
-
     estudiantes = ServiciosEstudiante.obtener_todos()
+    primer_nombre = datos_usuario.get('primer_nombre', 'Usuario')
+    primer_apellido = datos_usuario.get('primer_apellido', '')
+
+    
 
     return render_template('recepcionista/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes)
 
@@ -353,8 +353,32 @@ def crear_estudiante(datos_usuario):
 #----------------------------------- GESTION ACTIVIDADES ------------------------------------------------
 
 @recepcionista_bp.route('/actividades', methods=['GET'])
-def obtener_actividades():
-    return render_template("recepcionista/actividades.html")
+@token_requerido
+def vista_lista_actividades(datos_usuario):
+    actividades = ServiciosActividad.obtener_todos()
+    print('/*-'*100)
+    print(actividades)
+    fecha = datos_usuario.get('fecha')
+    hora = datos_usuario.get('hora')
+
+    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades)
+
+
+@recepcionista_bp.route('/actividades/crear', methods=['POST'])
+@token_requerido
+def crear_actividad(datos_usuario):
+    datos = request.form
+
+    actividades = ServiciosActividad.crear(datos.get['fecha'],
+                                           datos.get['hora'],
+                                           datos.get['id_docente'],
+                                           datos.get['descripcion'],
+                                           datos.get['nivel'],
+                                           datos.get['cupos']
+                                           
+                                           )
+    
+    return redirect(url_for('recepcionista_bp.vista_lista_actividades'))
 
 
 

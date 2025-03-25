@@ -93,14 +93,23 @@
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
-                                        <div class="col-md-9 col-sm-9">
-                                            <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet"
-                                                pattern="^[0-9]+$"
-                                                title="Solo se permiten números. No coloque extensiones."
-                                                onfocus="this.setAttribute('title', 'Ingrese solo números sin extensiones')" required>
+                                        <div class="col-md-6 col-sm-6">
+                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                        </div>
+                                        
+                                        <div class="col-md-3 col-sm-3">
+                                            <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
+                                                <option value="LP">LP</option>
+                                                <option value="CBBA">CBBA</option>
+                                                <option value="SCZ">SCZ</option>
+                                                <option value="PT">PT</option>
+                                                <option value="OR">OR</option>
+                                                <option value="TJ">TJ</option>
+                                                <option value="PN">PN</option>
+                                                <option value="BN">BN</option>
+                                            </select>
                                         </div>
                                     </div>
-
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Telefono Personal</label>
                                         <div class="col-md-9 col-sm-9">
@@ -159,6 +168,17 @@
                                     </div>
 
                                 </form>
+                                <!-- MODAL DE ÉXITO -->
+                                    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                    <i class="fa fa-check-circle" style="font-size: 50px; color: green;"></i>
+                                                    <h4 class="mt-3">¡Usuario registrado con éxito!</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 
                             </div>
                             <div class="modal-footer">
@@ -333,6 +353,21 @@
 
     }
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); 
+
+            
+            $("#successModal").modal("show");
+            setTimeout(() => {
+                form.submit();
+            }, 2000);
+        });
+    });
+</script>
+
 
 <!-- iCheck -->
 <script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
