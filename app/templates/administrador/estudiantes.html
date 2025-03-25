@@ -94,18 +94,18 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
                                         <div class="col-md-6 col-sm-6">
-                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="numero_carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
                                         </div>
                                         <div class="col-md-3 col-sm-3">
                                             <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
-                                                <option>LP</option>
-                                                <option>CBBA</option>
-                                                <option>SCZ</option>
-                                                <option>PT</option>
-                                                <option>OR</option>
-                                                <option>TJ</option>
-                                                <option>PN</option>
-                                                <option>BN</option>
+                                                <option value="LP" {% if administrador.extension == 'LP' %} selected {% endif %}>LP</option>
+                                                <option value="CBBA" {% if administrador.extension == 'CBBA' %} selected {% endif %}>CBBA</option>
+                                                <option value="SCZ" {% if administrador.extension == 'SCZ' %} selected {% endif %}>SCZ</option>
+                                                <option value="PT" {% if administrador.extension == 'PT' %} selected {% endif %}>PT</option>
+                                                <option value="OR" {% if administrador.extension == 'OR' %} selected {% endif %}>OR</option>
+                                                <option value="TJ" {% if administrador.extension == 'TJ' %} selected {% endif %}>TJ</option>
+                                                <option value="PN" {% if administrador.extension == 'PN' %} selected {% endif %}>PN</option>
+                                                <option value="BN" {% if administrador.extension == 'BN' %} selected {% endif %}>BN</option>
                                             </select>
                                         </div>
                                     </div>
@@ -171,23 +171,30 @@
                                     </div>
                                     
                                     <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Número de Cuenta</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 10000" name="numero_cuenta" min="1" title="Ingresa solo números para el número de contrato">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Número de Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="number" class="form-control" placeholder="Ejemplo: 123456" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 266" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
                                         </div>
                                     </div>
                                     
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Inicio del Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="date" class="form-control" name="fecha_inicio_contrato" title="Selecciona la fecha de inicio del contrato">
+                                            <input type="date" class="form-control" name="inicio_contrato" title="Selecciona la fecha de inicio del contrato">
                                         </div>
                                     </div>
                                     
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Expiración del Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="date" class="form-control" name="fecha_expiracion_contrato" title="Selecciona la fecha de expiración del contrato">
+                                            <input type="date" class="form-control" name="fin_contrato" title="Selecciona la fecha de expiración del contrato">
                                         </div>
                                     </div>
 

@@ -82,7 +82,7 @@ def vista_lista_docentes(datos_usuario):
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('recepcionista/docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
+    return render_template('recepcionista/docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, horarios=horarios)
 
 @recepcionista_bp.route('/crear/docente', methods=['POST'])
 @token_requerido
@@ -338,7 +338,16 @@ def crear_estudiante(datos_usuario):
                                            datos['telefono_titular'],
                                            datos['nombres_titular'],
                                            datos['nombre_nivel'],
-                                           datos['rango_nivel'])
+                                           datos['rango_nivel'],
+                                           datos['departamento_carnet'],
+                                           datos.get('ocupacion_tutor', ''),  
+                                           datos.get('parentesco_tutor', ''),
+                                           datos.get('numero_cuenta', ''),
+                                           datos.get('numero_contrato', ''),
+                                           datos.get('inicio_contrato', ''),
+                                           datos.get('fin_contrato', '')
+                                           
+                                           )
     
     return redirect(url_for('recepcionista_bp.vista_lista_estudiantes'))
 #----------------------------------- GESTION ACTIVIDADES ------------------------------------------------

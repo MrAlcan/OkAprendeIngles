@@ -18,7 +18,7 @@ class ServiciosRecepcionista():
         
     def obtener_todos():
         datos = Recepcionista.query.filter_by(activo = 1)
-        datos_requeridos = ['id_recepcionista', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal']
+        datos_requeridos = ['id_recepcionista', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal', 'extension']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
         
