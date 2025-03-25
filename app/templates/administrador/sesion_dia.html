@@ -88,7 +88,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800"
+                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800" min="07:30" max="21:00"
                                             id="input_agregar_hora" required>
                                         </div>
                                     </div>
@@ -189,7 +189,7 @@
                                                                 {% elif docente.horarios[hora_d]=='sesion' %}
 
                                                                 {% else %}
-                                                                    <td rowspan="2" style="background-color: {{docente.color}}">
+                                                                    <td rowspan="1" style="background-color: {{docente.color}}">
                                                                         {{docente.horarios[hora_d].seccion}} {{docente.horarios[hora_d].nivel}}<br>
                                                                         Cupos: {{docente.horarios[hora_d].cupos_disponibles}}<br>
                                                                         {% if hora_d > hora_actual%}
@@ -777,7 +777,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800"
+                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800" min="07:30" max="21:00"
                                                 required value="{{sesion.hora}}">
                                         </div>
                                     </div>

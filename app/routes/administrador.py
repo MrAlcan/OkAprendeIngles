@@ -241,10 +241,21 @@ def vista_lista_sesiones(datos_usuario):
 def crear_sesion(datos_usuario):
     id_usuario = str(datos_usuario['id_usuario'])
 
+    # Obtienes la URL de la página anterior
+    referer = request.referrer
+
+    
+
     datos = request.form
 
     sesion = ServiciosSesion.crear(datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
 
+    # Rediriges al usuario a la página de donde vino
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('administrador_bp.vista_lista_sesiones'))
     return redirect(url_for('administrador_bp.vista_lista_sesiones'))
 
 @administrador_bp.route('/sesiones/editar/<id>', methods=['POST'])
@@ -295,7 +306,7 @@ def vista_lista_sesiones_dia(datos_usuario):
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
 
-    lista_horas = ['08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30']
+    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
 
     sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
 
