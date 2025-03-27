@@ -9,6 +9,10 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_EXTENSIONS_HOMEWORK = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'mp3', 'wav', 'ogg'}
+
+def allowed_file_homework(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_HOMEWORK
 
 # Función para verificar si la extensión de la imagen es válida
 def allowed_file(filename):
@@ -65,14 +69,20 @@ def vista_sesion_por_id(datos_usuario, id):
 
     sesion = ServiciosDocente.obtener_sesion_por_id(id_docente, id)
 
+    
+
     if not sesion:
         return redirect(url_for("docente_bp.vista_lista_sesiones"))
     
+    tareas = ServiciosDocente.obtener_tarea_por_sesion(id)
+    
     detalle_sesion = ServiciosDocente.obtener_detalles_sesion(id)
     print(detalle_sesion)
+
+    detalle_tarea = ServiciosDocente.obtener_detalle_tareas_por_sesion(id)
     
 
-    return render_template("docente/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion=detalle_sesion)
+    return render_template("docente/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion=detalle_sesion, tarea=tareas, detalle_tareas=detalle_tarea)
 
 @docente_bp.route('/sesiones/link/<id>', methods=['POST'])
 @token_requerido
@@ -208,3 +218,113 @@ def download_file(filename):
     print(current_app.config['UPLOAD_FOLDER_CLASES'])
     print(filename)
     return send_from_directory('/cargados/clases',filename)
+
+
+
+@docente_bp.route('/sesiones/tarea/<id>', methods=['POST'])
+@token_requerido
+def asignar_tarea(datos_usuario, id):
+
+    id_docente = datos_usuario['id_usuario']
+    descripcion_tarea = request.form['descripcion']
+
+    print(descripcion_tarea)
+
+    referer = request.referrer
+
+    if 'material' not in request.files:
+        print("no existe el nombre material")
+        asignado = ServiciosDocente.asignar_tarea(id, descripcion_tarea, None)
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('docente_bp.vista_lista_sesiones'))
+
+    file = request.files['material']
+
+    print(file)
+    
+    # Verificar si se seleccionó un archivo
+    if file.filename == '':
+        print("el filename es erroneo")
+        asignado = ServiciosDocente.asignar_tarea(id, descripcion_tarea, None)
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('docente_bp.vista_lista_sesiones'))
+
+    # Verificar si el archivo tiene una extensión permitida
+
+
+    if file and allowed_file_homework(file.filename):
+        # Renombrar el archivo usando el id de sesión y la fecha actual para evitar colisiones
+        extension = os.path.splitext(file.filename)[1]
+
+        session_id = str(id)  # Aquí se debe usar el ID de sesión o cualquier identificador único
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"{session_id}_{id_docente}_{timestamp}{extension}"
+
+        print('/*-'*50)
+        print(filename)
+
+        # Asegurarse de que el nombre del archivo sea seguro
+        filename = secure_filename(filename)
+
+        # Crear el directorio si no existe
+        if not os.path.exists(current_app.config['UPLOAD_FOLDER_TAREAS']):
+            os.makedirs(current_app.config['UPLOAD_FOLDER_TAREAS'])
+
+        # Guardar la imagen temporalmente
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER_TAREAS'], filename)
+
+        file.save(file_path)
+
+        file_path = f'{filename}'
+        asignado = ServiciosDocente.asignar_tarea(id, descripcion_tarea, file_path)
+
+
+
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('docente_bp.vista_lista_sesiones'))
+
+
+    asignado = ServiciosDocente.asignar_tarea(id, descripcion_tarea, None)
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('docente_bp.vista_lista_sesiones'))
+
+
+
+    asignado = ServiciosDocente.asignar_tarea(id, descripcion_tarea)
+
+    referer = request.referrer
+
+
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('docente_bp.vista_lista_sesiones'))
+    
+
+@docente_bp.route('/download/<filename>')
+def download_file_h(filename):
+    # Validar que el archivo existe
+    file_path = os.path.join('app','static','tareas', filename)
+    #filename = str(filename).split('/')[1]
+    print(filename)
+    print(file_path)
+    if os.path.exists(file_path):
+        print("existes")
+        file_path = os.path.join(os.getcwd(),'app','static','tareas')
+        # Usamos send_from_directory para enviar el archivo
+        return send_from_directory(file_path, path=filename, as_attachment=False)
+
+    return jsonify({"error": "File not found"}), 404

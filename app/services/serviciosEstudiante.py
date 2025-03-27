@@ -1,6 +1,10 @@
 from app.models.estudiante import Estudiante
 from app.models.detalleSesion import DetalleSesion
 from app.models.sesion import Sesion
+from app.models.tarea import Tarea
+from app.models.detalleTarea import DetalleTarea
+
+
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.config.extensiones import db
 from datetime import datetime, timedelta, date
@@ -613,5 +617,41 @@ class ServiciosEstudiante():
             return None, None, hora_string, dia_actual, lunes, sabado
         
 
+    def obtener_tarea_por_sesion(sesion):
+        tarea = Tarea.query.filter(Tarea.activo==1, Tarea.id_sesion==sesion).first()
+        if tarea:
+            datos_requeridos = ['id_tarea', 'descripcion', 'material_adicional']
+            respuesta = SerializadorUniversal.serializar_unico(dato= tarea, campos_requeridos= datos_requeridos)
+            return respuesta
+        else:
+            return None
+        
+    def agregar_tarea(sesion, estudiante, archivo):
+        tarea = Tarea.query.filter(Tarea.activo==1, Tarea.id_sesion==sesion).first()
+        if tarea:
+            id_tarea = tarea.id_tarea
+            detalle_tarea = DetalleTarea.query.filter(DetalleTarea.activo==1, DetalleTarea.id_tarea == id_tarea, DetalleTarea.id_estudiante==estudiante).first()
+            if detalle_tarea:
+                detalle_tarea.material_subido = archivo
+                db.session.commit()
+            else:
+                nueva_tarea = DetalleTarea(id_tarea, estudiante, archivo)
+                db.session.add(nueva_tarea)
+                db.session.commit()
+            return True
+        else:
+            return None
+    
+    def obtener_material_por_sesion(sesion, estudiante):
+        tarea = Tarea.query.filter(Tarea.activo==1, Tarea.id_sesion==sesion).first()
+        if tarea:
+            id_tarea = tarea.id_tarea
+            detalle_tarea = DetalleTarea.query.filter(DetalleTarea.activo==1, DetalleTarea.id_tarea == id_tarea, DetalleTarea.id_estudiante==estudiante).first()
+            if detalle_tarea:
+                return str(detalle_tarea.material_subido)
+            else:
+                return None
+        else:
+            return None
 
 

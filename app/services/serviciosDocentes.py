@@ -3,6 +3,8 @@ from app.models.horario import Horario
 from app.models.sesion import Sesion
 from app.models.detalleSesion import DetalleSesion
 from app.models.estudiante import Estudiante
+from app.models.tarea import Tarea
+from app.models.detalleTarea import DetalleTarea
 
 from app.config.extensiones import db
 from app import SQLAlchemyError
@@ -363,3 +365,83 @@ class ServiciosDocente():
             obj_sesion.imagen_url = dir_imagen
             db.session.commit()
         return True
+    
+    def obtener_tarea_por_sesion(sesion):
+        tarea = Tarea.query.filter(Tarea.activo==1, Tarea.id_sesion==sesion).first()
+
+        if tarea:
+
+            datos_requeridos = ['id_tarea', 'descripcion', 'material_adicional']
+            respuesta = SerializadorUniversal.serializar_unico(dato= tarea, campos_requeridos= datos_requeridos)
+            return respuesta
+        else:
+            return None
+        
+
+
+    
+    def asignar_tarea(id, descripcion, documento=None):
+
+        tarea_existente = Tarea.query.filter(Tarea.activo==1, Tarea.id_sesion==id).first()
+
+        if tarea_existente:
+            tarea_existente.descripcion = descripcion
+            if documento:
+                tarea_existente.material_adicional = documento
+            db.session.commit()
+            return True
+        else:
+
+            nueva_tarea = Tarea(id, descripcion, documento)
+            db.session.add(nueva_tarea)
+            db.session.commit()
+
+            return True
+
+
+        '''detalle_sesion = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==id, DetalleSesion.estado_registro!='Cancelado').all()
+
+        id_tarea = nueva_tarea.id_tarea
+
+        if detalle_sesion:
+            for detalle in detalle_sesion:
+                id_estudiante = detalle.id_estudiante'''
+        
+
+
+
+    def obtener_detalle_tareas_por_sesion(sesion):
+        tarea = Tarea.query.filter(Tarea.activo==1, Tarea.id_sesion==sesion).first()
+        if tarea:
+            id_tarea = tarea.id_tarea
+            detalle_tarea = DetalleTarea.query.filter(DetalleTarea.activo==1, DetalleTarea.id_tarea == id_tarea).all()
+
+            if detalle_tarea:
+
+                respuesta = []
+
+                for det_tar in detalle_tarea:
+                    id_est = det_tar.id_estudiante
+
+                    estudiante = Estudiante.query.get(id_est)
+
+                    cuerpo = {
+                        'id_estudiante': id_est,
+                        'nombres': estudiante.nombres,
+                        'apellidos': estudiante.apellidos,
+                        'material_subido': det_tar.material_subido
+                    }
+                    respuesta.append(cuerpo)
+                
+                return respuesta
+            else:
+                return None
+
+
+
+        else:
+            return None
+        
+
+        
+            

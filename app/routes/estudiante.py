@@ -1,11 +1,19 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, send_from_directory
 
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosSesion import ServiciosSesion
 
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 
+import os
+import time
+from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+
+ALLOWED_EXTENSIONS_HOMEWORK = {'png', 'jpg', 'jpeg', 'gif', 'pdf', 'mp3', 'wav', 'ogg'}
+
+def allowed_file_homework(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS_HOMEWORK
 
 estudiante_bp = Blueprint('estudiante_bp', __name__)
 
@@ -136,11 +144,89 @@ def vista_sesion_id(datos_usuario, id):
 
     sesion, datos_sesion = ServiciosEstudiante.obtener_datos_sesion(id, id_estudiante)
 
+    tarea = ServiciosEstudiante.obtener_tarea_por_sesion(id)
+
+    material_entregado = ServiciosEstudiante.obtener_material_por_sesion(id, id_estudiante)
+
     if sesion:
-        return render_template("estudiante/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion = datos_sesion)
+        return render_template("estudiante/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion = datos_sesion, tarea=tarea, material_entregado=material_entregado)
     else:
         return redirect(url_for("estudiante_bp.vista_sesiones_inscritas"))
 
 
 
+@estudiante_bp.route('/sesiones/tarea/<id>', methods=['POST'])
+@token_requerido
+def asignar_tarea(datos_usuario, id):
 
+    id_estudiante = datos_usuario['id_usuario']
+    
+
+    referer = request.referrer
+
+    if 'material' not in request.files:
+        print("no existe el nombre material")
+        
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))
+
+    file = request.files['material']
+
+    print(file)
+    
+    # Verificar si se seleccionó un archivo
+    if file.filename == '':
+        print("el filename es erroneo")
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))
+
+    # Verificar si el archivo tiene una extensión permitida
+
+
+    if file and allowed_file_homework(file.filename):
+        # Renombrar el archivo usando el id de sesión y la fecha actual para evitar colisiones
+        extension = os.path.splitext(file.filename)[1]
+
+        session_id = str(id)  # Aquí se debe usar el ID de sesión o cualquier identificador único
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        filename = f"{session_id}_{id_estudiante}_{timestamp}{extension}"
+
+        print('/*-'*50)
+        print(filename)
+
+        # Asegurarse de que el nombre del archivo sea seguro
+        filename = secure_filename(filename)
+
+        # Crear el directorio si no existe
+        if not os.path.exists(current_app.config['UPLOAD_FOLDER_TAREAS']):
+            os.makedirs(current_app.config['UPLOAD_FOLDER_TAREAS'])
+
+        # Guardar la imagen temporalmente
+        file_path = os.path.join(current_app.config['UPLOAD_FOLDER_TAREAS'], filename)
+
+        file.save(file_path)
+
+        file_path = f'{filename}'
+        asignado = ServiciosEstudiante.agregar_tarea(id, id_estudiante, file_path)
+
+
+
+        if referer:
+            return redirect(referer)
+        else:
+            # Si no hay referencia, rediriges a una página predeterminada
+            return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))
+
+
+
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))

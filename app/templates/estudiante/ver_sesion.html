@@ -78,7 +78,31 @@
                                             {% endif %}
                                         {% endif %}
                                     </p>
-                                    {% if tareas %}
+                                    {% if tarea %}
+                                        <h2>Tarea Asignada para la clase:</h2>
+                                        <p><strong>Descripcion: </strong>{{tarea.descripcion}}</p>
+                                        {% if tarea.material_adicional %}
+                                            <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
+                                                <button class="btn btn-primary btn-sm">Ver Archivo</button>
+                                            </a>
+                                        {% else %}
+                                            <p>Sin Material Adicional</p>
+                                        {% endif %}
+
+                                        <p>_________________________________________________________________</p>
+                                        {% if material_entregado %}
+                                        <a href="{{ url_for('docente_bp.download_file_h', filename=material_entregado) }}" target="_blank">
+                                            <button class="btn btn-primary btn-sm">Ver Tarea Subida</button>
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                            data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Modificar Tarea <i class="fa fa-edit"></i></button>
+                                        {% else %}
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Subir Tarea <i class="fa fa-check"></i></button>
+
+                                        {% endif %}
+
+                                    {% else %}
+                                        <h2>Sin tarea asignada para la clase</h2>
                                     {% endif %}
                                     
                                     
@@ -104,6 +128,52 @@
                             
                             {% endif %}
                 
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade modal_agregar_tarea" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Agregar o modificar Tarea</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <form class="form-label-left input_mask formulario_sesiones"
+                                    action="/estudiante/sesiones/tarea/{{sesion.id_sesion}}" method="POST" enctype="multipart/form-data">
+                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Tarea:</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="file" name="material" required>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            
+                                            <button type="submit" class="btn btn-success">Enviar Tarea</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
                         </div>
                     </div>
                 </div>

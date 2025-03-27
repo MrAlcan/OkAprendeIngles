@@ -180,6 +180,56 @@
 
                             </form>
 
+                            <div class="col">
+                                <h2>Tarea de la Sesión</h2>
+                                <div>
+                                    {% if tarea %}
+                                        <p>{{tarea.descripcion}}</p>
+                                        {% if tarea.material_adicional %}
+                                            <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
+                                                <button class="btn btn-primary btn-sm">Descargar Archivo</button>
+                                            </a>
+                                        {% endif %}
+                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                            data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Editar Tarea <i class="fa fa-edit"></i></button>
+                                        <br>
+                                        <p></p>
+                                        {% if detalle_tareas %}
+                                            <p class="text-muted font-13 m-b-30">Tareas Presentadas</p>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Nombres</th>
+                                                        <th>Apellidos</th>
+                                                        <th>Tarea</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for d_tarea in detalle_tareas %}
+                                                        <tr>
+                                                            <td>{{d_tarea.id_estudiante}}</td>
+                                                            <td>{{d_tarea.nombres}}</td>
+                                                            <td>{{d_tarea.apellidos}}</td>
+                                                            <td><a href="{{ url_for('docente_bp.download_file_h', filename=d_tarea.material_subido) }}" target="_blank">
+                                                                <button class="btn btn-primary btn-sm">Ver Archivo</button>
+                                                            </a></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p>Ningún Estudiante presento la Tarea hasta el momento </p>
+                                        {% endif %}
+                                        
+                                    {% else %}
+                                        <p>Sin tarea asignada para esta sesión</p>
+                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                        data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Agregar Tarea <i class="fa fa-check"></i></button>
+                                    {% endif %}
+                                </div>
+                            </div>
+
                             
                 
                         </div>
@@ -215,6 +265,64 @@
                                         <div class="col-md-9 col-sm-9  offset-md-3">
                                             
                                             <button type="submit" class="btn btn-success">Enviar Link</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade modal_agregar_tarea" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Tarea para la Sesión</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <form class="form-label-left input_mask formulario_sesiones"
+                                    action="/docente/sesiones/tarea/{{sesion.id_sesion}}" method="POST" enctype="multipart/form-data">
+                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Descripción *</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            {% if tarea %}
+                                                <input type="text" class="form-control" name="descripcion" value="{{tarea.descripcion or ''}}" required>
+                                            {% else %}
+                                                <input type="text" class="form-control" name="descripcion" required>
+                                            {% endif %}
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Material Adicional</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="file" name="material">
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            
+                                            <button type="submit" class="btn btn-success">Enviar Datos Tarea</button>
                                         </div>
                                     </div>
 
