@@ -7,6 +7,27 @@ from datetime import datetime, timedelta, date
 
 class ServiciosEstudiante():
 
+    def obtener_datos_sesion(sesion, estudiante):
+
+        datos_sesion = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.id_estudiante == estudiante).first()
+
+        if datos_sesion:
+        
+            datos_sesion_requeridos = ['id_inscritos_sesion', 'id_sesion', 'id_estudiante', 'estado_registro', 'calificacion', 'justificacion']
+            
+            respuesta_datos_sesion = SerializadorUniversal.serializar_unico(dato=datos_sesion, campos_requeridos=datos_sesion_requeridos)
+            datos = Sesion.query.filter(Sesion.activo==1, Sesion.id_sesion==sesion).first()
+
+            if datos:
+            
+                datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'link']
+                respuesta = SerializadorUniversal.serializar_unico(dato= datos, campos_requeridos= datos_requeridos)
+                return respuesta, respuesta_datos_sesion
+            else:
+                return None, None
+        else:
+            return None, None
+
     def crear(correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel):
 
 
@@ -74,6 +95,12 @@ class ServiciosEstudiante():
         detalle_sesion.estado_registro = 'Cancelado'
         detalle_sesion.calificacion = 0.0
 
+        sesion_modificada = Sesion.query.filter(Sesion.id_sesion==sesion).first()
+
+        cupos = int(sesion_modificada.cupos_disponibles)
+        cupos = cupos + 1
+        sesion_modificada.cupos_disponibles = cupos
+
         if justificacion:
 
             detalle_sesion.justificacion = justificacion
@@ -104,11 +131,14 @@ class ServiciosEstudiante():
     def obtener_sesiones_disponibles(estudiante):
 
         fecha_actual = datetime.now()
-        fecha_actual = fecha_actual + timedelta(minutes=30)
 
         # hoy ida 23/03/2025 para pruebas
-        fecha_actual = fecha_actual + timedelta(days=1)
+        fecha_actual = fecha_actual - timedelta(days=1)
         # fin pruevas
+
+        fecha_actual = fecha_actual + timedelta(minutes=30)
+
+        
 
         estudiante_ob = Estudiante.query.filter_by(activo = 1, id_estudiante = estudiante).first()
 
@@ -146,7 +176,7 @@ class ServiciosEstudiante():
 
         hoy = date.today()
         # PRUEBAS 23/03/2025 PARA VER HORARIOS
-        hoy = hoy + timedelta(days=1)
+        hoy = hoy - timedelta(days=1)
         # DINT PRUEBAS
         dias_al_lunes = hoy.weekday()
 
@@ -357,11 +387,13 @@ class ServiciosEstudiante():
     def obtener_sesiones_inscritas(estudiante):
 
         fecha_actual = datetime.now()
-        fecha_actual = fecha_actual + timedelta(minutes=30)
 
         # hoy ida 23/03/2025 para pruebas
-        fecha_actual = fecha_actual + timedelta(days=1)
+        fecha_actual = fecha_actual - timedelta(days=1)
         # fin pruevas
+        fecha_actual = fecha_actual + timedelta(minutes=30)
+
+        
 
         estudiante_ob = Estudiante.query.filter_by(activo = 1, id_estudiante = estudiante).first()
 
@@ -399,11 +431,12 @@ class ServiciosEstudiante():
 
         hoy = date.today()
         # PRUEBAS 23/03/2025 PARA VER HORARIOS
-        hoy = hoy + timedelta(days=1)
+        hoy = hoy - timedelta(days=1)
         # DINT PRUEBAS
         dias_al_lunes = hoy.weekday()
 
         lunes = hoy - timedelta(days= dias_al_lunes)
+        lunes_i = lunes
         sabado = lunes + timedelta(days=5)
 
 
@@ -448,7 +481,7 @@ class ServiciosEstudiante():
 
         sesiones_disponibles = []
 
-        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'activo']
+        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'activo', 'link']
 
 
         sesiones_inscritas = DetalleSesion.query.filter(DetalleSesion.id_estudiante == estudiante, DetalleSesion.activo==1).all()
@@ -458,12 +491,12 @@ class ServiciosEstudiante():
         if sesiones_inscritas:
             for sesion_i in sesiones_inscritas:
                 #if sesion_i.estado_registro != 'Asistio' and sesion_i.estado_registro != 'Cancelado':
-                if sesion_i.estado_registro == 'Inscrito':
+                if sesion_i.estado_registro == 'Inscrito' or sesion_i.estado_registro == 'Falto' or sesion_i.estado_registro == 'Asistio':
                     lista_sesiones_inscritos.append(int(sesion_i.id_sesion))
 
 
 
-        sesiones = Sesion.query.filter(Sesion.fecha.between(hoy, sabado), Sesion.activo==1).all()
+        sesiones = Sesion.query.filter(Sesion.fecha.between(lunes_i, sabado), Sesion.activo==1).all()
 
 
 
@@ -479,7 +512,7 @@ class ServiciosEstudiante():
                     hora_fecha_sesion = str(sesion.fecha.strftime("%Y-%m-%d")+" "+sesion.hora.strftime('%H:%M'))
                     hora_fecha_sesion = datetime.strptime(hora_fecha_sesion, "%Y-%m-%d %H:%M")
                     hora_fecha_sesion = hora_fecha_sesion + timedelta(minutes=20)
-                    if sesion.seccion == 'Welcome' and hora_fecha_sesion>fecha_actual:
+                    if sesion.seccion == 'Welcome': #and hora_fecha_sesion>fecha_actual:
                         if welcome_completado==0:
                             sesiones_disponibles.append(sesion)
 
@@ -501,7 +534,7 @@ class ServiciosEstudiante():
 
 
                     else:
-                        if sesion.seccion == 'Working' and hora_fecha_sesion>fecha_actual:
+                        if sesion.seccion == 'Working':# and hora_fecha_sesion>fecha_actual:
                             nivel_sesion = [int(str(sesion.nivel).split('-')[0]), int(str(sesion.nivel).split('-')[1])]
                             cupos = int(sesion.cupos_disponibles)
 
@@ -524,7 +557,7 @@ class ServiciosEstudiante():
                                 sesiones_calendario[hora_string][dia_sesion].append(SerializadorUniversal.serializar_unico(sesion, datos_requeridos))
                                 # aqui esta una logica que se repite
 
-                        elif sesion.seccion == 'Essential' and hora_fecha_sesion>fecha_actual:
+                        elif sesion.seccion == 'Essential':# and hora_fecha_sesion>fecha_actual:
                             nivel_sesion = [int(str(sesion.nivel).split('-')[0]), int(str(sesion.nivel).split('-')[1])]
                             cupos = int(sesion.cupos_disponibles)
 
@@ -544,7 +577,7 @@ class ServiciosEstudiante():
                                 
                                 sesiones_calendario[hora_string][dia_sesion].append(SerializadorUniversal.serializar_unico(sesion, datos_requeridos))
                                 # aqui esta una logica que se repite
-                        elif hora_fecha_sesion>fecha_actual:
+                        else:#elif #hora_fecha_sesion>fecha_actual:
                             print('/*-'*150)
                             print(sesion.nivel)
                             print(str(sesion.nivel).split('-'))

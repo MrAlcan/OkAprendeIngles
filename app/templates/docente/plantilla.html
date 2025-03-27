@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Administrador</title>
+    <title>Docente</title>
 
     <!-- Bootstrap -->
     <link href="{{url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -73,7 +73,7 @@
                                 <li><a><i class="fa fa-graduation-cap"></i> Sesiones <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="/docente/sesiones">Lista Sesiones</a></li>
-                                        <li><a href="/docente/etc">Etc</a></li>
+                                        <li><a href="/docente/sesiones/semana">Sesiones Asignadas</a></li>
                                     </ul>
                                 </li>
                                 
@@ -258,6 +258,8 @@
     <script src="{{url_for('static', filename='vendors/fastclick/lib/fastclick.js')}}"></script>
     <!-- NProgress -->
     <script src="{{url_for('static', filename='vendors/nprogress/nprogress.js')}}"></script>
+
+    {% block scripts_final %}{% endblock %}
 
     <!-- Custom Theme Scripts -->
     <script src="{{url_for('static', filename='build/js/custom.min.js')}}"></script>

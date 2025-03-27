@@ -39,111 +39,9 @@
                 <p class="text-muted font-13 m-b-30">
                     Tabla de Sesiones
                 </p>
-                <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
-                    data-target=".modal_agregar_sesion" id="boton_agregar_sesion">Agregar Sesión</button>
+                
 
-                <div class="modal fade modal_agregar_sesion" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-
-                            <div class="modal-header">
-                                <h4 class="modal-title" id="myModalLabel">Crear Sesion</h4>
-                                <button type="button" class="close" data-dismiss="modal"><span
-                                        aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-
-
-                                <form class="form-label-left input_mask formulario_sesiones"
-                                    action="/administrador/sesiones/crear" method="POST" enctype="multipart/form-data">
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Sección</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control select_seccion" name="seccion" required>
-                                                <option>Escoge una Opción</option>
-                                                <option value="Welcome">Welcome</option>
-                                                <option value="Speak Out">Speak Out</option>
-                                                <option value="Working">Working</option>
-                                                <option value="Essential">Essential</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3">Fecha</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="date" class="form-control fecha_sesion" name="fecha" id="input_agregar_fecha" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3">Día</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control dia_nombre_sesion" name="ddd"
-                                                value="" id="input_agregar_dia" disabled>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="time" class="form-control hora_sesion" name="hora" step="1800"
-                                            id="input_agregar_hora" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Docente</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control docentes_sesion" name="docente" required
-                                            id="input_agregar_docente" disabled>
-                                                <option value="">Seleccione un Docente</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control select_nivel" name="nivel" required>
-                                                <option>Escoge una Opción</option>
-                                                <option value="1-5">1 - 5</option>
-                                                <option value="6-15">6 - 15</option>
-                                                <option value="11-15">11 - 15</option>
-                                                <option value="16-30">16 - 30</option>
-                                                <option value="31-50">31 - 50</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Cupos</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="number" class="form-control" name="cupos" min="1" max="10"
-                                                step="1" value="6" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="ln_solid"></div>
-                                    <div class="form-group row">
-                                        <div class="col-md-9 col-sm-9  offset-md-3">
-                                            <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
-                                            <button type="submit" class="btn btn-success">Crear Sesión</button>
-                                        </div>
-                                    </div>
-
-                                </form>
-
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                                <!--button type="button" class="btn btn-primary">Save changes</button-->
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+                
 
                 
 
@@ -216,31 +114,43 @@
 
                                             {% if sesiones_calendario[hora_d] %}
                                                 <td>
-                                                    {% if dia_actual!='Lunes' or hora_d>=hora_actual %}
+                                                    
 
-                                                        {% if sesiones_calendario[hora_d]['Lunes'] %}
-                                                            {% for sesion_c in sesiones_calendario[hora_d]['Lunes'] %}
-                                                                {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
-                                                                Cupos: {{sesion_c.cupos_disponibles}}<br>
-                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
-                                                                    class="btn btn-danger btn-sm">Cancelar <i class="fa fa-check-square"></i></button></a><br>
-                                                            {% endfor %}
-                                                        {% endif %}
-                                                        
+                                                    {% if sesiones_calendario[hora_d]['Lunes'] %}
+                                                        {% for sesion_c in sesiones_calendario[hora_d]['Lunes'] %}
+                                                            {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
+                                                            Cupos: {{sesion_c.cupos_disponibles}}<br>
+                                                            <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                class="btn btn-danger btn-sm">Cancelar Inscripción <i class="fa fa-check-square"></i></button></a><br-->
+                                                            <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                            {% if numero_dia <= 1 and hora_d>=hora_actual %}
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
+                                                                        class="fa fa-minus-square"></i></button><br>
+                                                            {% endif %}
+                                                            
+                                                        {% endfor %}
                                                     {% endif %}
+                                                        
                                                     
                                                 </td>
                                                 <td>
-                                                    {% if dia_actual!='Martes' or hora_d>=hora_actual %}
+                                                    
                                                         {% if sesiones_calendario[hora_d]['Martes'] %}
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Martes'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
-                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
-                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                                <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
+                                                                <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                                {% if dia_actual!='Martes' or hora_d>=hora_actual %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                        data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
+                                                                            class="fa fa-minus-square"></i></button><br>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
-                                                    {% endif %}
+                                                    
                                                 </td>
                                                 <td>
                                                     {% if dia_actual!='Miercoles' or hora_d>=hora_actual %}
@@ -248,8 +158,11 @@
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Miercoles'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
-                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
-                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                                <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
+                                                                        class="fa fa-minus-square"></i></button>
                                                             {% endfor %}
                                                         {% endif %}
                                                     {% endif %}
@@ -260,8 +173,11 @@
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Jueves'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
-                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
-                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                                <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
+                                                                        class="fa fa-minus-square"></i></button>
                                                             {% endfor %}
                                                         {% endif %}
                                                     {% endif %}
@@ -272,8 +188,11 @@
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Viernes'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
-                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
-                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                                <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
+                                                                        class="fa fa-minus-square"></i></button>
                                                             {% endfor %}
                                                         {% endif %}
                                                     {% endif %}
@@ -284,8 +203,12 @@
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Sabado'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
-                                                                <a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
-                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br>
+                                                                <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
+                                                                    class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
+                                                                        class="fa fa-minus-square"></i></button>
+                                                                
                                                             {% endfor %}
                                                         {% endif %}
                                                     {% endif %}
@@ -397,25 +320,25 @@
 
                 {% if sesiones %}
                 {% for sesion in sesiones %}
-                <div class="modal fade modal_editar_sesion_{{sesion.id_sesion}}" tabindex="-1" role="dialog"
+                <div class="modal fade modal_cancelar_sesion_{{sesion.id_sesion}}" tabindex="-1" role="dialog"
                     aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
 
                             <div class="modal-header">
-                                <h4 class="modal-title" id="myModalLabel">Editar Sesion</h4>
+                                <h4 class="modal-title" id="myModalLabel">Cancelar Inscripción a Sesión</h4>
                                 <button type="button" class="close" data-dismiss="modal"><span
                                         aria-hidden="true">×</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <form class="form-label-left input_mask formulario_sesiones formulario_sesiones_editar"
-                                    action="/administrador/sesiones/editar/{{sesion.id_sesion}}" method="POST"
+                                    action="/estudiante/sesiones/cancelar/{{sesion.id_sesion}}" method="POST"
                                     enctype="multipart/form-data">
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Sección</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control select_seccion" name="seccion" required>
+                                            <select class="form-control select_seccion" name="seccion" disabled>
                                                 <option>Escoge una Opción</option>
                                                 <option value="Welcome" {% if sesion.seccion=='Welcome' %}Selected{%
                                                     endif %}>Welcome</option>
@@ -432,7 +355,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3">Fecha</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="date" class="form-control fecha_sesion" name="fecha" required
+                                            <input type="date" class="form-control fecha_sesion" name="fecha" readonly
                                                 value="{{sesion.fecha}}">
                                         </div>
                                     </div>
@@ -441,7 +364,7 @@
                                         <label class="col-form-label col-md-3 col-sm-3">Día</label>
                                         <div class="col-md-9 col-sm-9 ">
                                             <input type="text" class="form-control dia_nombre_sesion" name="ddd"
-                                                value="" disabled>
+                                                value="{{dia_actual}}" disabled>
                                         </div>
                                     </div>
 
@@ -449,24 +372,16 @@
                                         <label class="col-form-label col-md-3 col-sm-3 ">Hora</label>
                                         <div class="col-md-9 col-sm-9 ">
                                             <input type="time" class="form-control hora_sesion" name="hora" step="1800"
-                                                required value="{{sesion.hora}}">
+                                                readonly value="{{sesion.hora}}">
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Docente</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control docentes_sesion" name="docente" required
-                                                disabled>
-                                                <option value="{{sesion.id_docente}}">Seleccione un Docente</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                    
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <select class="form-control select_nivel" name="nivel" required>
+                                            <select class="form-control select_nivel" name="nivel" disabled>
                                                 <option>Escoge una Opción</option>
                                                 {% if sesion.nivel == '0' %}
                                                 <option value="0" selected>0</option>
@@ -487,18 +402,17 @@
 
                                     <div class="form-group row">
 
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Cupos</label>
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Justificación</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="number" class="form-control" name="cupos" min="1" max="10"
-                                                step="1" required value="{{sesion.cupos_disponibles}}">
+                                            <input type="text" class="form-control" name="justificacion"
+                                                required value="Sin Justificacion">
                                         </div>
                                     </div>
 
                                     <div class="ln_solid"></div>
                                     <div class="form-group row">
-                                        <div class="col-md-9 col-sm-9  offset-md-3">
-                                            <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
-                                            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                        <div class="col-md-12 col-sm-12  offset-md-3">
+                                            <button type="submit" class="btn btn-danger">Cancelar Inscripción</button>
                                         </div>
                                     </div>
 
@@ -525,7 +439,56 @@
 
 
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
 
+        
+
+        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
+            data-target=".modal_aviso_cancelar_sesion" id="boton_mensaje_cancelar_sesion" hidden></button>
+                                                                
+
+        <div class="modal fade modal_aviso_cancelar_sesion" tabindex="1" role="dialog"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title" id="myModalLabel">Fallo al cancelar la Inscripción a Sesión</h4>
+                                    <button type="button" class="close" data-dismiss="modal"><span
+                                            aria-hidden="true">×</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {% for category, message in messages %}
+                                        <li class="{{ category }}">{{ message }}</li>
+                                    {% endfor %}
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+                                    <!--button type="button" class="btn btn-primary">Save changes</button-->
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    
+
+
+      <script>
+        // Verificar si hay un mensaje para mostrar
+            window.onload = function() {
+                var myModal = document.getElementById("boton_mensaje_cancelar_sesion");
+                console.log(myModal)
+                myModal.click();
+            };
+
+    </script>
+            
+    {% endif %}
+{% endwith %}
 
 
 

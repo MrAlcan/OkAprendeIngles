@@ -1,0 +1,175 @@
+{% extends 'estudiante/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+    <!-- FullCalendar -->
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.print.css')}}" rel="stylesheet" media="print">
+
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Detalle de la Sesión de 
+    {% if sesion %}
+        {{sesion.seccion}}
+    {% endif %}
+</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                
+                <p class="text-muted font-13 m-b-30">
+                    Tabla de Sesiones
+                </p>
+  
+
+                <div class="col-md-12 col-sm-12  ">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            {% if sesion %}
+                                <div class="row">
+                                    <div class="col-6"><h2>Seccion: {{sesion.seccion}}</h2></div>
+                                    <div class="col-6"><h2>Nivel: {{sesion.nivel}}</h2></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6"><h2>Fecha: {{sesion.fecha}}</h2></div>
+                                    <div class="col-6"><h2>Hora: {{sesion.hora}}</h2></div>
+                                </div>
+                            {% endif %}
+
+                            
+                            
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                
+                            {% if detalle_sesion %}
+                                {% if detalle_sesion.estado_registro == 'Inscrito' %}
+                                    <p class="text-muted font-13 m-b-30">Estado de Registro: <strong style="color: blue;"> Inscrito </strong></p>
+                                    <p class="text-muted font-13 m-b-30"><strong>Link de la Clase: </strong>
+                                        {% if sesion %}
+                                            {% if sesion.link %}
+                                                <a target="_blank" href="{{sesion.link}}">{{sesion.link}}</a>
+                                            {% else %}
+                                                <span> Link de la sesión no disponible por el momento</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </p>
+                                    {% if tareas %}
+                                    {% endif %}
+                                    
+                                    
+                                {% elif detalle_sesion.estado_registro == 'Asistio' %}
+                                    <p class="text-muted font-13 m-b-30">Estado de Registro: <strong style="color: green;"> Asistio</strong></p>
+                                    <p class="text-muted font-13 m-b-30"><strong>Calificación: </strong>
+                                        {% if detalle_sesion.calificacion == '0' %}
+                                            <span> Sin Calificación disponible por el momento</span>
+                                        {% elif detalle_sesion.calificacion > 84 %}
+                                            <span style="color: green;">{{detalle_sesion.calificacion}} Aprobado</span>
+                                        {% else %}
+                                            <span style="color: red;">{{detalle_sesion.calificacion}} Reprobado</span>
+                                        {% endif %}
+                                    </p>
+                                    <p class="text-muted font-13 m-b-30"></p>
+                                    
+                                {% else %}
+                                    <p class="text-muted font-13 m-b-30">Estado de Registro: <strong style="color: red;"> Falto</strong></p>
+                                    <p class="text-muted font-13 m-b-30"><strong>Calificación: </strong><span style="color: red;">0</span></p>
+                                    
+                                    
+                                {% endif %}
+                            
+                            {% endif %}
+                
+                        </div>
+                    </div>
+                </div>
+
+                
+
+
+                
+
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_sesiones');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_sesiones ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_sesiones = document.getElementById('nav_sesiones_dia');
+        nav_sesiones.classList.add('current-page');
+    });
+</script>
+
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+
+<!-- FullCalendar -->
+<script src="{{url_for('static', filename='vendors/moment/min/moment.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+{% endblock %}

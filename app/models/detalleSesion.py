@@ -9,6 +9,7 @@ class DetalleSesion(db.Model):
     estado_registro = db.Column(db.String(20), nullable=False, default = 'Inscrito')
     calificacion = db.Column(db.Double, nullable=False, default=0)
     justificacion = db.Column(db.String(150), nullable=True, default='S/N')
+    recomendacion = db.Column(db.Text, nullable=True, default=None)
     activo = db.Column(db.Integer, nullable=False, default=1)
 
     def __init__(self, sesion, estudiante):
