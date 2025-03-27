@@ -80,11 +80,28 @@ class ServiciosEstudiante():
         
 
     def inscribir_a_sesion(estudiante, sesion):
-        detalle_sesion = DetalleSesion(sesion, estudiante)
+
+        estudiante_op = Estudiante.query.get(estudiante)
+        
 
         sesion = Sesion.query.get(sesion)
 
         sesion.cupos_disponibles = int(sesion.cupos_disponibles) - 1
+
+        seccion_s = sesion.seccion
+
+        nivel_est = 0
+
+        if seccion_s == 'Welcome':
+            nivel_est = int(estudiante_op.welcome_completado)
+        elif seccion_s == 'Working':
+            nivel_est = int(estudiante_op.working_completado)
+        elif seccion_s == 'Essential':
+            nivel_est = int(estudiante_op.essential_completado)
+        else:
+            nivel_est = int(estudiante_op.speakout_completado)
+
+        detalle_sesion = DetalleSesion(sesion, estudiante, nivel_est)
 
         db.session.add(detalle_sesion)
 
@@ -147,9 +164,9 @@ class ServiciosEstudiante():
         estudiante_ob = Estudiante.query.filter_by(activo = 1, id_estudiante = estudiante).first()
 
         rango_nivel = estudiante_ob.rango_nivel
-        speakout_completado = int(estudiante_ob.speakout_completado)
-        working_completado = int(estudiante_ob.working_completado)
-        essential_completado = int(estudiante_ob.essential_completado)
+        speakout_completado = int(estudiante_ob.speakout_completado) + 1
+        working_completado = int(estudiante_ob.working_completado) + 1
+        essential_completado = int(estudiante_ob.essential_completado) + 1
         welcome_completado = int(estudiante_ob.welcome_completado)
 
         nivel_inferior = int(str(rango_nivel).split('-')[0])
@@ -497,6 +514,7 @@ class ServiciosEstudiante():
                 #if sesion_i.estado_registro != 'Asistio' and sesion_i.estado_registro != 'Cancelado':
                 if sesion_i.estado_registro == 'Inscrito' or sesion_i.estado_registro == 'Falto' or sesion_i.estado_registro == 'Asistio':
                     lista_sesiones_inscritos.append(int(sesion_i.id_sesion))
+                    print(f"ingreso a la lista la sesion : {sesion_i.id_sesion}")
 
 
 
@@ -517,21 +535,21 @@ class ServiciosEstudiante():
                     hora_fecha_sesion = datetime.strptime(hora_fecha_sesion, "%Y-%m-%d %H:%M")
                     hora_fecha_sesion = hora_fecha_sesion + timedelta(minutes=20)
                     if sesion.seccion == 'Welcome': #and hora_fecha_sesion>fecha_actual:
-                        if welcome_completado==0:
-                            sesiones_disponibles.append(sesion)
+                        #if welcome_completado==0:
+                        sesiones_disponibles.append(sesion)
 
                             # aqui esta una logica que se repite
-                            hora_string = sesion.hora.strftime('%H:%M')
+                        hora_string = sesion.hora.strftime('%H:%M')
 
-                            if hora_string not in sesiones_calendario:
-                                sesiones_calendario[hora_string] = {}
-                            dia_sesion = sesion.fecha.strftime("%Y-%m-%d")
-                            dia_sesion = dias_fechas[dia_sesion]
+                        if hora_string not in sesiones_calendario:
+                            sesiones_calendario[hora_string] = {}
+                        dia_sesion = sesion.fecha.strftime("%Y-%m-%d")
+                        dia_sesion = dias_fechas[dia_sesion]
 
-                            if dia_sesion not in sesiones_calendario[hora_string]:
-                                sesiones_calendario[hora_string][dia_sesion] = []
+                        if dia_sesion not in sesiones_calendario[hora_string]:
+                            sesiones_calendario[hora_string][dia_sesion] = []
                             
-                            sesiones_calendario[hora_string][dia_sesion].append(SerializadorUniversal.serializar_unico(sesion, datos_requeridos))
+                        sesiones_calendario[hora_string][dia_sesion].append(SerializadorUniversal.serializar_unico(sesion, datos_requeridos))
                             # aqui esta una logica que se repite
 
 

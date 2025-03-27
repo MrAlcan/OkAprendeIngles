@@ -336,12 +336,40 @@ class ServiciosDocente():
         return True
     
     def asignar_asistencias_notas(estudiantes, sesion):
+
+        ob_sesion = Sesion.query.filter(Sesion.activo==1, Sesion.id_sesion==sesion).first()
+        
+        seccion_sesion = ob_sesion.seccion
+
         for estudiante in estudiantes:
             detalle = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.id_estudiante==estudiante['id_estudiante']).first()
+            estudiante_ob = Estudiante.query.get(estudiante['id_estudiante'])
             if detalle:
                 detalle.estado_registro = 'Asistio'
                 detalle.recomendacion = estudiante['recomendacion']
                 detalle.calificacion = float(estudiante['nota'])
+
+                if seccion_sesion == 'Welcome':
+                    rango = str(estudiante_ob.rango_nivel)
+                    nivel_inicial = int(rango.split('-')[0]) - 1
+                    estudiante_ob.speakout_completado = nivel_inicial
+                    estudiante_ob.working_completado = nivel_inicial
+                    estudiante_ob.essential_completado = nivel_inicial
+                    estudiante_ob.welcome_completado = 1
+                elif seccion_sesion == 'Working':
+                    nivel = int(estudiante_ob.working_completado)
+                    nivel = nivel + 1
+                    estudiante_ob.working_completado = nivel
+                elif seccion_sesion == 'Essential':
+                    nivel = int(estudiante_ob.essential_completado)
+                    nivel = nivel + 1
+                    estudiante_ob.essential_completado = nivel
+                else:
+                    nivel = int(estudiante_ob.speakout_completado)
+                    nivel = nivel + 1
+                    estudiante_ob.speakout_completado = nivel
+                
+
         
 
             

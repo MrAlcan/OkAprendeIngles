@@ -10,9 +10,11 @@ class DetalleSesion(db.Model):
     calificacion = db.Column(db.Double, nullable=False, default=0)
     justificacion = db.Column(db.String(150), nullable=True, default='S/N')
     recomendacion = db.Column(db.Text, nullable=True, default=None)
+    nivel_seccion = db.Column(db.Integer, default=0)
     activo = db.Column(db.Integer, nullable=False, default=1)
 
-    def __init__(self, sesion, estudiante):
+    def __init__(self, sesion, estudiante, seccion):
         self.id_sesion = sesion
         self.id_estudiante = estudiante
+        self.nivel_seccion = seccion
         

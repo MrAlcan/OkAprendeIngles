@@ -69,8 +69,8 @@ def vista_sesiones_inscritas(datos_usuario):
 
     sesiones_disponibles, sesiones_calendario, hora_actual, dia_actual, f_lunes, f_sabado = ServiciosEstudiante.obtener_sesiones_inscritas(id_estudiante)
 
-    print(sesiones_calendario)
-    print(sesiones_disponibles)
+    #print(sesiones_calendario)
+    #print(sesiones_disponibles)
 
     lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00','13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
 
