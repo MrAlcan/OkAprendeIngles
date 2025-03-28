@@ -4,3 +4,6 @@
 separador_datos.py
 app/static/vendors/
 app/static/build/
+app/static/clases/
+app/static/tareas/
+cargados/

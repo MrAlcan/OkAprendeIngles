@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-<h3>Administradores Registrados en el Sistema</h3>
+<h3>Estudiantes Registrados en el Sistema</h3>
 {% endblock %}
 
 {% block contenido %}
@@ -32,23 +32,23 @@
         <div class="col-sm-12">
             <div class="card-box table-responsive">
                 <p class="text-muted font-13 m-b-30">
-                    Tabla de Usuarios Administradores
+                    Tabla de Usuarios Estudiantes
                 </p>
                 <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
-                    data-target=".modal_agregar_administrador">Agregar Administrador</button>
+                    data-target=".modal_agregar_administrador">Agregar Estudiante</button>
 
                 <div class="modal fade modal_agregar_administrador" tabindex="-1" role="dialog" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
 
                             <div class="modal-header">
-                                <h4 class="modal-title" id="myModalLabel">Crear Administrador</h4>
+                                <h4 class="modal-title" id="myModalLabel">Crear Estudiante</h4>
                                 <button type="button" class="close" data-dismiss="modal"><span
                                         aria-hidden="true">×</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-label-left input_mask" action="/administrador/crear/administrador" method="POST" enctype="multipart/form-data">
+                                <form class="form-label-left input_mask" action="/administrador/estudiantes/crear" method="POST" enctype="multipart/form-data">
 
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
                                         <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres">
@@ -83,9 +83,44 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Telefono Personal</label>
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="number" class="form-control" placeholder="Telefono Personal" name="telefono_personal">
+                                            <select class="form-control" name="nombre_nivel">
+                                                <option>Escoge una Opción</option>
+                                                <option value="Basico">Basico</option>
+                                                <option value="Intermedio">Intermedio</option>
+                                                <option value="Avanzado">Avanzado</option>
+                                            </select>
+                                            
+                                            <!--input type="text" class="form-control" placeholder="Telefono Personal" name="telefono_personal"-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Rango</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control" name="rango_nivel">
+                                                <option>Escoge una Opción</option>
+                                                <option value="1-5">1 - 5</option>
+                                                <option value="6-15">6 - 15</option>
+                                                <option value="11-15">11 - 15</option>
+                                                <option value="16-30">16 - 30</option>
+                                                <option value="31-50">31 - 50</option>
+                                            </select>
+                                            
+                                            <!--input type="text" class="form-control" placeholder="Telefono Personal" name="telefono_personal"-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nombres del Titular</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="text" class="form-control" placeholder="Nombres del Titular" name="nombres_titular">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Telefono Titular</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="number" class="form-control" placeholder="Telefono del Titular" name="telefono_titular">
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -99,37 +134,12 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <!--div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Disabled Input </label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" disabled="disabled" placeholder="Disabled Input">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Read-Only Input</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" readonly="readonly" placeholder="Read-Only Input">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Date Of Birth <span class="required">*</span>
-                                        </label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input class="date-picker form-control" placeholder="dd-mm-yyyy" type="text" required="required" type="text" onfocus="this.type='date'" onmouseover="this.type='date'" onclick="this.type='date'" onblur="this.type='text'" onmouseout="timeFunctionLong(this)">
-                                            <script>
-                                                function timeFunctionLong(input) {
-                                                    setTimeout(function() {
-                                                        input.type = 'text';
-                                                    }, 60000);
-                                                }
-                                            </script>
-                                        </div>
-                                    </div-->
+                                    
                                     <div class="ln_solid"></div>
                                     <div class="form-group row">
                                         <div class="col-md-9 col-sm-9  offset-md-3">
                                             <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
-                                            <button type="submit" class="btn btn-success">Crear Administrador</button>
+                                            <button type="submit" class="btn btn-success">Crear Recepcionista</button>
                                         </div>
                                     </div>
 
@@ -159,16 +169,20 @@
                     </thead>
                     <tbody>
 
-                        {% for administrador in administradores %}
-                        <tr>
-                            <td>{{administrador.id_administrador}}</td>
-                            <td>{{administrador.nombres}}</td>
-                            <td>{{administrador.apellidos}}</td>
-                            <td>{{administrador.telefono}}</td>
-                            <td>{{administrador.correo}}</td>
-                            <td><a>Eliminar</a><a>Editar</a></td>
-                        </tr>
-                        {% endfor %}
+                        {% if estudiantes %}
+                            {% for recepcionista in estudiantes %}
+                            <tr>
+                                <td>{{recepcionista.id_estudiante}}</td>
+                                <td>{{recepcionista.nombres}}</td>
+                                <td>{{recepcionista.apellidos}}</td>
+                                <td>{{recepcionista.telefono}}</td>
+                                <td>{{recepcionista.correo}}</td>
+                                <td><a>Eliminar</a><a>Editar</a></td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                        
 
 
                     </tbody>
@@ -188,9 +202,6 @@
 
 
 
-
-{% endblock %}
-
 {% block scripts_final %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -198,7 +209,7 @@
         nav_grupo.classList.add('active');
         const bloque = document.querySelector('#nav_grupo_usuarios ul');
         bloque.setAttribute('style', 'display: block;')
-        const nav_administradores = document.getElementById('nav_administradores');
+        const nav_administradores = document.getElementById('nav_recepcionistas');
         nav_administradores.classList.add('current-page');
     });
 </script>
@@ -243,4 +254,5 @@
 <script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
 <script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
 <script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+{% endblock %}
 {% endblock %}

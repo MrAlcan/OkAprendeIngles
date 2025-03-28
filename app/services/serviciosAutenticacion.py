@@ -14,7 +14,7 @@ def no_iniciar_sesion(f):
         try:
             verify_jwt_in_request()
             current_user = get_jwt_identity()
-            print(current_user)
+            #print(current_user)
             if str(current_user) == 'administrador':
                 return redirect(url_for('administrador_bp.vista_inicio'))
             if str(current_user) == 'recepcionista':
@@ -32,24 +32,24 @@ def token_requerido(f):
     def wrapper(*args, **kwargs):
         cookie_cabecera = request.headers['Cookie'].split('; ')
         ruta = str(request.path)
-        print(f"ruta: {ruta}")
+        #print(f"ruta: {ruta}")
         rol_vista = ruta.split('/')[1]
-        print(f"rol_vista : {rol_vista}")
-        print(cookie_cabecera)
+        #print(f"rol_vista : {rol_vista}")
+        #print(cookie_cabecera)
         ac_co_tok = cookie_cabecera[0].split('=')
         csrf_tok = cookie_cabecera[1].split('=')
         cuerpo_token = {
             f'{ac_co_tok[0]}': f'{ac_co_tok[1]}',
             f'{csrf_tok[0]}': f'{csrf_tok[1]}'
         }
-        print(cuerpo_token['access_token_cookie'])
+        #print(cuerpo_token['access_token_cookie'])
         
         try:
             data = jwt.decode(cuerpo_token['access_token_cookie'], os.environ.get('SECRET_KEY'), algorithms=['HS256'])
             if str(data['rol']) != str(rol_vista):
                 direccion = str(data['rol']) + '_bp.vista_inicio'
                 return redirect(url_for(direccion))
-            print(data['sub'])
+            #print(data['sub'])
             #user_id = data['sub']['id_usuario']
             #datos_usuario = data['sub']
             datos_usuario = {
