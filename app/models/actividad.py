@@ -19,3 +19,4 @@ class Actividad(db.Model):
         self.descripcion = descripcion
         self.nivel = nivel
         self.cupos_disponibles = cupos
+        

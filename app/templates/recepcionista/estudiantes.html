@@ -1,4 +1,4 @@
-{% extends 'administrador/plantilla.html' %}
+{% extends 'recepcionista/plantilla.html' %}
 
 {% block cabecera %}
 
@@ -48,10 +48,10 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-label-left input_mask" action="/administrador/estudiantes/crear" method="POST" enctype="multipart/form-data">
+                                <form class="form-label-left input_mask" action="/recepcionista/estudiantes/crear" method="POST" enctype="multipart/form-data">
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres"
+                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres" 
                                             pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
                                             title="Solo se permiten letras y una sola separación por palabras"
                                             onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
@@ -59,7 +59,7 @@
                                     </div>
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
-                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos"
+                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos" 
                                             pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
                                             title="Solo se permiten letras y una sola separación por palabras"
                                             onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
@@ -67,7 +67,7 @@
                                     </div>
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
-                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo"
+                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo" 
                                             pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                             title="Ingrese un correo válido con @" 
                                             onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')" required>
@@ -75,19 +75,19 @@
                                     </div>
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
-                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono"
+                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono" 
                                             pattern="[0-9]{8}" title="Solo números de 8 dígitos"
                                             onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')" required>
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
+                                        <label class="col-form-label col-md-3 col-sm-3">Nombre de Usuario</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
-                                                pattern="^[a-zA-Z_]+$"
-                                                title="Solo se permiten letras y barra baja (_)"
-                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
+                                            <input type="text" class="form-control" placeholder="NOMBRE.USUARIO" name="nombre_usuario" 
+                                                pattern="^[A-Z]+(?:\.[A-Z]+)*$"
+                                                title="Solo mayúsculas y se permite separar con '.'"
+                                                onfocus="this.setAttribute('title', 'Ingrese solo mayúsculas separadas con punto (.)')" required>
                                         </div>
                                     </div>
 
@@ -96,16 +96,17 @@
                                         <div class="col-md-6 col-sm-6">
                                             <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
                                         </div>
+                                        
                                         <div class="col-md-3 col-sm-3">
                                             <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
-                                                <option value="LP" {% if administrador.extension == 'LP' %} selected {% endif %}>LP</option>
-                                                <option value="CBBA" {% if administrador.extension == 'CBBA' %} selected {% endif %}>CBBA</option>
-                                                <option value="SCZ" {% if administrador.extension == 'SCZ' %} selected {% endif %}>SCZ</option>
-                                                <option value="PT" {% if administrador.extension == 'PT' %} selected {% endif %}>PT</option>
-                                                <option value="OR" {% if administrador.extension == 'OR' %} selected {% endif %}>OR</option>
-                                                <option value="TJ" {% if administrador.extension == 'TJ' %} selected {% endif %}>TJ</option>
-                                                <option value="PN" {% if administrador.extension == 'PN' %} selected {% endif %}>PN</option>
-                                                <option value="BN" {% if administrador.extension == 'BN' %} selected {% endif %}>BN</option>
+                                                <option value="LP">LP</option>
+                                                <option value="CBBA">CBBA</option>
+                                                <option value="SCZ">SCZ</option>
+                                                <option value="PT">PT</option>
+                                                <option value="OR">OR</option>
+                                                <option value="TJ">TJ</option>
+                                                <option value="PN">PN</option>
+                                                <option value="BN">BN</option>
                                             </select>
                                         </div>
                                     </div>
@@ -169,39 +170,40 @@
                                             </select>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Número de Cuenta</label>
+                                        <label class="col-form-label col-md-3 col-sm-3">Número de Cuenta</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="number" class="form-control" placeholder="Ejemplo: 10000" name="numero_cuenta" min="1" title="Ingresa solo números para el número de contrato">
+                                            <input type="number" class="form-control" placeholder="Número de Cuenta" name="numero_cuenta" min="1"
+                                                title="Ingrese solo números EJ. ">
                                         </div>
                                     </div>
-
+                                    
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Número de Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="number" class="form-control" placeholder="Ejemplo: 266" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 123456" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
                                         </div>
                                     </div>
                                     
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Inicio del Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="date" class="form-control" name="inicio_contrato" title="Selecciona la fecha de inicio del contrato">
+                                            <input type="date" class="form-control" name="fecha_inicio_contrato" title="Selecciona la fecha de inicio del contrato">
                                         </div>
                                     </div>
                                     
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Expiración del Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="date" class="form-control" name="fin_contrato" title="Selecciona la fecha de expiración del contrato">
+                                            <input type="date" class="form-control" name="fecha_expiracion_contrato" title="Selecciona la fecha de expiración del contrato">
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input class="form-control" type="password" id="password1" name="contrasena" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" title="Minimo 8 Caracteres Incluyento por lo menos una Letra Mayuscula y una Minuscula, un Numero y un caracter Especial" required />
+                                            <input class="form-control" type="password" id="password1" name="contrasena" pattern="\d{8,}" title="Debe contener solo números y tener al menos 8 dígitos" required />
                                             
                                             <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()" >
                                                 <i id="slash" class="fa fa-eye-slash"></i>
@@ -209,7 +211,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="ln_solid"></div>
                                     <div class="form-group row">
                                         <div class="col-md-9 col-sm-9  offset-md-3">
@@ -289,22 +291,20 @@
     });
 </script>
 <script>
-    function hideshow(){
+    function hideshow() {
         var password = document.getElementById("password1");
         var slash = document.getElementById("slash");
         var eye = document.getElementById("eye");
-        
-        if(password.type === 'password'){
+
+        if (password.type === 'password') {
             password.type = "text";
+            slash.style.display = "none";
+            eye.style.display = "block";
+        } else {
+            password.type = "password";
             slash.style.display = "block";
             eye.style.display = "none";
         }
-        else{
-            password.type = "password";
-            slash.style.display = "none";
-            eye.style.display = "block";
-        }
-
     }
 </script>
 

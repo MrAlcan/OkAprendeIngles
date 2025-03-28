@@ -1,31 +1,108 @@
-{% extends 'administrador/plantilla.html' %}
+{% extends 'recepcionista/plantilla.html' %}
 
 {% block cabecera %}
-    
     <link rel="stylesheet" href="{{url_for('static',filename='assets/css/slicknav.min.css')}}">
+    <style>
+        @keyframes cambio-color {
+            0% { background: linear-gradient(to right, #daf105, #bd6f0a); }
+            50% { background: linear-gradient(to right, #bd6f0a, #daf105); }
+            100% { background: linear-gradient(to right, #daf105, #bd6f0a); }
+        }
 
-    
+        .inicio-container {
+            text-align: center;
+            padding: 50px 20px;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            animation: cambio-color 6s infinite alternate ease-in-out;
+        }
+
+        .inicio-container h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .inicio-container p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .btn-reservar {
+            background: #0288d1;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-reservar:hover {
+            background: #0277bd;
+        }
+
+        .beneficios {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .beneficio {
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .beneficio img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .beneficio p {
+            font-size: 16px;
+        }
+    </style>
 {% endblock %}
 
 {% block titulo_contenido %}
-    <h3>Inicio</h3>
+    <h3>Panel de Recepción</h3>
 {% endblock %}
 
 {% block contenido %}
+    <div class="inicio-container">
+        <h2>¡Tu esfuerzo garantiza el mejor servicio!</h2>
+        <p>Gracias a ti, cada reserva se gestiona con compromiso y dedicación.</p>
+        <a class="btn-reservar">Gestionar reservas</a>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia ad vero deleniti provident saepe, a ratione, nulla totam aliquid id amet doloremque voluptatum, ea magni odit iure itaque error eius?</p>
-    
-
-
-
-
-
-
+        <div class="beneficios">
+            <div class="beneficio">
+                <p>📅 Organización impecable</p>
+            </div>
+            <div class="beneficio">
+                <p>📞 Atención eficiente</p>
+            </div>
+            <div class="beneficio">
+                 <p>😊 Compromiso con cada cliente</p>
+            </div>
+            <div class="beneficio">
+                <p>🔍 Gestión detallada</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const nav_inicio = document.getElementById('nav_inicio');
-            nav_inicio.classList.add('current-page');  
+            const nav_recepcionista = document.getElementById('nav_recepcionista');
+            if (nav_recepcionista) {
+                nav_recepcionista.classList.add('current-page');
+            }
         });
     </script>
 {% endblock %}
+

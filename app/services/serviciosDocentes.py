@@ -14,7 +14,8 @@ from datetime import datetime, timedelta
 
 class ServiciosDocente():
 
-    def crear(correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, color):
+
+    def crear(correo, nombres, apellidos, carnet, telefono, asignacion_tutor, dias, horas_inicio, horas_final, color, extension):
         try:
             primer_nombre = str(nombres).split(' ')[0]
             primer_apellido = str(apellidos).split(' ')[0]
@@ -44,7 +45,8 @@ class ServiciosDocente():
                             break
 
 
-            nuevo_docente = Docente(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor)
+            nuevo_docente = Docente(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, color, asignacion_tutor, extension)
+
             db.session.add(nuevo_docente)
             db.session.commit()
 

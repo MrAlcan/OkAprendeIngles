@@ -36,6 +36,7 @@ def create_app(config_class=Config):
     from app.routes.recepcionista import recepcionista_bp
     from app.routes.inicio import inicio_bp
     from app.routes.autenticacion import autenticar_bp
+    from app.routes.actividad import actividad_bp
 
     '''@app.before_request
     def verificar_cookie():
@@ -57,7 +58,7 @@ def create_app(config_class=Config):
     app.register_blueprint(recepcionista_bp, url_prefix='/recepcionista')
     app.register_blueprint(inicio_bp, url_prefix='/inicio')
     app.register_blueprint(autenticar_bp, url_prefix='/autenticacion')
-
+    app.register_blueprint(actividad_bp, url_prefix='/actividad')
 
 
 

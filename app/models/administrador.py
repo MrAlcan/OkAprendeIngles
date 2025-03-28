@@ -14,8 +14,8 @@ class Administrador(Usuario):
         'polymorphic_identity': 'administrador'
     }
 
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal):
-        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='administrador')
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal, extension):
+        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='administrador', extension=extension)
         self.telefono_personal = telefono_personal
     
     def modificar_usuario(self, usuario, nuevos_datos: dict):

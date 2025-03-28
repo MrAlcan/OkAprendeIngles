@@ -11,6 +11,7 @@ from datetime import datetime, timedelta, date
 
 class ServiciosEstudiante():
 
+
     def obtener_datos_sesion(sesion, estudiante):
 
         datos_sesion = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.id_estudiante == estudiante).first()
@@ -32,7 +33,7 @@ class ServiciosEstudiante():
         else:
             return None, None
 
-    def crear(correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel):
+    def crear(correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato):
 
 
         primer_nombre = str(nombres).split(' ')[0]
@@ -63,7 +64,8 @@ class ServiciosEstudiante():
                         break
 
 
-        estudiante = Estudiante(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel)
+        estudiante = Estudiante(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato)
+
 
         db.session.add(estudiante)
         db.session.commit()

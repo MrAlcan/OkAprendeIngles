@@ -1,31 +1,108 @@
 {% extends 'docente/plantilla.html' %}
 
 {% block cabecera %}
-    
     <link rel="stylesheet" href="{{url_for('static',filename='assets/css/slicknav.min.css')}}">
+    <style>
+        @keyframes cambio-color {
+            0% { background: linear-gradient(to right, #4A90E2, #50E3C2); }
+            50% { background: linear-gradient(to right, #50E3C2, #4A90E2); }
+            100% { background: linear-gradient(to right, #4A90E2, #50E3C2); }
+        }
 
-    
+        .inicio-container {
+            text-align: center;
+            padding: 50px 20px;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            animation: cambio-color 6s infinite alternate ease-in-out;
+        }
+
+        .inicio-container h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .inicio-container p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .btn-docente {
+            background: #FFD700;
+            color: #333;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-docente:hover {
+            background: #FFC107;
+        }
+
+        .beneficios {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .beneficio {
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .beneficio img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .beneficio p {
+            font-size: 16px;
+        }
+    </style>
 {% endblock %}
 
 {% block titulo_contenido %}
-    <h3>Inicio</h3>
+    <h3>Panel de Docentes</h3>
 {% endblock %}
 
 {% block contenido %}
+    <div class="inicio-container">
+        <h2>¡Gracias por hacer de OK Aprende Inglés lo que es hoy!</h2>
+        <p>Ustedes son la base del aprendizaje, cada lección que imparten deja huella en nuestros estudiantes.</p>
+        <a class="btn-docente">Ver mis clases</a>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia ad vero deleniti provident saepe, a ratione, nulla totam aliquid id amet doloremque voluptatum, ea magni odit iure itaque error eius?</p>
-    
-
-
-
-
-
-
+        <div class="beneficios">
+            <div class="beneficio">
+                <p>📖 Compartiendo conocimiento</p>
+            </div>
+            <div class="beneficio">
+                <p>🌟 Inspirando a cada estudiante</p>
+            </div>
+            <div class="beneficio">
+                 <p>🎯 Enseñanza con pasión</p>
+            </div>
+            <div class="beneficio">
+                <p>📝 Creciendo juntos</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const nav_inicio = document.getElementById('nav_inicio');
-            nav_inicio.classList.add('current-page');  
+            const nav_docente = document.getElementById('nav_docente');
+            if (nav_docente) {
+                nav_docente.classList.add('current-page');
+            }
         });
     </script>
 {% endblock %}
+

@@ -1,5 +1,15 @@
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for, send_from_directory, current_app
 
+from app.services.serviciosAdministrador import serviciosAdministrador
+from app.services.serviciosRecepcionista import ServiciosRecepcionista
+
+from app.services.serviciosUsuario import ServiciosUsuario
+from app.services.serviciosSesion import ServiciosSesion
+from app.services.serviciosEstudiante import ServiciosEstudiante
+from datetime import datetime
+
+
+
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 from app.services.serviciosDocentes import ServiciosDocente
 
@@ -30,8 +40,16 @@ def convert_to_jpg(image):
         return img
     return image
 
+
 docente_bp = Blueprint('docente_bp', __name__)
 
+@docente_bp.route('/obtener_todos', methods=['GET'])
+@token_requerido
+def obtener_administradores(datos_usuario):
+    administradores = serviciosAdministrador.obtener_todos()
+    #print(administradores)
+    #return jsonify({'mensaje': administradores}), 201
+    return render_template('administrador/tabla_muestra.html', datos = administradores)
 
 @docente_bp.route('/inicio', methods=['GET'])
 @token_requerido
@@ -42,13 +60,16 @@ def vista_inicio(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
     return render_template('docente/inicio.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
+
 @docente_bp.route('/sesiones', methods=['GET'])
 @token_requerido
 def vista_lista_sesiones(datos_usuario):
+
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
+
 
     id_docente = datos_usuario['id_usuario']
 
@@ -60,10 +81,12 @@ def vista_lista_sesiones(datos_usuario):
 @docente_bp.route('/sesiones/ver/<id>', methods=['GET'])
 @token_requerido
 def vista_sesion_por_id(datos_usuario, id):
+
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
+
 
     id_docente = datos_usuario['id_usuario']
 
@@ -328,3 +351,4 @@ def download_file_h(filename):
         return send_from_directory(file_path, path=filename, as_attachment=False)
 
     return jsonify({"error": "File not found"}), 404
+

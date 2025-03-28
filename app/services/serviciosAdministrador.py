@@ -11,7 +11,8 @@ from datetime import date, datetime, timedelta
 
 class serviciosAdministrador():
 
-    def crear(correo, nombres, apellidos, carnet, telefono, telefono_personal):
+
+    def crear(correo, nombres, apellidos, carnet, telefono, telefono_personal, extension):
         try:
             primer_nombre = str(nombres).split(' ')[0]
             primer_apellido = str(apellidos).split(' ')[0]
@@ -40,7 +41,8 @@ class serviciosAdministrador():
                             nombre_usuario = nombre_usuario_n
                             break
 
-            nuevo_administrador = Administrador(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_personal)
+            nuevo_administrador = Administrador(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_personal, extension)
+
             db.session.add(nuevo_administrador)
             db.session.commit()
             return {"status": "success", "message": "Administrador creado exitosamente"}
@@ -51,7 +53,7 @@ class serviciosAdministrador():
         
     def obtener_todos():
         datos = Administrador.query.filter_by(activo = 1)
-        datos_requeridos = ['id_administrador', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal']
+        datos_requeridos = ['id_administrador', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'telefono_personal', 'extension']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
     
@@ -68,6 +70,36 @@ class serviciosAdministrador():
                 return "contrasena no coincide"
         else:
             return "no se encontro el administrador"
+
+
+    def actualizar(id_administrador, nombre_usuario, correo, nombres, apellidos, carnet, telefono):
+        try:
+
+            administrador = Administrador.query.get(id_administrador)
+            administrador.nombre_usuario = nombre_usuario
+            administrador.correo = correo
+            administrador.nombres = nombres
+            administrador.apellidos = apellidos
+            administrador.carnet_identidad = carnet
+            administrador.telefono = telefono
+            
+            db.session.commit()
+
+            return {"status": "success", "message": "Administradores modificados exitosamente"}
+    
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"status": "error", "message": str(e)}
+    
+    def eliminar(id_administrador):
+        administrador = Administrador.query.get(id_administrador)
+
+        if administrador:
+            administrador.activo = 0
+            db.session.commit()
+        return {"status": "success", "message": "Administrador eliminado exitosamente"}
+
+
     
     def obtener_fechas_siguientes():
         hoy = datetime.now()
@@ -171,3 +203,4 @@ class serviciosAdministrador():
         db.session.add(nuevo_detalle)
         db.session.commit()
         return True
+

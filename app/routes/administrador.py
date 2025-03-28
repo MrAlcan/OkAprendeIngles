@@ -38,6 +38,9 @@ def vista_lista_usuarios(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
     return render_template('administrador/usuarios.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, usuarios = usuarios)
 
+
+
+
 @administrador_bp.route('/usuarios/habilitar/<id>', methods=['GET'])
 @token_requerido
 def habilitar_usuario(datos_usuario, id):
@@ -65,7 +68,9 @@ def vista_lista_administradores(datos_usuario):
 @token_requerido
 def crear_administrador(datos_usuario):
     datos = request.form
-    nuevo_administrador = serviciosAdministrador.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+
+    nuevo_administrador = serviciosAdministrador.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'], datos['departamento_carnet'])
+
     if nuevo_administrador:
         return redirect(url_for('administrador_bp.vista_lista_administradores'))
     else:
@@ -79,13 +84,15 @@ def vista_lista_recepcionistas(datos_usuario):
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('administrador/recepcionistas.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, recepcionistas = recepcionistas)
+    return render_template('administrador/recepcionistas.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, recepcionistas = recepcionistas, administrador=datos_usuario)
 
 @administrador_bp.route('/crear/recepcionista', methods=['POST'])
 @token_requerido
 def crear_recepcionista(datos_usuario):
     datos = request.form
-    nuevo_administrador = ServiciosRecepcionista.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
+
+    nuevo_administrador = ServiciosRecepcionista.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'], 'LP')
+
     if nuevo_administrador:
         return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
     else:
@@ -129,7 +136,9 @@ def crear_docente(datos_usuario):
     horas_final_ordenados = sorted(horas_final, key=lambda x: x[0])
     lista_horas_final = [valor for hora, valor in horas_final_ordenados]
 
-    nuevo_docente = ServiciosDocente.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'])
+
+    nuevo_docente = ServiciosDocente.crear(datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'], datos['departamento_carnet'])
+    print(nuevo_docente)
 
     #nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
     #if nuevo_administrador:
@@ -217,8 +226,33 @@ def eliminar_docente(datos_usuario, id):
     docente = ServiciosDocente.eliminar(id)
     return redirect(url_for('administrador_bp.vista_lista_docentes'))
 
+@administrador_bp.route('/editar/recepcionista/<id>', methods=['POST'])
+@token_requerido
+def editar_recepcionista(datos_usuario, id):
+    datos = request.form
+    recepcionista = ServiciosRecepcionista.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
 
+    return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
 
+@administrador_bp.route('/recepcionista/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_recepcionista(datos_usuario, id):
+    recepcionista = ServiciosRecepcionista.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_recepcionistas'))
+
+@administrador_bp.route('/editar/administrador/<id>', methods=['POST'])
+@token_requerido
+def editar_administrador(datos_usuario, id):
+    datos = request.form
+    administrador = serviciosAdministrador.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'])
+
+    return redirect(url_for('administrador_bp.vista_lista_administradores'))
+
+@administrador_bp.route('/administradores/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_administrador(datos_usuario, id):
+    administrador = serviciosAdministrador.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_administradores'))
 
 # ----------------------- GESTION SESIONES ----------------------------------
 
@@ -335,7 +369,7 @@ def vista_lista_estudiantes(datos_usuario):
 
     estudiantes = ServiciosEstudiante.obtener_todos()
 
-    return render_template('administrador/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes)
+    return render_template('administrador/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes, administrador=datos_usuario)
 
 
 @administrador_bp.route('/estudiantes/crear', methods = ['POST'])
@@ -351,7 +385,15 @@ def crear_estudiante(datos_usuario):
                                            datos['telefono_titular'],
                                            datos['nombres_titular'],
                                            datos['nombre_nivel'],
-                                           datos['rango_nivel'])
+                                           datos['rango_nivel'],
+                                           datos['departamento_carnet'],
+                                           datos.get('ocupacion_tutor', ''),  
+                                           datos.get('parentesco_tutor', ''),
+                                           datos.get('numero_cuenta', ''),
+                                           datos.get('numero_contrato', ''),
+                                           datos.get('inicio_contrato', ''),
+                                           datos.get('fin_contrato', '')
+                                           )
     
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 

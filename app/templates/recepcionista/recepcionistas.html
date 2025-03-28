@@ -1,4 +1,4 @@
-{% extends 'administrador/plantilla.html' %}
+{% extends 'recepcionista/plantilla.html' %}
 
 {% block cabecera %}
 
@@ -48,7 +48,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-label-left input_mask" action="/administrador/crear/recepcionista" method="POST" enctype="multipart/form-data">
+                                <form class="form-label-left input_mask" action="/rececionista/crear/recepcionista" method="POST" enctype="multipart/form-data">
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
                                         <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres"
@@ -82,13 +82,14 @@
                                     </div>
 
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3">Nombre de Usuario</label>
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="text" class="form-control" 
-                                                   placeholder="Nombre de Usuario" name="nombre_usuario" value="{{ administrador.nombre_usuario }}">
+                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
+                                                pattern="^[a-zA-Z_]+$"
+                                                title="Solo se permiten letras y barra baja (_)"
+                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
                                         </div>
                                     </div>
-
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
@@ -109,7 +110,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Telefono Personal</label>
                                         <div class="col-md-9 col-sm-9">
@@ -168,6 +168,17 @@
                                     </div>
 
                                 </form>
+                                <!-- MODAL DE ÉXITO -->
+                                    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-body text-center">
+                                                    <i class="fa fa-check-circle" style="font-size: 50px; color: green;"></i>
+                                                    <h4 class="mt-3">¡Usuario registrado con éxito!</h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 
                             </div>
                             <div class="modal-footer">
@@ -208,7 +219,7 @@
                                         data-target=".modal_editar_recepcionista_{{ recepcionista.id_recepcionista }}">
                                         <i class="fa fa-edit"></i>
                                     </button>
-                                    <a href="/administrador/recepcionista/eliminar/{{ recepcionista.id_recepcionista }}">
+                                    <a href="/recepcionista/recepcionistas/eliminar/{{ recepcionista.id_recepcionista }}">
                                         <button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
                                     </a>
                                 </td>
@@ -234,7 +245,7 @@
             
                                 <div class="modal-body">
                                     <form class="form-label-left input_mask formulario_recepcionista formulario_recepcionista_editar"
-                                          action="/administrador/editar/recepcionista/{{ recepcionista.id_recepcionista }}" 
+                                          action="/recepcionista/editar/recepcionista/{{ recepcionista.id_recepcionista }}" 
                                           method="POST" enctype="multipart/form-data">
             
                                         <div class="col-md-6 col-sm-6 form-group has-feedback">
@@ -342,6 +353,21 @@
 
     }
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.querySelector("form");
+        form.addEventListener("submit", function (event) {
+            event.preventDefault(); 
+
+            
+            $("#successModal").modal("show");
+            setTimeout(() => {
+                form.submit();
+            }, 2000);
+        });
+    });
+</script>
+
 
 <!-- iCheck -->
 <script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
