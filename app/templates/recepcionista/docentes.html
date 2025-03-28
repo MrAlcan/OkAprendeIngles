@@ -86,13 +86,11 @@
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row" hidden>
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
                                         <div class="col-md-9 col-sm-9">
                                             <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
-                                                pattern="^[a-zA-Z_]+$"
-                                                title="Solo se permiten letras y barra baja (_)"
-                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
+                                                value="a" hidden>
                                         </div>
                                     </div>
 
@@ -132,15 +130,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
+                                    <div class="form-group row" hidden>
+                                        <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="">*</span></label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input class="form-control" type="password" id="password1" name="contrasena" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" title="Minimo 8 Caracteres Incluyento por lo menos una Letra Mayuscula y una Minuscula, un Numero y un caracter Especial" required />
+                                            <input class="form-control" type="password" id="password1" name="contrasena" value="a" hidden/>
                                             
-                                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()" >
-                                                <i id="slash" class="fa fa-eye-slash"></i>
-                                                <i id="eye" class="fa fa-eye"></i>
-                                            </span>
+                                            
                                         </div>
                                     </div>
 
@@ -208,6 +203,7 @@
                             <th>Id</th>
                             <th>Nombres</th>
                             <th>Apellidos</th>
+                            <th>Carnet</th>
                             <th>Asignacion Tutor</th>
                             <th>Horarios</th>
                             <th>Opciones</th>
@@ -221,6 +217,7 @@
                                 <td>{{docente.id_docente}}</td>
                                 <td>{{docente.nombres}}</td>
                                 <td>{{docente.apellidos}}</td>
+                                <td>{{docente.carnet_identidad}}</td>
                                 <td>{{docente.asignacion_tutor}}</td>
                                 <td>
                                     {% if docente.horarios['Lunes'] %}
@@ -310,7 +307,7 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form class="form-label-left input_mask formulario_docentes formulario_docentes_editar" action="/administrador/editar/docente/{{docente.id_docente}}" method="POST" enctype="multipart/form-data">
+                                        <form class="form-label-left input_mask formulario_docentes formulario_docentes_editar" action="/recepcionista/editar/docente/{{docente.id_docente}}" method="POST" enctype="multipart/form-data">
 
                                             <input type="text" class="input_horarios_eliminados" name="input_horarios_eliminados" value="NULL" hidden>
         
@@ -394,11 +391,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -421,11 +418,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -449,11 +446,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -477,11 +474,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -505,11 +502,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -533,11 +530,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -561,11 +558,11 @@
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_inicio']}}">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
                                                             </div>
                                                             <label class="col-form-label col-md-1 col-sm-1">Final:</label>
                                                             <div class="col-md-2 col-sm-2">
-                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="08:00" max="22:00" step="3600" class="form-control" value="{{horario['hora_final']}}">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="3180" class="form-control" value="{{horario['hora_final']}}">
                                                             </div>
                                                             <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
                                                         </div>
@@ -582,7 +579,6 @@
                                                 <div class="col-md-9 col-sm-9  offset-md-3">
                                                     <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
                                                     <button type="submit" class="btn btn-success">Guardar cambios</button>
-                                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
                                                 </div>
                                             </div>
         
@@ -710,7 +706,7 @@
             input_t_inicio.name = "h_inicio_" + contador;
             input_t_inicio.min = "07:30";
             input_t_inicio.max = "22:00";
-            input_t_inicio.step = "3600";
+            input_t_inicio.step = "1800";
             input_t_inicio.classList.add("form-control");
 
             contenedor_t_inicio.appendChild(input_t_inicio);
@@ -732,7 +728,7 @@
             input_t_ifinal.name = "h_final_" + contador;
             input_t_ifinal.min = "07:30";
             input_t_ifinal.max = "22:00";
-            input_t_ifinal.step = "3600";
+            input_t_ifinal.step = "1800";
             input_t_ifinal.classList.add("form-control");
 
             contenedor_t_final.appendChild(input_t_ifinal);

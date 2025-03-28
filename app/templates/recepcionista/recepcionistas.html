@@ -48,7 +48,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-label-left input_mask" action="/rececionista/crear/recepcionista" method="POST" enctype="multipart/form-data">
+                                <form class="form-label-left input_mask" action="/recepcionista/crear/recepcionista" method="POST" enctype="multipart/form-data">
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
                                         <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres"
@@ -81,13 +81,11 @@
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row" hidden>
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
                                         <div class="col-md-9 col-sm-9">
                                             <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
-                                                pattern="^[a-zA-Z_]+$"
-                                                title="Solo se permiten letras y barra baja (_)"
-                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
+                                                value="a" hidden>
                                         </div>
                                     </div>
 
@@ -119,18 +117,13 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row" hidden>
                                         <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
                                             <input class="form-control" type="password" id="password1" name="contrasena"
-                                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}"
-                                                title="Mínimo 8 caracteres, incluyendo al menos una letra mayúscula, una minúscula, un número y un carácter especial"
-                                                onfocus="this.setAttribute('title', 'Debe contener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial')" required>
+                                                value="a" hidden>
                                             
-                                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()">
-                                                <i id="slash" class="fa fa-eye-slash"></i>
-                                                <i id="eye" class="fa fa-eye"></i>
-                                            </span>
+                                            
                                         </div>
                                     </div>
                                     <!--div class="form-group row">
@@ -198,6 +191,7 @@
                             <th>Nombres</th>
                             <th>Apellidos</th>
                             <th>Telefono</th>
+                            <th>Carnet</th>
                             <th>Correo</th>
                             <th>Nombre de Usuario</th>
                             <th>Opciones</th>
@@ -212,6 +206,7 @@
                                 <td>{{ recepcionista.nombres }}</td>
                                 <td>{{ recepcionista.apellidos }}</td>
                                 <td>{{ recepcionista.telefono }}</td>
+                                <td>{{recepcionista.carnet_identidad}}</td>
                                 <td>{{ recepcionista.correo }}</td>
                                 <td>{{ recepcionista.nombre_usuario }}</td>
                                 <td>
