@@ -1,4 +1,8 @@
 from app.models.administrador import Administrador
+from app.models.estudiante import Estudiante
+from app.models.sesion import Sesion
+from app.models.detalleSesion import DetalleSesion
+
 from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
@@ -99,3 +103,71 @@ class serviciosAdministrador():
                 fechas_posibles.append(cuerpo)
             
         return fechas_posibles
+
+    def obtener_estudiantes_para_sesion(id_sesion):
+        sesion = Sesion.query.filter(Sesion.activo==1, Sesion.id_sesion==id_sesion).first()
+
+        if sesion:
+            if int(sesion.cupos_disponibles)>0:
+                seccion_sesion = sesion.seccion
+                rango = sesion.nivel
+                nivel_superior = 0
+                nivel_inferior = 0
+                if rango!='0':
+                    nivel_superior = int(str(rango).split('-')[1])
+                    nivel_inferior = int(str(rango).split('-')[0]) - 1
+                
+                estudiantes_inscritos = []
+                detalle_sesion = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==id_sesion).all()
+                if detalle_sesion:
+                    for detalle in detalle_sesion:
+                        id_est = detalle.id_estudiante
+                        estudiantes_inscritos.append(id_est)
+                
+                estudiantes = None
+                if seccion_sesion == 'Welcome':
+                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.welcome_completado==0).all()
+                elif seccion_sesion == 'Working':
+                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.working_completado<nivel_superior, Estudiante.working_completado>=nivel_inferior).all()
+                elif seccion_sesion == 'Essential':
+                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.essential_completado<nivel_superior, Estudiante.essential_completado>=nivel_inferior).all()
+                else:
+                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.speakout_completado<nivel_superior, Estudiante.speakout_completado>=nivel_inferior).all()
+                
+
+                estudiantes_disponibles = []
+
+                datos_requeridos = ['id_estudiante', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'celular_titular', 'nombres_titular', 'nombre_nivel', 'rango_nivel', 'speakout_completado', 'working_completado', 'essential_completado', 'welcome_completado', 'activo']
+
+                if estudiantes:
+                    for estud in estudiantes:
+                        id_est = estud.id_estudiante
+                        if id_est not in estudiantes_inscritos:
+                            
+                            respuesta = SerializadorUniversal.serializar_unico(dato= estud, campos_requeridos= datos_requeridos)
+                            estudiantes_disponibles.append(respuesta)
+                    return estudiantes_disponibles
+                else:
+                    return None
+
+            else:
+                return None
+
+        else:
+            return None
+
+
+
+    def agregar_estudiante_manualmente(id_sesion, id_estudiante):
+        sesion = Sesion.query.get(id_sesion)
+
+        cupos = int(sesion.cupos_disponibles) - 1
+        sesion.cupos_disponibles = cupos
+
+        seccion = sesion.seccion
+
+        nuevo_detalle = DetalleSesion(id_sesion, id_estudiante, seccion)
+
+        db.session.add(nuevo_detalle)
+        db.session.commit()
+        return True

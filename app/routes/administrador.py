@@ -452,6 +452,24 @@ def vista_sesion_por_id(datos_usuario, id):
     print(detalle_sesion)
 
     detalle_tarea = ServiciosDocente.obtener_detalle_tareas_por_sesion(id)
+
+    estudiantes_disponibles = serviciosAdministrador.obtener_estudiantes_para_sesion(id)
     
 
-    return render_template("administrador/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion=detalle_sesion, tarea=tareas, detalle_tareas=detalle_tarea)
+    return render_template("administrador/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion=detalle_sesion, tarea=tareas, detalle_tareas=detalle_tarea, estudiantes_disponibles = estudiantes_disponibles)
+
+@administrador_bp.route('/sesiones/agregar/estudiante/<id>', methods=['POST'])
+@token_requerido
+def agregar_estudiante_manualmente(datos_usuario, id):
+    id_est = request.form['estudiante']
+
+    referer = request.referrer
+
+    agregado = serviciosAdministrador.agregar_estudiante_manualmente(id, id_est)
+
+
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('administrador_bp.vista_lista_sesiones'))
