@@ -1,0 +1,483 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+    <!-- FullCalendar -->
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.print.css')}}" rel="stylesheet" media="print">
+
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Detalle de la Sesión de 
+    {% if sesion %}
+        {{sesion.seccion}}
+    {% endif %}
+</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                
+                <p class="text-muted font-13 m-b-30">
+                    Tabla de Sesiones
+                </p>
+  
+
+                <div class="col-md-12 col-sm-12  ">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            {% if sesion %}
+                                <div class="row">
+                                    <div class="col-6"><h2>Seccion: {{sesion.seccion}}</h2></div>
+                                    <div class="col-6"><h2>Nivel: {{sesion.nivel}}</h2></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6"><h2>Fecha: {{sesion.fecha}}</h2></div>
+                                    <div class="col-6"><h2>Hora: {{sesion.hora}}</h2></div>
+                                </div>
+                            {% endif %}
+                            {% if detalle_sesion %}
+                                <div class="row">
+                                    <div class="col-6"><h2>Estudiantes Inscritos: {{detalle_sesion.inscritos}}</h2></div>
+                                    <div class="col-6"><h2>Estudiantes que Cancelaron: {{detalle_sesion.cancelados}}</h2></div>
+                                </div>
+                                {% if detalle_sesion.asistieron > 0 or detalle_sesion.faltaron > 0 %}
+                                    <div class="row">
+                                        <div class="col-6"><h2>Estudiantes que Asistieron: {{detalle_sesion.asistieron}}</h2></div>
+                                        <div class="col-6"><h2>Estudiantes que Faltaron: {{detalle_sesion.faltaron}}</h2></div>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="row">
+                                    <div class="col-6"><h2>Estudiantes Inscritos: 0</h2></div>
+                                </div>
+                            {% endif %}
+
+                            
+                            
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <div>
+                                <p>Agregar estudiantes a la sesion</p>
+                                {% if sesion %}
+                                    {% if sesion.cupos_disponibles > 0%}
+                                        <form class="form-label-left input_mask formulario_sesiones" action="/administrador/sesiones/agregar/estudiante/{{sesion.id_sesion}}" method="POST" enctype="multipart/form-data">
+                            
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Estudiante</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <select class="form-control select_nivel" name="estudiante" required>
+                                                        <option>Escoge una Opción</option>
+                                                        {% if estudiantes_disponibles %}
+                                                            {% for est in estudiantes_disponibles %}
+                                                                <option value="{{est.id_estudiante}}">{{est.nombres}} {{est.apellidos}}</option>
+                                                            {% endfor %}
+                                                        {% endif %}
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-md-9 col-sm-9  offset-md-3">
+                                                    <button type="submit" class="btn btn-success">Agregar</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    {% else %}
+                                        <p>Cupos llenos</p>
+                                    {% endif %}
+                                {% endif %}
+                                
+                                
+                            </div>
+
+                            <div class="col">
+                                {% if sesion.link %}
+                                    <div class="row"><p>Link para la sesión: <a href="{{sesion.link}}" target="_blank">{{sesion.link}}</a></p></div>
+                                    
+                                    
+                                {% else %}
+                                    <div class="row"><p>Sin link para la sesión disponible</p></div>
+                                    
+                                    
+                                {% endif %}
+                            </div>
+
+
+                            
+                                <div class="row">
+                                    <div class="col-8">
+                                        <p class="text-muted font-13 m-b-30">Estudiantes de la Sesión</p>
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Id</th>
+                                                    <th>Nombres</th>
+                                                    <th>Apellidos</th>
+                                                    <th>Asistio</th>
+                                                    <th>Calificación</th>
+                                                    <th>Notas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% if detalle_sesion %}
+                                                    {% if detalle_sesion.estudiantes %}
+                                                        {% for estudiante_s in detalle_sesion.estudiantes %}
+                                                            <tr>
+                                                                <td>{{estudiante_s.id_estudiante}}</td>
+                                                                <td>{{estudiante_s.nombres}}</td>
+                                                                <td>{{estudiante_s.apellidos}}</td>
+                                                                {% if estudiante_s.estado == 'Asistio' %}
+                                                                    <td><i class="fa fa-check" style="color: green;"></i></td>
+                                                                    <td>{{estudiante_s.calificacion}}</td>
+                                                                    <td>{{estudiante_s.recomendacion}}</td>
+                                                                    <!--td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" checked disabled></td>
+                                                                    <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" disabled></td>
+                                                                    <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}"></td-->
+                                                                {% elif estudiante_s.estado == 'Inscrito' %}
+                                                                    <td><i class="fa fa-minus" style="color: orange;"></i></td>
+                                                                    <td>Sin Calificación</td>
+                                                                    <td>Sin Recomendacion</td>
+                                                                {% else %}
+                                                                    <td><i class="fa fa-remove" style="color: red;"></i></td>
+                                                                    <td>0</td>
+                                                                    <td>Ninguna</td>
+                                                                    <!--td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" disabled></td>
+                                                                    <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" readonly disabled></td>
+                                                                    <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}" readonly disabled></td-->
+                                                                {% endif %}
+                                                                
+                                                                
+                                                            </tr>
+                                                        {% endfor %}
+                                                    {% endif %}
+
+                                                    {% if detalle_sesion.cancelados %}
+                                                        {% for estudiante_s in detalle_sesion.cancelados %}
+                                                            <tr>
+                                                                <td style="background-color: #990000;">{{estudiante_s.id_estudiante}}</td>
+                                                                <td>{{estudiante_s.nombres}}</td>
+                                                                <td>{{estudiante_s.apellidos}}</td>
+                                                                <td>Cancelado</td>
+                                                                <td>0</td>
+                                                                <td></td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                {% else %}
+                                                    <tr>
+                                                        <td colspan="6"><center>Ningun Estudiante Inscrito a la Sesión</center></td>
+                                                    </tr>
+                                                {% endif %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="col-4">
+                                        <div id="contenedor_imagen">
+                                            {% if sesion.imagen_url %}
+                                                <img id="image-preview" src="{{ url_for('static', filename=sesion.imagen_url) }}" alt="Imagen actual" width="300px" />
+                                            {% else %}
+                                                <p>No hay imagen disponible</p>
+                                            {% endif %}
+                                        </div>
+                                    
+                                        
+                                    </div>
+                                </div>
+
+                                
+
+                            
+
+                            <div class="col">
+                                <h2>Tarea de la Sesión</h2>
+                                <div>
+                                    {% if tarea %}
+                                        <p>{{tarea.descripcion}}</p>
+                                        {% if tarea.material_adicional %}
+                                            <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
+                                                <button class="btn btn-primary btn-sm">Descargar Archivo</button>
+                                            </a>
+                                        {% endif %}
+                                        
+                                        <br>
+                                        <p></p>
+                                        {% if detalle_tareas %}
+                                            <p class="text-muted font-13 m-b-30">Tareas Presentadas</p>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Id</th>
+                                                        <th>Nombres</th>
+                                                        <th>Apellidos</th>
+                                                        <th>Tarea</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for d_tarea in detalle_tareas %}
+                                                        <tr>
+                                                            <td>{{d_tarea.id_estudiante}}</td>
+                                                            <td>{{d_tarea.nombres}}</td>
+                                                            <td>{{d_tarea.apellidos}}</td>
+                                                            <td><a href="{{ url_for('docente_bp.download_file_h', filename=d_tarea.material_subido) }}" target="_blank">
+                                                                <button class="btn btn-primary btn-sm">Ver Archivo</button>
+                                                            </a></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        {% else %}
+                                            <p>Ningún Estudiante presento la Tarea hasta el momento </p>
+                                        {% endif %}
+                                        
+                                    {% else %}
+                                        <p>Sin tarea asignada para esta sesión</p>
+                                        
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            
+                
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade modal_agregar_link" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Link de la Sesión</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <form class="form-label-left input_mask formulario_sesiones"
+                                    action="/docente/sesiones/link/{{sesion.id_sesion}}" method="POST" enctype="multipart/form-data">
+                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Link de la Sesión</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="text" class="form-control" name="link" value="{{sesion.link or ''}}" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            
+                                            <button type="submit" class="btn btn-success">Enviar Link</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade modal_agregar_tarea" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Tarea para la Sesión</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+
+
+                                <form class="form-label-left input_mask formulario_sesiones"
+                                    action="/docente/sesiones/tarea/{{sesion.id_sesion}}" method="POST" enctype="multipart/form-data">
+                                    
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Descripción *</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            {% if tarea %}
+                                                <input type="text" class="form-control" name="descripcion" value="{{tarea.descripcion or ''}}" required>
+                                            {% else %}
+                                                <input type="text" class="form-control" name="descripcion" required>
+                                            {% endif %}
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Material Adicional</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="file" name="material">
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            
+                                            <button type="submit" class="btn btn-success">Enviar Datos Tarea</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                
+
+
+                
+
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_sesiones');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_sesiones ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_sesiones = document.getElementById('nav_sesiones_dia');
+        nav_sesiones.classList.add('current-page');
+    });
+</script>
+
+
+<script>
+    document.getElementById("image-input").addEventListener("change", function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            const contenedor_imagen = document.getElementById("contenedor_imagen");
+            reader.onload = function(e) {
+                contenedor_imagen.innerText = ""
+                const obj_imagen = document.createElement("img");
+                obj_imagen.setAttribute("width", "200px");
+                obj_imagen.src = e.target.result;
+                contenedor_imagen.appendChild(obj_imagen)
+                //document.getElementById("image-preview").src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Obtener todos los checkboxes
+        const checkboxes = document.querySelectorAll('.checkbox-asistencia');
+    
+        // Añadir un listener de cambio a cada checkbox
+        checkboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const estudianteId = checkbox.getAttribute('data-estudiante-id');
+                
+                // Obtener los inputs relacionados con este estudiante por su ID
+                const inputNota = document.getElementById(`nota-${estudianteId}`);
+                const inputRecomendacion = document.getElementById(`recomendacion-${estudianteId}`);
+    
+                // Si el checkbox está marcado, quitar el readonly
+                if (checkbox.checked) {
+                    inputNota.removeAttribute('readonly');
+                    inputRecomendacion.removeAttribute('readonly');
+                } else {
+                    // Si no está marcado, agregar el readonly
+                    inputNota.setAttribute('readonly', true);
+                    inputRecomendacion.setAttribute('readonly', true);
+                }
+            });
+        });
+    });
+</script>
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+
+<!-- FullCalendar -->
+<script src="{{url_for('static', filename='vendors/moment/min/moment.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+{% endblock %}

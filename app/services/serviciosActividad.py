@@ -10,6 +10,7 @@ class ServiciosActividad():
         try:
             nueva_actividad = Actividad(fecha, hora, docente, descripcion, nivel, cupos)
             db.session.add(nueva_actividad)
+            print(nueva_actividad.__dict__)
             db.session.commit()
             return {"status": "success", "message": "Actividad creado exitosamente"}
     
@@ -30,7 +31,7 @@ class ServiciosActividad():
         return respuesta
 
     def obtener_por_docente(id_docentesdasdas):
-        datos = Actividad.query.filter_by(id_docente = id_docentesdasdas)
+        datos = Actividad.query.filter_by(id_docente=id_docente).all()
         datos_requeridos = ['id_actividad', 'fecha', 'hora', 'id_docente', 'descripcion', 'nivel', 'cupos_disponibles']
         respuesta = SerializadorUniversal.serializar_lista(datos=datos, campos_requeridos= datos_requeridos)
         return respuesta

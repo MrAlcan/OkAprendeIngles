@@ -12,8 +12,8 @@ class Recepcionista(Usuario):
         'polymorphic_identity': 'recepcionista'
     }
 
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal):
-        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='recepcionista')
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_personal, extension):
+        super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='recepcionista', extension=extension)
         self.telefono_personal = telefono_personal
     
     def modificar_usuario(self, usuario, nuevos_datos: dict):

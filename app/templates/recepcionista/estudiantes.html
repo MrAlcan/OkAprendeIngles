@@ -1,0 +1,330 @@
+{% extends 'recepcionista/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Estudiantes Registrados en el Sistema</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                <p class="text-muted font-13 m-b-30">
+                    Tabla de Usuarios Estudiantes
+                </p>
+                <button type="button" class="btn btn-success btn-xs" data-toggle="modal"
+                    data-target=".modal_agregar_administrador">Agregar Estudiante</button>
+
+                <div class="modal fade modal_agregar_administrador" tabindex="-1" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">Crear Estudiante</h4>
+                                <button type="button" class="close" data-dismiss="modal"><span
+                                        aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form class="form-label-left input_mask" action="/recepcionista/estudiantes/crear" method="POST" enctype="multipart/form-data">
+
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres" 
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
+                                        <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos" 
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
+                                        <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo" 
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                            title="Ingrese un correo válido con @" 
+                                            onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')" required>
+                                        <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono" 
+                                            pattern="[0-9]{8}" title="Solo números de 8 dígitos"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')" required>
+                                        <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                                    </div>
+
+                                    <div class="form-group row" hidden>
+                                        <label class="col-form-label col-md-3 col-sm-3">Nombre de Usuario</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="NOMBRE.USUARIO" name="nombre_usuario" 
+                                                value="a" hidden>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
+                                        <div class="col-md-6 col-sm-6">
+                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                        </div>
+                                        
+                                        <div class="col-md-3 col-sm-3">
+                                            <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
+                                                <option value="LP">LP</option>
+                                                <option value="CBBA">CBBA</option>
+                                                <option value="SCZ">SCZ</option>
+                                                <option value="PT">PT</option>
+                                                <option value="OR">OR</option>
+                                                <option value="TJ">TJ</option>
+                                                <option value="PN">PN</option>
+                                                <option value="BN">BN</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control" name="nombre_nivel">
+                                                <option>Escoge una Opción</option>
+                                                <option value="Basico">Basico</option>
+                                                <option value="Intermedio">Intermedio</option>
+                                                <option value="Avanzado">Avanzado</option>
+                                            </select>
+                                            
+                                            <!--input type="text" class="form-control" placeholder="Telefono Personal" name="telefono_personal"-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Rango</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control" name="rango_nivel">
+                                                <option>Escoge una Opción</option>
+                                                <option value="1-5">1 - 5</option>
+                                                <option value="6-15">6 - 15</option>
+                                                <option value="11-15">11 - 15</option>
+                                                <option value="16-30">16 - 30</option>
+                                                <option value="31-50">31 - 50</option>
+                                            </select>
+                                            
+                                            <!--input type="text" class="form-control" placeholder="Telefono Personal" name="telefono_personal"-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Nombres del Titular</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="text" class="form-control" placeholder="Nombres del Titular" name="nombres_titular">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Telefono Titular</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <input type="number" class="form-control" placeholder="Telefono del Titular" name="telefono_titular">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Ocupación del Titular</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Ejemplo: Ingeniero, Comerciante, etc." name="ocupacion_titular" title="Ingresa la ocupación del titular. Puede contener letras y números.">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Parentesco del Titular</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <select class="form-control" name="parentesco_titular" title="Selecciona el parentesco con el titular">
+                                                <option>Escoge una Opción</option>
+                                                <option value="Madre">Madre</option>
+                                                <option value="Padre">Padre</option>
+                                                <option value="Titular">Titular</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3">Número de Cuenta</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="number" class="form-control" placeholder="Número de Cuenta" name="numero_cuenta" min="1"
+                                                title="Ingrese solo números EJ. ">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Número de Contrato</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 123456" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Inicio del Contrato</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="date" class="form-control" name="fecha_inicio_contrato" title="Selecciona la fecha de inicio del contrato">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Expiración del Contrato</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="date" class="form-control" name="fecha_expiracion_contrato" title="Selecciona la fecha de expiración del contrato">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row" hidden>
+                                        <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="">*</span></label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input class="form-control" type="password" id="password1" name="contrasena" value="a" hidden/>
+                                            
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group row">
+                                        <div class="col-md-9 col-sm-9  offset-md-3">
+                                            <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                            <button type="submit" class="btn btn-success">Crear Recepcionista</button>
+                                        </div>
+                                    </div>
+
+                                </form>
+                                
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                <!--button type="button" class="btn btn-primary">Save changes</button-->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Telefono</th>
+                            <th>Carnet</th>
+                            <th>Correo</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% if estudiantes %}
+                            {% for recepcionista in estudiantes %}
+                            <tr>
+                                <td>{{recepcionista.id_estudiante}}</td>
+                                <td>{{recepcionista.nombres}}</td>
+                                <td>{{recepcionista.apellidos}}</td>
+                                <td>{{recepcionista.telefono}}</td>
+                                <td>{{recepcionista.carnet_identidad}}</td>
+                                <td>{{recepcionista.correo}}</td>
+                                <td><a>Eliminar</a><a>Editar</a></td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                        
+
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_usuarios');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_usuarios ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_administradores = document.getElementById('nav_recepcionistas');
+        nav_administradores.classList.add('current-page');
+    });
+</script>
+<script>
+    function hideshow() {
+        var password = document.getElementById("password1");
+        var slash = document.getElementById("slash");
+        var eye = document.getElementById("eye");
+
+        if (password.type === 'password') {
+            password.type = "text";
+            slash.style.display = "none";
+            eye.style.display = "block";
+        } else {
+            password.type = "password";
+            slash.style.display = "block";
+            eye.style.display = "none";
+        }
+    }
+</script>
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+{% endblock %}
+{% endblock %}

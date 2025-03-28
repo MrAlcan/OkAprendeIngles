@@ -19,6 +19,11 @@
 <link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
     rel="stylesheet">
 
+    <!-- Bootstrap Colorpicker -->
+    <link href="{{url_for('static', filename='vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
+
+    <link href="{{url_for('static', filename='vendors/cropper/dist/cropper.min.css')}}" rel="stylesheet">
+
 
 {% endblock %}
 
@@ -48,57 +53,115 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-label-left input_mask" action="/administrador/crear/docente" method="POST" enctype="multipart/form-data">
+                                <form class="form-label-left input_mask formulario_docentes" action="/administrador/crear/docente" method="POST" enctype="multipart/form-data">
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres"
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
                                         <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos"
+                                            pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                            title="Solo se permiten letras y una sola separación por palabras"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')" required>
                                         <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo"
+                                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                            title="Ingrese un correo válido con @" 
+                                            onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')" required>
                                         <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono" min="60000000" max="79999999">
+                                    <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                        <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono"
+                                            pattern="[0-9]{8}" title="Solo números de 8 dígitos"
+                                            onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')" required>
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row" hidden>
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario">
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
+                                                title="Solo se permiten letras y barra baja (_)"
+                                                value="a" hidden>
                                         </div>
                                     </div>
+
+                                    
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
-                                        <div class="col-md-9 col-sm-9 ">
-                                            <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet">
+                                        <div class="col-md-6 col-sm-6">
+                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                        </div>
+                                        
+                                        <div class="col-md-3 col-sm-3">
+                                            <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
+                                                <option value="LP">LP</option>
+                                                <option value="CBBA">CBBA</option>
+                                                <option value="SCZ">SCZ</option>
+                                                <option value="PT">PT</option>
+                                                <option value="OR">OR</option>
+                                                <option value="TJ">TJ</option>
+                                                <option value="PN">PN</option>
+                                                <option value="BN">BN</option>
+                                            </select>
                                         </div>
                                     </div>
+
                                     <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3 ">Telefono Personal</label>
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Número de Tutor</label>
                                         <div class="col-md-9 col-sm-9 ">
-                                            <input type="number" class="form-control" placeholder="Telefono Personal" name="telefono_personal">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
-                                        <div class="col-md-9 col-sm-9">
-                                            <input class="form-control" type="password" id="password1" name="contrasena" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" title="Minimo 8 Caracteres Incluyento por lo menos una Letra Mayuscula y una Minuscula, un Numero y un caracter Especial" required />
+                                            <select class="form-control" name="asignacion_tutor">
+                                                <option>Escoge una Opción</option>
+                                                <option value="Tutor 1">Tutor 1</option>
+                                                <option value="Tutor 2">Tutor 2</option>
+                                                <option value="Tutor 3">Tutor 3</option>
+                                                <option value="Tutor 4">Tutor 4</option>
+                                                <option value="Tutor 5">Tutor 5</option>
+                                                <option value="Tutor 6">Tutor 6</option>
+                                                <option value="Tutor 7">Tutor 7</option>
+                                            </select>
                                             
-                                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()" >
-                                                <i id="slash" class="fa fa-eye-slash"></i>
-                                                <i id="eye" class="fa fa-eye"></i>
-                                            </span>
+                                            <!--input type="text" class="form-control" placeholder="Telefono Personal" name="telefono_personal"-->
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="control-label col-md-3 col-sm-3  ">Color Tutor</label>
+                                        <div class="col-md-9 col-sm-9  ">
+                                            <div class="input-group demo2">
+                                                <input type="text" value="#ffffff" class="form-control" name="color"/>
+                                                <span class="input-group-addon"><i></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row" hidden>
+                                        <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="">*</span></label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input class="form-control" type="password" id="password1" name="contrasena"  title="Minimo 8 Caracteres Incluyento por lo menos una Letra Mayuscula y una Minuscula, un Numero y un caracter Especial" hidden value="a" />
+                                            
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div id="formulario_horarios" class="formulario_horarios">
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-9 col-sm-9">Horarios Disponibles<span class="required">*</span></label>
+                                            
+                                        </div>
+                                        
+                                    </div>
+                                    <button id="agregar_horario" type="button" class="btn btn-secondary agregar_horario">Agregar Horario</button>
+
+                                    
+
                                     <!--div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Disabled Input </label>
                                         <div class="col-md-9 col-sm-9 ">
@@ -152,8 +215,9 @@
                             <th>Id</th>
                             <th>Nombres</th>
                             <th>Apellidos</th>
-                            <th>Telefono</th>
-                            <th>Correo</th>
+                            <th>Carnet</th>
+                            <th>Asignacion Tutor</th>
+                            <th>Horarios</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -162,21 +226,388 @@
                         {% if docentes %}
                             {% for docente in docentes %}
                             <tr>
-                                <td>{{docente.id_recepcionista}}</td>
+                                <td>{{docente.id_docente}}</td>
                                 <td>{{docente.nombres}}</td>
                                 <td>{{docente.apellidos}}</td>
-                                <td>{{docente.telefono}}</td>
-                                <td>{{docente.correo}}</td>
-                                <td><a>Eliminar</a><a>Editar</a></td>
+                                <td>{{docente.carnet_identidad}}</td>
+                                <td>{{docente.asignacion_tutor}}</td>
+                                <td>
+                                    {% if docente.horarios['Lunes'] %}
+                                        <p>
+                                            <strong>Lunes:</strong> De 
+                                            {% for horario in docente.horarios['Lunes'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Martes'] %}
+                                        <p>
+                                            <strong>Martes:</strong> De 
+                                            {% for horario in docente.horarios['Martes'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Miercoles'] %}
+                                        <p>
+                                            <strong>Miercoles:</strong> De 
+                                            {% for horario in docente.horarios['Miercoles'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Jueves'] %}
+                                        <p>
+                                            <strong>Jueves:</strong> De 
+                                            {% for horario in docente.horarios['Jueves'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Viernes'] %}
+                                        <p>
+                                            <strong>Viernes:</strong> De 
+                                            {% for horario in docente.horarios['Viernes'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Sabado'] %}
+                                        <p>
+                                            <strong>Sabado:</strong> De 
+                                            {% for horario in docente.horarios['Sabado'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Domingo'] %}
+                                        <p>
+                                            <strong>Domingo:</strong> De 
+                                            {% for horario in docente.horarios['Domingo'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                        data-target=".modal_editar_docente_{{docente.id_docente}}"><i class="fa fa-edit"></i></button>
+                                        <a href="/administrador/administradores/eliminar/{{ docente.id_administrador }}" 
+                                        class="btn btn-danger btn-xs">
+                                         <i class="fa fa-trash"></i>
+                                     </a>
+                                     
+                                </td>
                             </tr>
                             {% endfor %}
                         {% endif %}
 
-                        
-
-
+                      
                     </tbody>
                 </table>
+
+                {% if docentes %}
+                    {% for docente in docentes %}
+                        <div class="modal fade modal_editar_docente_{{docente.id_docente}}" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+        
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" id="myModalLabel">Editar Docente</h4>
+                                        <button type="button" class="close" data-dismiss="modal"><span
+                                                aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form class="form-label-left input_mask formulario_docentes formulario_docentes_editar" action="/administrador/editar/docente/{{docente.id_docente}}" method="POST" enctype="multipart/form-data">
+
+                                            <input type="text" class="input_horarios_eliminados" name="input_horarios_eliminados" value="NULL" hidden>
+        
+                                            <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                                <input type="text" class="form-control has-feedback-left" id="inputSuccess2" placeholder="Nombres" name="nombres" value="{{docente.nombres}}">
+                                                <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                                            </div>
+        
+                                            <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                                <input type="text" class="form-control" id="inputSuccess3" placeholder="Apellidos" name="apellidos" value="{{docente.apellidos}}">
+                                                <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+        
+                                            <div class="col-md-6 col-sm- 6  form-group has-feedback">
+                                                <input type="email" class="form-control has-feedback-left" id="inputSuccess4" placeholder="Correo" name="correo" value="{{docente.correo}}">
+                                                <span class="fa fa-envelope form-control-feedback left" aria-hidden="true"></span>
+                                            </div>
+        
+                                            <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                                <input type="number" class="form-control" id="inputSuccess5" placeholder="Telefono" name="telefono" min="60000000" max="79999999" value="{{docente.telefono}}">
+                                                <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                                            </div>
+        
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario" value="{{docente.nombre_usuario}}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet" value="{{docente.carnet_identidad}}">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Número de Tutor</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <select class="form-control" value="{{docente.asignacion_tutor}}" name="asignacion_tutor">
+                                                        <option value="Tutor 1" {% if docente.asignacion_tutor == 'Tutor 1' %}Selected{% endif %}>Tutor 1</option>
+                                                        <option value="Tutor 2" {% if docente.asignacion_tutor == 'Tutor 2' %}Selected{% endif %}>Tutor 2</option>
+                                                        <option value="Tutor 3" {% if docente.asignacion_tutor == 'Tutor 3' %}Selected{% endif %}>Tutor 3</option>
+                                                        <option value="Tutor 4" {% if docente.asignacion_tutor == 'Tutor 4' %}Selected{% endif %}>Tutor 4</option>
+                                                        <option value="Tutor 5" {% if docente.asignacion_tutor == 'Tutor 5' %}Selected{% endif %}>Tutor 5</option>
+                                                        <option value="Tutor 6" {% if docente.asignacion_tutor == 'Tutor 6' %}Selected{% endif %}>Tutor 6</option>
+                                                        <option value="Tutor 7" {% if docente.asignacion_tutor == 'Tutor 7' %}Selected{% endif %}>Tutor 7</option>
+                                                    </select>
+                                                    
+                                                    <!--input type="text" class="form-control" placeholder="Telefono Personal" name="telefono_personal"-->
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label class="control-label col-md-3 col-sm-3  ">Color Tutor</label>
+                                                <div class="col-md-9 col-sm-9  ">
+                                                    <div class="input-group demo2">
+                                                        <input type="text" value="{{docente.color}}" class="form-control" name="color"/>
+                                                        <span class="input-group-addon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+        
+                                            <div id="formulario_horarios" class="formulario_horarios">
+                                                <div class="form-group row">
+                                                    <label class="col-form-label col-md-9 col-sm-9">Horarios Disponibles<span class="required">*</span></label>
+                                                </div>
+                                                {% if docente.horarios['Lunes'] %}
+                                                    {% for horario in docente.horarios['Lunes'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes" selected>Lunes</option>
+                                                                    <option value="Martes">Martes</option>
+                                                                    <option value="Miercoles">Miercoles</option>
+                                                                    <option value="Jueves">Jueves</option>
+                                                                    <option value="Viernes">Viernes</option>
+                                                                    <option value="Sabado">Sabado</option>
+                                                                    <option value="Domingo">Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if docente.horarios['Martes'] %}
+                                                    {% for horario in docente.horarios['Martes'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes">Lunes</option>
+                                                                    <option value="Martes" selected>Martes</option>
+                                                                    <option value="Miercoles">Miercoles</option>
+                                                                    <option value="Jueves">Jueves</option>
+                                                                    <option value="Viernes">Viernes</option>
+                                                                    <option value="Sabado">Sabado</option>
+                                                                    <option value="Domingo">Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+                                                            
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if docente.horarios['Miercoles'] %}
+                                                    {% for horario in docente.horarios['Miercoles'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes">Lunes</option>
+                                                                    <option value="Martes">Martes</option>
+                                                                    <option value="Miercoles" selected>Miercoles</option>
+                                                                    <option value="Jueves">Jueves</option>
+                                                                    <option value="Viernes">Viernes</option>
+                                                                    <option value="Sabado">Sabado</option>
+                                                                    <option value="Domingo">Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if docente.horarios['Jueves'] %}
+                                                    {% for horario in docente.horarios['Jueves'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes">Lunes</option>
+                                                                    <option value="Martes">Martes</option>
+                                                                    <option value="Miercoles">Miercoles</option>
+                                                                    <option value="Jueves" selected>Jueves</option>
+                                                                    <option value="Viernes">Viernes</option>
+                                                                    <option value="Sabado">Sabado</option>
+                                                                    <option value="Domingo">Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if docente.horarios['Viernes'] %}
+                                                    {% for horario in docente.horarios['Viernes'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes">Lunes</option>
+                                                                    <option value="Martes">Martes</option>
+                                                                    <option value="Miercoles">Miercoles</option>
+                                                                    <option value="Jueves">Jueves</option>
+                                                                    <option value="Viernes" selected>Viernes</option>
+                                                                    <option value="Sabado">Sabado</option>
+                                                                    <option value="Domingo">Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if docente.horarios['Sabado'] %}
+                                                    {% for horario in docente.horarios['Sabado'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes">Lunes</option>
+                                                                    <option value="Martes">Martes</option>
+                                                                    <option value="Miercoles">Miercoles</option>
+                                                                    <option value="Jueves">Jueves</option>
+                                                                    <option value="Viernes">Viernes</option>
+                                                                    <option value="Sabado" selected>Sabado</option>
+                                                                    <option value="Domingo">Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {% if docente.horarios['Domingo'] %}
+                                                    {% for horario in docente.horarios['Domingo'] %}
+                                                        <div class="form-group row horario_original_servidor" id="horario_or_{{horario['id_horario']}}">
+                                                            <label class="col-form-label col-md-2 col-sm-2">Día:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <select name="o_dia_{{horario['id_horario']}}" class="form-control">
+                                                                    <option value="Lunes">Lunes</option>
+                                                                    <option value="Martes">Martes</option>
+                                                                    <option value="Miercoles">Miercoles</option>
+                                                                    <option value="Jueves">Jueves</option>
+                                                                    <option value="Viernes">Viernes</option>
+                                                                    <option value="Sabado">Sabado</option>
+                                                                    <option value="Domingo" selected>Domingo</option>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Inicio:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_inicio_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_inicio']}}">
+                                                            </div>
+                                                            <label class="col-form-label col-md-1 col-sm-1">Final:</label>
+                                                            <div class="col-md-2 col-sm-2">
+                                                                <input type="time" name="o_h_final_{{horario['id_horario']}}" min="07:30" max="22:00" step="1800" class="form-control" value="{{horario['hora_final']}}">
+                                                            </div>
+                                                            <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                                        </div>
+
+                                                    {% endfor %}
+                                                {% endif %}
+                                                
+                                            </div>
+                                            <button id="agregar_horario" type="button" class="btn btn-secondary agregar_horario">Agregar Horario</button>
+        
+                                  
+                                            <div class="ln_solid"></div>
+                                            <div class="form-group row">
+                                                <div class="col-md-9 col-sm-9  offset-md-3">
+                                                    <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                                    <button type="submit" class="btn btn-success">Guardar cambios</button>
+                                                    
+                                                </div>
+                                            </div>
+        
+                                        </form>
+                                        
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                        <!--button type="button" class="btn btn-primary">Save changes</button-->
+                                    </div>
+        
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
 
             </div>
@@ -203,6 +634,223 @@
         nav_administradores.classList.add('current-page');
     });
 </script>
+
+<script>
+    let contador = 0;
+
+    let formulario_docentes = document.querySelectorAll(".formulario_docentes");
+
+    formulario_docentes.forEach(function(form_doc) {
+        let boton_agregar_horario = form_doc.querySelector(".agregar_horario");
+
+        let formulario_horarios = form_doc.querySelector(".formulario_horarios");
+        boton_agregar_horario.addEventListener("click", () => {
+            contador++;
+
+            const grupo_horario = document.createElement("div");
+            grupo_horario.classList.add("form-group");
+            grupo_horario.classList.add("row");
+
+            /*<label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
+            <div class="col-md-9 col-sm-9 ">
+                <input type="text" class="form-control" placeholder="Carnet de Identidad" name="carnet">
+            </div>*/
+            
+            const etiqueta_dia = document.createElement("label");
+            etiqueta_dia.classList.add("col-form-label");
+            etiqueta_dia.classList.add("col-md-2");
+            etiqueta_dia.classList.add("col-sm-2");
+            etiqueta_dia.textContent = "Día:"
+
+
+            const contenedor_dia = document.createElement("div");
+            contenedor_dia.classList.add("col-md-2");
+            contenedor_dia.classList.add("col-sm-2");
+
+            const input_dia = document.createElement("select");
+            input_dia.name = "dia_" + contador;
+            input_dia.classList.add("form-control");
+
+            const opcion_1 = document.createElement("option");
+            opcion_1.value = "Lunes";
+            opcion_1.textContent = "Lunes";
+            input_dia.appendChild(opcion_1);
+            const opcion_2 = document.createElement("option");
+            opcion_2.value = "Martes";
+            opcion_2.textContent = "Martes";
+            input_dia.appendChild(opcion_2);
+            const opcion_3 = document.createElement("option");
+            opcion_3.value = "Miercoles";
+            opcion_3.textContent = "Miercoles";
+            input_dia.appendChild(opcion_3);
+            const opcion_4 = document.createElement("option");
+            opcion_4.value = "Jueves";
+            opcion_4.textContent = "Jueves";
+            input_dia.appendChild(opcion_4);
+            const opcion_5 = document.createElement("option");
+            opcion_5.value = "Viernes";
+            opcion_5.textContent = "Viernes";
+            input_dia.appendChild(opcion_5);
+            const opcion_6 = document.createElement("option");
+            opcion_6.value = "Sabado";
+            opcion_6.textContent = "Sabado";
+            input_dia.appendChild(opcion_6);
+            const opcion_7 = document.createElement("option");
+            opcion_7.value = "Domingo";
+            opcion_7.textContent = "Domingo";
+            input_dia.appendChild(opcion_7);
+
+            contenedor_dia.appendChild(input_dia);
+
+
+            const etiqueta_t_inico = document.createElement("label");
+            etiqueta_t_inico.classList.add("col-form-label");
+            etiqueta_t_inico.classList.add("col-md-1");
+            etiqueta_t_inico.classList.add("col-sm-1");
+            etiqueta_t_inico.textContent = "Inicio:"
+
+
+            const contenedor_t_inicio = document.createElement("div");
+            contenedor_t_inicio.classList.add("col-md-2");
+            contenedor_t_inicio.classList.add("col-sm-2");
+
+            const input_t_inicio = document.createElement("input");
+            input_t_inicio.type = "time";
+            input_t_inicio.name = "h_inicio_" + contador;
+            input_t_inicio.min = "07:30";
+
+            input_t_inicio.max = "22:00";
+
+            input_t_inicio.step = "1800";
+            input_t_inicio.classList.add("form-control");
+
+            contenedor_t_inicio.appendChild(input_t_inicio);
+
+
+            const etiqueta_t_final = document.createElement("label");
+            etiqueta_t_final.classList.add("col-form-label");
+            etiqueta_t_final.classList.add("col-md-1");
+            etiqueta_t_final.classList.add("col-sm-1");
+            etiqueta_t_final.textContent = "Final:"
+
+
+            const contenedor_t_final = document.createElement("div");
+            contenedor_t_final.classList.add("col-md-2");
+            contenedor_t_final.classList.add("col-sm-2");
+
+            const input_t_ifinal = document.createElement("input");
+            input_t_ifinal.type = "time";
+            input_t_ifinal.name = "h_final_" + contador;
+            input_t_ifinal.min = "07:30";
+
+            input_t_ifinal.max = "22:00";
+
+            input_t_ifinal.step = "1800";
+            input_t_ifinal.classList.add("form-control");
+
+            contenedor_t_final.appendChild(input_t_ifinal);
+
+
+            const boton_eliminar = document.createElement("button");
+            //boton_eliminar.textContent = '<i class="fa fa-trash"></i>';
+            boton_eliminar.classList.add("btn");
+            boton_eliminar.classList.add("btn-danger");
+
+            const icono = document.createElement("i");
+            icono.classList.add("fa");
+            icono.classList.add("fa-trash");
+
+            boton_eliminar.appendChild(icono);
+
+
+            boton_eliminar.addEventListener("click", () => {
+                grupo_horario.remove();
+            });
+
+
+            grupo_horario.appendChild(etiqueta_dia);
+            grupo_horario.appendChild(contenedor_dia);
+            grupo_horario.appendChild(etiqueta_t_inico);
+            grupo_horario.appendChild(contenedor_t_inicio);
+            grupo_horario.appendChild(etiqueta_t_final);
+            grupo_horario.appendChild(contenedor_t_final);
+            grupo_horario.appendChild(boton_eliminar);
+
+
+            formulario_horarios.appendChild(grupo_horario);
+
+
+
+
+        });
+    });
+
+    let form_doc_edit = document.querySelectorAll(".formulario_docentes_editar");
+
+    form_doc_edit.forEach(function(form_ed) {
+        let input_eliminados = form_ed.querySelector('.input_horarios_eliminados');
+
+        let horarios_originales = form_ed.querySelectorAll(".horario_original_servidor");
+
+        let eliminados_texto = ""; 
+
+        horarios_originales.forEach(function(horario_original) {
+            let id_horario_or = horario_original.id.split('_')[2];
+
+            //let input_eliminados = horario_original.querySelector('.input_horarios_eliminados');
+            
+
+            
+            
+            let boton_eliminar_h = horario_original.querySelector('button');
+            boton_eliminar_h.addEventListener("click", () => {
+                horario_original.remove();
+                //ids_horarios_eliminados.push(id_horario_or);
+                eliminados_texto = eliminados_texto + id_horario_or + "_"
+                input_eliminados.setAttribute('value', eliminados_texto)
+                console.log(eliminados_texto);
+                console.log(input_eliminados);
+            });
+        });
+    });
+
+
+    /*let horarios_originales = document.querySelectorAll(".horario_original_servidor");
+
+    let ids_horarios_eliminados = [];
+
+    
+
+    horarios_originales.forEach(function(horario_original) {
+        let id_horario_or = horario_original.id.split('_')[2];
+
+        let input_eliminados = horario_original.querySelector('.input_horarios_eliminados');
+        let eliminados_texto = ""; 
+
+        
+        
+        let boton_eliminar_h = horario_original.querySelector('button');
+        boton_eliminar_h.addEventListener("click", () => {
+            horario_original.remove();
+            ids_horarios_eliminados.push(id_horario_or);
+            eliminados_texto = eliminados_texto + id_horario_or + "_"
+            //input_eliminados.value = eliminados_texto
+            console.log(input_eliminados);
+        });
+    });*/
+
+
+
+    
+    
+    
+
+    
+
+    
+    
+</script>
+
 <script>
     function hideshow(){
         var password = document.getElementById("password1");
@@ -244,5 +892,7 @@
 <script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
 <script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
 <script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+<!-- Bootstrap Colorpicker -->
+<script src="{{url_for('static', filename='vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
 {% endblock %}
 {% endblock %}

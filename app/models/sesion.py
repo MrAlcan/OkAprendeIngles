@@ -9,8 +9,10 @@ class Sesion(db.Model):
     hora = db.Column(db.Time, nullable=True)
     id_docente = db.Column(db.Integer, db.ForeignKey('docentes.id_docente'), nullable=False)
     seccion = db.Column(db.String(20), nullable=False)
-    nivel = db.Column(db.Integer, nullable=False, default=0)
+    nivel = db.Column(db.String(10), nullable=False, default='1-5')
     cupos_disponibles = db.Column(db.Integer, nullable=False, default=6)
+    link = db.Column(db.Text, nullable=True, default=None)
+    imagen_url = db.Column(db.Text, nullable=True, default=None)
     activo = db.Column(db.Integer, nullable=False, default=1)
     #Estudiantes Registrados
 

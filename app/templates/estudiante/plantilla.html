@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Administrador</title>
+    <title>Estudiante</title>
+    <link rel="icon" href="{{url_for('static', filename='img/logo.jpeg')}}" type="image/jpeg">
 
     <!-- Bootstrap -->
     <link href="{{url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -17,9 +18,20 @@
     <!-- NProgress -->
     <link href="{{url_for('static', filename='vendors/nprogress/nprogress.css')}}" rel="stylesheet">
 
+    {% block cabecera %}{% endblock %}
+
     <!-- Custom Theme Style -->
     <link href="{{url_for('static', filename='build/css/custom.min.css')}}" rel="stylesheet">
-    {% block cabecera %}{% endblock %}
+
+    <style>
+        .imagen-redonda {
+          width: 50px; /* Ajusta el tamaño de la imagen */
+          height: 50px; /* Ajusta el tamaño de la imagen */
+          border-radius: 50%; /* Hace la imagen redonda */
+          object-fit: cover; /* Asegura que la imagen se recorte adecuadamente */
+        }
+    </style>
+    
 </head>
 
 <body class="nav-md">
@@ -28,7 +40,7 @@
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
-                        <a href="/estudiante/inicio" class="site_title"><i class="fa fa-paw"></i> <span>Ok Aprende Ingles</span></a>
+                        <a href="/estudiante/inicio" class="site_title"><img src="{{url_for('static', filename='img/logo.jpeg')}}" alt="Logo" class="imagen-redonda"> <span>Ok Aprende Ingles</span></a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -61,16 +73,15 @@
                                     </ul>
                                 </li--><!--EJEMPLO DE COMO ACTIVAR LAS PESTAÑAS DE MANERA INDIVIDUAL O GRUPAL ^    -->
                                 <li id="nav_inicio"><a href="/estudiante/inicio"><i class="fa fa-home"></i> Inicio </a></li>
-                                <li id="nav_grupo_usuarios"><a><i class="fa fa-users"></i> Usuarios <span class="fa fa-chevron-down"></span></a>
+                                <li id="nav_grupo_sesiones"><a><i class="fa fa-users"></i> Sesiones <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li id="nav_usuarios"><a href="/estudiante/usuarios">Usuarios</a></li>
-                                        <li id="nav_administradores"><a href="/estudiante/usuarios/administradores">Administradores</a></li>
-                                        <li id="nav_recepcionistas"><a href="/estudiante/usuarios/recepcionistas">Recepcionistas</a></li>
-                                        <li id="nav_docentes"><a href="/estudiante/usuarios/docentes">Docentes</a></li>
-                                        <li id="nav_estudiantes"><a href="/estudiante/usuarios/estudiantes">Estudiantes</a></li>
+                                        <li id="nav_disponibles"><a href="/estudiante/sesiones/disponibles">Sesiones Disponibles</a></li>
+                                        <li id="nav_inscritas"><a href="/estudiante/sesiones/inscritas">Sesiones Inscritas</a></li>
+                                        <li id="nav_pasadas"><a href="/estudiante/sesiones/pasadas">Sesiones Pasadas</a></li>
+                                        
                                     </ul>
                                 </li>
-                                <li><a><i class="fa fa-graduation-cap"></i> Sesiones <span class="fa fa-chevron-down"></span></a>
+                                <li><a><i class="fa fa-graduation-cap"></i> Actividades <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="/estudiante/sesiones">Lista Sesiones</a></li>
                                         <li><a href="/estudiante/etc">Etc</a></li>
@@ -258,6 +269,8 @@
     <script src="{{url_for('static', filename='vendors/fastclick/lib/fastclick.js')}}"></script>
     <!-- NProgress -->
     <script src="{{url_for('static', filename='vendors/nprogress/nprogress.js')}}"></script>
+
+    {% block scripts_final %}{% endblock %}
 
     <!-- Custom Theme Scripts -->
     <script src="{{url_for('static', filename='build/js/custom.min.js')}}"></script>
