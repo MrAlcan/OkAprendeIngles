@@ -192,6 +192,7 @@
                                                                     <td rowspan="1" style="background-color: {{docente.color}}">
                                                                         {{docente.horarios[hora_d].seccion}} {{docente.horarios[hora_d].nivel}}<br>
                                                                         Cupos: {{docente.horarios[hora_d].cupos_disponibles}}<br>
+                                                                        <a href="/administrador/sesiones/ver/{{docente.horarios[hora_d].id_sesion}}"><button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
                                                                         {% if hora_d > hora_actual%}
                                                                             <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                                                                 data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
@@ -269,6 +270,7 @@
                                         class="fa fa-edit"></i></button>
                                 <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button
                                         class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a>
+                                        <a href="/administrador/sesiones/ver/{{sesion.id_sesion}}"><button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
                             </td>
                         </tr>
                         {% endfor %}

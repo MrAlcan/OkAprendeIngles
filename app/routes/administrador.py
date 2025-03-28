@@ -294,8 +294,8 @@ def vista_lista_sesiones_dia(datos_usuario):
     }
 
     dia_actual = dias_espanol[dia_hoy]
-    fecha_actual = '2025-03-24'
-    dia_actual = 'Lunes'
+    #fecha_actual = '2025-03-24'
+    #dia_actual = 'Lunes'
     print(dia_actual)
     print(fecha_actual)
     docentes = ServiciosDocente.obtener_por_dia(dia_actual)
@@ -354,3 +354,104 @@ def crear_estudiante(datos_usuario):
                                            datos['rango_nivel'])
     
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
+
+
+# -------------------------------------- GESTION SESIONES SEMANALES ------------------------------------------
+@administrador_bp.route('/sesiones/semana', methods=['GET', 'POST'])
+@token_requerido
+def vista_sesiones_semanales(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_administrador = datos_usuario['id_usuario']
+
+    fechas_posibles = serviciosAdministrador.obtener_fechas_siguientes()
+
+    if request.method == 'POST':
+        fecha_seleccionada = str(request.form['fecha'])
+        dias_espanol = {
+            'Monday': 'Lunes',
+            'Tuesday': 'Martes',
+            'Wednesday': 'Miercoles',
+            'Thursday': 'Jueves',
+            'Friday': 'Viernes',
+            'Saturday': 'Sabado',
+            'Sunday': 'Domingo'
+        }
+
+        fecha_seleccionada = fecha_seleccionada + " 01:00:00"
+
+        fecha_actual = datetime.strptime(fecha_seleccionada, "%Y-%m-%d %H:%M:%S")
+
+        dia_hoy = fecha_actual.strftime("%A")
+        hora_actual = fecha_actual.strftime("%H:%M") 
+        fecha_actual = fecha_actual.strftime("%Y-%m-%d")
+
+        dia_actual = dias_espanol[dia_hoy]
+        #fecha_actual = '2025-03-24'
+        #dia_actual = 'Lunes'
+        print(dia_actual)
+        print(fecha_actual)
+        docentes = ServiciosDocente.obtener_por_dia(dia_actual)
+        print('/*-'*100)
+        print(docentes)
+        nombres = str(datos_usuario['primer_nombre'])
+        apellidos = str(datos_usuario['primer_apellido'])
+        primer_nombre = nombres.split(' ')[0]
+        primer_apellido = apellidos.split(' ')[0]
+
+        lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+
+        sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
+
+        #pruebaa docentes
+
+        docentes = ServiciosDocente.obtener_sesiones_por_fecha(fecha_actual)
+
+        docentes_horarios = ServiciosDocente.obtener_todos()
+
+
+
+        print(sesiones)
+        #return render_template('administrador/sesion_dia.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas, docentes_horarios = docentes_horarios, hora_actual = hora_actual)
+
+
+        return render_template("administrador/sesion_semana.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, fechas_posibles=fechas_posibles, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas, docentes_horarios = docentes_horarios, hora_actual = hora_actual, obtenido=True)
+
+    return render_template("administrador/sesion_semana.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, fechas_posibles=fechas_posibles)
+
+
+@administrador_bp.route('/sesiones/ver/<id>', methods=['GET'])
+@token_requerido
+def vista_sesion_por_id(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_administrador = datos_usuario['id_usuario']
+
+    #sesion = ServiciosDocente.obtener_sesion_por_id(id_docente, id)
+
+    sesion = ServiciosSesion.obtener_por_id(id)
+
+
+
+    
+
+    if not sesion:
+        return redirect(url_for("administrador_bp.vista_lista_sesiones"))
+    
+    #id_docente = sesion['id_docente']
+    
+    tareas = ServiciosDocente.obtener_tarea_por_sesion(id)
+    
+    detalle_sesion = ServiciosDocente.obtener_detalles_sesion(id)
+    print(detalle_sesion)
+
+    detalle_tarea = ServiciosDocente.obtener_detalle_tareas_por_sesion(id)
+    
+
+    return render_template("administrador/ver_sesion.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesion=sesion, detalle_sesion=detalle_sesion, tarea=tareas, detalle_tareas=detalle_tarea)

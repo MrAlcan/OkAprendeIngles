@@ -304,7 +304,8 @@ class ServiciosDocente():
                     'nombres': estudiante.nombres,
                     'apellidos': estudiante.apellidos,
                     'calificacion': dato.calificacion,
-                    'recomendacion': dato.recomendacion
+                    'recomendacion': dato.recomendacion,
+                    'estado': dato.estado_registro
                 }
                 inscritos = inscritos + 1
                 if str(dato.estado_registro) == "Cancelado":

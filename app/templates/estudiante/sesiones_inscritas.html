@@ -73,8 +73,7 @@
                                 <td>{{sesion.nivel}}</td>
                                 <td>{{sesion.cupos_disponibles}}</td>
                                 <td>
-                                    <a href="/estudiante/sesiones/inscribirse/{{sesion.id_sesion}}"><button
-                                            class="btn btn-danger btn-xs">Cancelar <i class="fa fa-check-square"></i></button></a>
+                                    <a href="/estudiante/sesiones/ver/{{sesion.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button></a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -123,11 +122,12 @@
                                                             <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
                                                                 class="btn btn-danger btn-sm">Cancelar Inscripción <i class="fa fa-check-square"></i></button></a><br-->
                                                             <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
-                                                            {% if numero_dia <= 1 and hora_d>=hora_actual %}
-                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
-                                                                        class="fa fa-minus-square"></i></button><br>
+                                                            {% if numero_dia < 1 %}
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                            {% elif numero_dia == 1 and hora_d>=hora_actual %}
+                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
                                                             {% endif %}
+                                                            
                                                             
                                                         {% endfor %}
                                                     {% endif %}
@@ -143,75 +143,85 @@
                                                                 <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
                                                                     class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
                                                                 <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
-                                                                {% if dia_actual!='Martes' or hora_d>=hora_actual %}
-                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                                        data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
-                                                                            class="fa fa-minus-square"></i></button><br>
+                                                                {% if numero_dia < 2 %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% elif numero_dia == 2 and hora_d>=hora_actual %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
                                                                 {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
                                                     
                                                 </td>
                                                 <td>
-                                                    {% if dia_actual!='Miercoles' or hora_d>=hora_actual %}
+                                                    
                                                         {% if sesiones_calendario[hora_d]['Miercoles'] %}
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Miercoles'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
                                                                 <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
                                                                     class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
-                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
-                                                                        class="fa fa-minus-square"></i></button>
+                                                                <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                                {% if numero_dia < 3 %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% elif numero_dia == 3 and hora_d>=hora_actual %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
-                                                    {% endif %}
+                                                    
                                                 </td>
                                                 <td>
-                                                    {% if dia_actual!='Jueves' or hora_d>=hora_actual %}
+                                                    
                                                         {% if sesiones_calendario[hora_d]['Jueves'] %}
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Jueves'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
                                                                 <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
                                                                     class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
-                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
-                                                                        class="fa fa-minus-square"></i></button>
+                                                                <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                                {% if numero_dia < 4 %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% elif numero_dia == 4 and hora_d>=hora_actual %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
-                                                    {% endif %}
+                                                    
                                                 </td>
                                                 <td>
-                                                    {% if dia_actual!='Viernes' or hora_d>=hora_actual %}
+                                                    
                                                         {% if sesiones_calendario[hora_d]['Viernes'] %}
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Viernes'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
                                                                 <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
                                                                     class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
-                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
-                                                                        class="fa fa-minus-square"></i></button>
+                                                                <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                                {% if numero_dia < 5 %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% elif numero_dia == 5 and hora_d>=hora_actual %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         {% endif %}
-                                                    {% endif %}
                                                 </td>
                                                 <td>
-                                                    {% if dia_actual!='Sabado' or hora_d>=hora_actual %}
+                                                    
                                                         {% if sesiones_calendario[hora_d]['Sabado'] %}
                                                             {% for sesion_c in sesiones_calendario[hora_d]['Sabado'] %}
                                                                 {{sesion_c.seccion}} {{sesion_c.nivel}}<br>
                                                                 Cupos: {{sesion_c.cupos_disponibles}}<br>
                                                                 <!--a href="/estudiante/sesiones/inscribirse/{{sesion_c.id_sesion}}"><button
                                                                     class="btn btn-success btn-sm">Inscribirse <i class="fa fa-check-square"></i></button></a><br-->
-                                                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal"
-                                                                    data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i
-                                                                        class="fa fa-minus-square"></i></button>
+                                                                <a href="/estudiante/sesiones/ver/{{sesion_c.id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                                {% if numero_dia < 6 %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% elif numero_dia == 6 and hora_d>=hora_actual %}
+                                                                    <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target=".modal_cancelar_sesion_{{sesion_c.id_sesion}}">Cancelar Inscripción <i class="fa fa-minus-square"></i></button><br>
+                                                                {% endif %}
                                                                 
                                                             {% endfor %}
                                                         {% endif %}
-                                                    {% endif %}
                                                 </td>
 
                                             {% else %}

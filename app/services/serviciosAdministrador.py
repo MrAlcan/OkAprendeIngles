@@ -3,6 +3,8 @@ from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 
+from datetime import date, datetime, timedelta
+
 class serviciosAdministrador():
 
     def crear(correo, nombres, apellidos, carnet, telefono, telefono_personal):
@@ -62,3 +64,38 @@ class serviciosAdministrador():
                 return "contrasena no coincide"
         else:
             return "no se encontro el administrador"
+    
+    def obtener_fechas_siguientes():
+        hoy = datetime.now()
+
+        dia_actual = hoy.strftime("%A")
+
+        dias_espanol = {
+            "Monday": "Lunes",
+            "Tuesday": "Martes",
+            "Wednesday": "Miércoles",
+            "Thursday": "Jueves",
+            "Friday": "Viernes",
+            "Saturday": "Sabado",
+            "Sunday": "Domingo"
+        }
+
+        dia_string = dias_espanol.get(dia_actual, dia_actual)
+
+        fechas_posibles = []
+
+        
+        for i in range(1,7):
+            dia_s = hoy + timedelta(days=i)
+            dia_s_h = dia_s.strftime("%A")
+            dia_string = str(dias_espanol.get(dia_s_h, dia_s_h)) + " " + dia_s.strftime("%Y-%m-%d")
+
+            cuerpo = {
+                'clave': dia_s.strftime("%Y-%m-%d"),
+                'valor': dia_string
+            }
+
+            if str(dias_espanol.get(dia_s_h, dia_s_h)) != 'Domingo':
+                fechas_posibles.append(cuerpo)
+            
+        return fechas_posibles

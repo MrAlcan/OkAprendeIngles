@@ -79,12 +79,12 @@ class ServiciosEstudiante():
         return respuesta
         
 
-    def inscribir_a_sesion(estudiante, sesion):
+    def inscribir_a_sesion(estudiante, sesion_id):
 
         estudiante_op = Estudiante.query.get(estudiante)
         
 
-        sesion = Sesion.query.get(sesion)
+        sesion = Sesion.query.get(sesion_id)
 
         sesion.cupos_disponibles = int(sesion.cupos_disponibles) - 1
 
@@ -101,7 +101,7 @@ class ServiciosEstudiante():
         else:
             nivel_est = int(estudiante_op.speakout_completado)
 
-        detalle_sesion = DetalleSesion(sesion, estudiante, nivel_est)
+        detalle_sesion = DetalleSesion(sesion_id, estudiante, nivel_est)
 
         db.session.add(detalle_sesion)
 
@@ -154,7 +154,7 @@ class ServiciosEstudiante():
         fecha_actual = datetime.now()
 
         # hoy ida 23/03/2025 para pruebas
-        fecha_actual = fecha_actual - timedelta(days=1)
+        #fecha_actual = fecha_actual - timedelta(days=1)
         # fin pruevas
 
         fecha_actual = fecha_actual + timedelta(minutes=30)
@@ -197,7 +197,7 @@ class ServiciosEstudiante():
 
         hoy = date.today()
         # PRUEBAS 23/03/2025 PARA VER HORARIOS
-        hoy = hoy - timedelta(days=1)
+        #hoy = hoy - timedelta(days=1)
         # DINT PRUEBAS
         dias_al_lunes = hoy.weekday()
 
@@ -410,7 +410,7 @@ class ServiciosEstudiante():
         fecha_actual = datetime.now()
 
         # hoy ida 23/03/2025 para pruebas
-        fecha_actual = fecha_actual - timedelta(days=1)
+        #fecha_actual = fecha_actual - timedelta(days=1)
         # fin pruevas
         fecha_actual = fecha_actual + timedelta(minutes=30)
 
@@ -419,9 +419,9 @@ class ServiciosEstudiante():
         estudiante_ob = Estudiante.query.filter_by(activo = 1, id_estudiante = estudiante).first()
 
         rango_nivel = estudiante_ob.rango_nivel
-        speakout_completado = int(estudiante_ob.speakout_completado)
-        working_completado = int(estudiante_ob.working_completado)
-        essential_completado = int(estudiante_ob.essential_completado)
+        speakout_completado = int(estudiante_ob.speakout_completado) + 1
+        working_completado = int(estudiante_ob.working_completado) + 1
+        essential_completado = int(estudiante_ob.essential_completado) + 1
         welcome_completado = int(estudiante_ob.welcome_completado)
 
         nivel_inferior = int(str(rango_nivel).split('-')[0])
@@ -452,7 +452,7 @@ class ServiciosEstudiante():
 
         hoy = date.today()
         # PRUEBAS 23/03/2025 PARA VER HORARIOS
-        hoy = hoy - timedelta(days=1)
+        #hoy = hoy - timedelta(days=1)
         # DINT PRUEBAS
         dias_al_lunes = hoy.weekday()
 
