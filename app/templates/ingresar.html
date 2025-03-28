@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Ok Aprende Ingles</title>
+    <link rel="icon" href="{{url_for('static', filename='img/logo.jpeg')}}" type="image/jpeg">
 
     <!-- Bootstrap -->
     <link href="{{url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
@@ -21,6 +22,15 @@
 
     <!-- Custom Theme Style -->
     <link href="{{url_for('static', filename='build/css/custom.min.css')}}" rel="stylesheet">
+
+    <style>
+        .imagen-redonda {
+          width: 100px; /* Ajusta el tamaño de la imagen */
+          height: 100px; /* Ajusta el tamaño de la imagen */
+          border-radius: 50%; /* Hace la imagen redonda */
+          object-fit: cover; /* Asegura que la imagen se recorte adecuadamente */
+        }
+    </style>
 </head>
 
 <body class="login">
@@ -61,7 +71,7 @@
                             <br />
 
                             <div>
-                                <h1><i class="fa fa-paw"></i> Ok Aprende Ingles</h1>
+                                <h1><img src="{{url_for('static', filename='img/logo.jpeg')}}" alt="Logo" class="imagen-redonda"></i> Ok Aprende Ingles</h1>
                                 <p>©2025 Todos los Derechos Reservados.</p>
                             </div>
                         </div>
