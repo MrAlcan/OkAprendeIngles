@@ -356,12 +356,13 @@ def crear_estudiante(datos_usuario):
 @token_requerido
 def vista_lista_actividades(datos_usuario):
     actividades = ServiciosActividad.obtener_todos()
+    docentes = ServiciosDocente.obtener_todos()
     print('/*-'*100)
     print(actividades)
     fecha = datos_usuario.get('fecha')
     hora = datos_usuario.get('hora')
 
-    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades)
+    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades, docentes = docentes)
 
 
 @recepcionista_bp.route('/actividades/crear', methods=['POST'])
@@ -369,15 +370,18 @@ def vista_lista_actividades(datos_usuario):
 def crear_actividad(datos_usuario):
     datos = request.form
 
-    actividades = ServiciosActividad.crear(datos.get['fecha'],
-                                           datos.get['hora'],
-                                           datos.get['id_docente'],
-                                           datos.get['descripcion'],
-                                           datos.get['nivel'],
-                                           datos.get['cupos']
-                                           
-                                           )
-    
+    actividades = ServiciosActividad.crear(datos['fecha'],
+                                           datos['hora'],
+                                           datos['docente'],
+                                           datos['descripcion'],
+                                           datos['nivel'],
+                                           datos['cupos'] )
+    print(actividades)
+    mensaje = actividades.status
+    if mensaje == 'success':
+        flash('Éxito', "success")
+    else: flash('Fracaso', "error")
+
     return redirect(url_for('recepcionista_bp.vista_lista_actividades'))
 
 

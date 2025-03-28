@@ -102,7 +102,7 @@ def vista_lista_docentes(datos_usuario):
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('administrador/docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, horarios=horarios)
+    return render_template('administrador/docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
 
 @administrador_bp.route('/crear/docente', methods=['POST'])
 @token_requerido
@@ -132,8 +132,8 @@ def crear_docente(datos_usuario):
     horas_final_ordenados = sorted(horas_final, key=lambda x: x[0])
     lista_horas_final = [valor for hora, valor in horas_final_ordenados]
 
-    nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'], 'LP')
-
+    nuevo_docente = ServiciosDocente.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'], lista_dias, lista_horas_inicio, lista_horas_final, datos['color'], datos['departamento_carnet'])
+    print(nuevo_docente)
     #nuevo_administrador = ServiciosRecepcionista.crear(datos['nombre_usuario'], datos['contrasena'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['telefono_personal'])
     #if nuevo_administrador:
     #    return redirect(url_for('administrador_bp.vista_lista_docentes'))

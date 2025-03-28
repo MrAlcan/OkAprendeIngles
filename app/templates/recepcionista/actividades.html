@@ -44,7 +44,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <form class="form-label-left input_mask" action="/actividades/crear" method="POST">
+                                <form class="form-label-left input_mask" action="/recepcionista/actividades/crear" method="POST">
 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
                                         <input type="date" class="form-control has-feedback-left" placeholder="Fecha" name="fecha" required>
@@ -58,12 +58,11 @@
                                 
                                     <div class="col-md-6 col-sm-6 form-group has-feedback">
                                         <select class="form-control has-feedback-left" name="docente" required>
-                                            <option value="">Selecciona un Tutor</option>
-                                            <option value="Tutor 1">Tutor 1</option>
-                                            <option value="Tutor 2">Tutor 2</option>
-                                            <option value="Tutor 3">Tutor 3</option>
-                                            <option value="Tutor 4">Tutor 4</option>
-                                            <option value="Tutor 5">Tutor 5</option>
+                                            {% if docentes %}
+                                                    {% for docente in docentes %}
+                                                        <option value="{{docente.id_docente}}"> {{docente.nombres}} {{docente.apellidos}}  </option>
+                                                    {% endfor %}
+                                                {% endif %}
                                         </select>
                                         <span class="fa fa-user form-control-feedback left"></span>
                                     </div>
