@@ -60,6 +60,9 @@
                                                 <option value="Speak Out">Speak Out</option>
                                                 <option value="Working">Working</option>
                                                 <option value="Essential">Essential</option>
+                                                <option value="Test Oral">Test Oral</option>
+                                                <option value="Test Escrito">Test Escrito</option>
+                                                <option value="Test Mixto">Test Mixto</option>
                                             </select>
                                         </div>
                                     </div>
@@ -376,7 +379,7 @@
 
             
 
-            if(selectSeccion.value == 'Welcome'){
+            if(selectSeccion.value == 'Welcome' || selectSeccion.value == 'Test Oral' || selectSeccion.value == 'Test Mixto' || selectSeccion.value == 'Test Escrito'){
                 
                 const opcion_nivel_cero = document.createElement('option');
                 opcion_nivel_cero.value = '0';
@@ -481,7 +484,7 @@
 
                 
 
-                if(selectSeccion.value == 'Welcome'){
+                if(selectSeccion.value == 'Welcome' || selectSeccion.value == 'Test Oral' || selectSeccion.value == 'Test Mixto' || selectSeccion.value == 'Test Escrito'){
                     
                     const opcion_nivel_cero = document.createElement('option');
                     opcion_nivel_cero.value = '0';
