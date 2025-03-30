@@ -3,11 +3,23 @@ from app.models.detalleSesion import DetalleSesion
 from app.models.sesion import Sesion
 from app.models.tarea import Tarea
 from app.models.detalleTarea import DetalleTarea
+from app.models.docente import Docente
 
 
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.config.extensiones import db
 from datetime import datetime, timedelta, date
+
+import os
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, Image
+from datetime import datetime
+import queue
+from io import BytesIO
 
 class ServiciosEstudiante():
 
@@ -1255,4 +1267,226 @@ class ServiciosEstudiante():
             
             
 
+    
+
+    # ------------------------------------------ ALGUNOS PDF'S --------------------------------
+
+    def obtener_reporte_todos_estudiantes(nombre_usuario):
+
+        estudiantes = Estudiante.query.filter(Estudiante.activo==1).all()
+
+        tabla_estudiantes = [['Id Estudiante', 'Nombres', 'Apellidos', 'Carnet de Identidad']]
+        for estudiante in estudiantes:
+            fila_tabla = [str(estudiante.id_estudiante), str(estudiante.nombres), str(estudiante.apellidos), str(estudiante.carnet_identidad)]
+            tabla_estudiantes.append(fila_tabla)
+
+        buffer = BytesIO()
+        pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        elementos = []
+
+        estilos = getSampleStyleSheet()
+        estilo_titulo = ParagraphStyle('Titulo', fontSize=18, alignment=1, fontName="Helvetica-Bold", underline=True)
+        estilo_subtitulo_2 = ParagraphStyle('Subtitulo', fontSize=15, alignment=0)  
+        estilo_subtitulo = ParagraphStyle('Subtitulo', fontSize=10, alignment=0) 
+        estilo_datos = estilos['Normal']
+
+
+
+        logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
+
+        fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        generado_por = Paragraph(f"<b>Generado por:</b> {nombre_usuario}<br/><b>Fecha de generación:</b> {fecha_actual}", estilo_subtitulo)
+        # Agregar elementos al PDF
+        elementos.append(Spacer(1, 55))
+       
+        elementos.append(Spacer(1, 20))
+
+        def add_header(canvas, doc):
+            width, height = letter
+            imagen_logo.drawOn(canvas, (0.5 * inch), height - (0.5 * inch) - imagen_logo.drawHeight)
+            titulo_x = width / 2  
+            titulo_y = height - (2.0 * inch) 
+            canvas.setFont("Helvetica-Bold", 18)
+            canvas.drawString(titulo_x - 120, titulo_y, "Informe de Estudiantes de la plataforma")
+            posicion_texto_x = (0.3*inch)
+            posicion_texto_y = (0.3*inch)
+            generado_por.wrapOn(canvas, width, height)
+            generado_por.drawOn(canvas, posicion_texto_x, posicion_texto_y)
+
+        
+        elementos.append(Spacer(1, 20))
+
+        tabla_estudiantes_pdf = Table(tabla_estudiantes)
+
+        estilo_tabla = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+                                   ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                   #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+                                   ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                   ('FONTSIZE', (0, 1), (-1, -1), 12),
+                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        
+        tabla_estudiantes_pdf.setStyle(estilo_tabla)
+
+        elementos.append(tabla_estudiantes_pdf)
+        
+
+        pdf.build(elementos, onFirstPage=add_header, onLaterPages=add_header)
+        buffer.seek(0)
+
+        return buffer
+
+
+    def obtener_ok_card_pdf(nombre_usuario, id_estudiante):
+        estudiante = Estudiante.query.get(id_estudiante)
+        if not estudiante:
+            return None
+        
+        detalles_sesion = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1).order_by(Sesion.fecha, Sesion.hora).all()
+
+        docentes = Docente.query.all()
+
+        lista_docentes = {}
+        for docente in docentes:
+            lista_docentes[str(docente.id_docente)] = docente.nombres + " " + docente.apellidos
+
+        
+
+        
+        buffer = BytesIO()
+        pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        elementos = []
+
+        estilos = getSampleStyleSheet()
+        estilo_titulo = ParagraphStyle('Titulo', fontSize=18, alignment=1, fontName="Helvetica-Bold", underline=True)
+        estilo_subtitulo_2 = ParagraphStyle('Subtitulo', fontSize=15, alignment=0)  
+        estilo_subtitulo = ParagraphStyle('Subtitulo', fontSize=10, alignment=0) 
+        estilo_subtitulo_3 = ParagraphStyle('Subtitulo', fontSize=8, alignment=0) 
+        estilo_datos = estilos['Normal']
+
+        cabecera = [Paragraph(f"LESSON", estilo_subtitulo_3), Paragraph(f"SESSION", estilo_subtitulo_3), Paragraph(f"DATE", estilo_subtitulo_3), Paragraph(f"HOUR", estilo_subtitulo_3), Paragraph(f"SKILLS(%)", estilo_subtitulo_3), '', Paragraph(f"SIGNATURE", estilo_subtitulo_3), Paragraph(f"TUTOR", estilo_subtitulo_3)]
+
+        tabla_detalle = Table([cabecera,
+                              ['Sin Sesiones', '', '', '', '', '', '', '']])
+        
+        estilo_tabla = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                   #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+                                   #('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+                                   ('FONTSIZE', (0, 1), (-1, -1), 12),
+                                   ('SPAN', (4, 0), (5, 0)),
+                                   ('SPAN', (0, 1), (-1, 1)),
+                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        
+        tabla_detalle.setStyle(estilo_tabla)
+
+        SIGLAS = {
+            'Welcome': 'W',
+            'Working': 'WR',
+            'Essential': 'E',
+            'Speak Out': 'SP',
+            'Test Oral': 'Test',
+            'Test Escrito': 'Test',
+            'Test Mixto': 'Test'
+        }
+
+        if detalles_sesion:
+            tabla_aux = [cabecera]
+            for sesion, detalle in detalles_sesion:
+                nota = 'NO'
+                if detalle.estado_registro == 'Falto':
+                    nota = 'NO'
+                else:
+                    nota = str(int(detalle.calificacion))
+                fila = [Paragraph(f"{detalle.nivel_seccion}", estilo_subtitulo_3), Paragraph(f"{sesion.seccion}", estilo_subtitulo_3), Paragraph(f"{sesion.fecha.strftime("%d/%m/%Y")}", estilo_subtitulo_3), Paragraph(f"{sesion.hora.strftime("%H:%M")}", estilo_subtitulo_3), Paragraph(f"{SIGLAS[str(sesion.seccion)]}", estilo_subtitulo_3), Paragraph(f"{nota}", estilo_subtitulo_3), Paragraph(f"", estilo_subtitulo_3), Paragraph(f"{lista_docentes[str(sesion.id_docente)]}", estilo_subtitulo_3)]
+                tabla_aux.append(fila)
             
+            estilo_tabla = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+                                   #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+                                   #('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+                                   ('FONTSIZE', (0, 1), (-1, -1), 12),
+                                   ('SPAN', (4, 0), (5, 0)),
+                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
+            tabla_detalle = Table(tabla_aux)
+            tabla_detalle.setStyle(estilo_tabla)
+
+
+
+        logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
+
+        fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        generado_por = Paragraph(f"<b>Generado por:</b> {nombre_usuario}<br/><b>Fecha de generación:</b> {fecha_actual}", estilo_subtitulo)
+        # Agregar elementos al PDF
+        elementos.append(Spacer(1, 55))
+       
+        elementos.append(Spacer(1, 20))
+
+        def add_header(canvas, doc):
+            width, height = letter
+            imagen_logo.drawOn(canvas, (0.5 * inch), height - (0.5 * inch) - imagen_logo.drawHeight)
+            titulo_x = width / 2  
+            titulo_y = height - (1.5 * inch) 
+            canvas.setFont("Helvetica-Bold", 18)
+            canvas.drawString(titulo_x - 50, titulo_y, "OK CARD")
+            posicion_texto_x = (0.3*inch)
+            posicion_texto_y = (0.3*inch)
+            generado_por.wrapOn(canvas, width, height)
+            generado_por.drawOn(canvas, posicion_texto_x, posicion_texto_y)
+
+        
+        elementos.append(Spacer(1, 20))
+
+        tabla_carimbo = Table([[Paragraph(f"FULL NAME: <b>{str(estudiante.nombres).upper()} {str(estudiante.apellidos).upper()}</b>", estilo_subtitulo), '', ''],
+                               [Paragraph(f"I.D. NUMBER: <b>{estudiante.carnet_identidad} {estudiante.extension}</b>", estilo_subtitulo), Paragraph(f"REG. DATE: <b>{estudiante.inicio_contrato.strftime("%d/%m/%Y")}</b>", estilo_subtitulo), ''],
+                               [Paragraph(f"DATE OF BIRTH: <b>0/0/0</b>", estilo_subtitulo), Paragraph(f"DUE. DATE: <b>{estudiante.fin_contrato.strftime("%d/%m/%Y")}</b>", estilo_subtitulo), ''],
+                               [Paragraph(f"OCCUPATION: <b>{str(estudiante.ocupacion_tutor).upper()}</b>", estilo_subtitulo), '', ''],
+                               [Paragraph(f"HOME ADDRESS: <b>{estudiante.telefono}</b>", estilo_subtitulo), '', Paragraph(f"INVOICE: <b>{estudiante.numero_cuenta}</b>", estilo_subtitulo)],
+                               [Paragraph(f"E-MAIL: <b>{estudiante.correo}</b>", estilo_subtitulo), '', Paragraph(f"REGISTTER: <b>{estudiante.numero_contrato}</b>", estilo_subtitulo)]])
+        
+        estilo_tabla = TableStyle([('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                   #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+                                   #('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
+                                   ('FONTSIZE', (0, 1), (-1, -1), 12),
+                                   ('SPAN', (0, 0), (-1, 0)),
+                                   ('SPAN', (1, 1), (-1, 1)),
+                                   ('SPAN', (1, 2), (-1, 2)),
+                                   ('SPAN', (0, 3), (-1, 3)),
+                                   ('SPAN', (0, 4), (1, 4)),
+                                   ('SPAN', (0, 5), (1, 5)),
+                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+
+
+        tabla_carimbo.setStyle(estilo_tabla)
+
+        elementos.append(tabla_carimbo)
+
+        elementos.append(Spacer(1, 20))
+
+        elementos.append(tabla_detalle)
+
+
+
+
+
+
+        '''tabla_estudiantes_pdf = Table(tabla_estudiantes)
+
+        estilo_tabla = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.gray),
+                                   ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                                   #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
+                                   ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+                                   ('FONTSIZE', (0, 1), (-1, -1), 12),
+                                   ('GRID', (0, 0), (-1, -1), 1, colors.black)])
+        
+        tabla_estudiantes_pdf.setStyle(estilo_tabla)
+
+        elementos.append(tabla_estudiantes_pdf)'''
+        
+
+        pdf.build(elementos, onFirstPage=add_header, onLaterPages=add_header)
+        buffer.seek(0)
+
+        return buffer
+        
+

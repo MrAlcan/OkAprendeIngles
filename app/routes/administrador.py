@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, make_response
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
@@ -523,3 +523,38 @@ def agregar_estudiante_manualmente(datos_usuario, id):
     else:
         # Si no hay referencia, rediriges a una página predeterminada
         return redirect(url_for('administrador_bp.vista_lista_sesiones'))
+
+
+# -------------------- generacion pdf's ----------------------------
+
+@administrador_bp.route('/usuarios/estudiantes/pdf', methods=['GET'])
+@token_requerido
+def generar_pdf_estudiantes_completos(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_reporte_todos_estudiantes(nombre_usuario)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="informe_estudiantes.pdf"'
+
+    return response
+
+@administrador_bp.route('/usuarios/estudiantes/okcard/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf_okcard_estudiante(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_ok_card_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response

@@ -224,6 +224,9 @@
                         </div>
                     </div>
                 </div>
+                <div>
+                    <a href="/administrador/usuarios/estudiantes/pdf" target="_blank"><button>Generar Reporte Estudiantes</button></a>
+                </div>
 
                 <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
                     cellspacing="0" width="100%">
@@ -251,7 +254,8 @@
                                 <td>{{recepcionista.carnet_identidad}}</td>
                                 <td>{{recepcionista.nombre_usuario}}</td>
                                 <td>{{recepcionista.correo}}</td>
-                                <td><a>Eliminar</a><a>Editar</a></td>
+                                <td><a>Eliminar</a><a>Editar</a>
+                                <a target="_blank" href="/administrador/usuarios/estudiantes/okcard/pdf/{{recepcionista.id_estudiante}}"><button>OBTENER_OK_CARD</button></a></td>
                             </tr>
                             {% endfor %}
                         {% endif %}
