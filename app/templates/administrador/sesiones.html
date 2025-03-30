@@ -160,7 +160,7 @@
                                     <td>{{sesion.id_sesion}}</td>
                                     <td>{{sesion.fecha}}</td>
                                     <td>{{sesion.hora}}</td>
-                                    <td>{{sesion.id_docente}}</td>
+                                    <td>{{sesion.nombre_docente}}</td>
                                     <td>{{sesion.seccion}}</td>
                                     <td>{{sesion.nivel}}</td>
                                     <td>{{sesion.cupos_disponibles}}</td>
@@ -201,6 +201,9 @@
                                                         <option value="Speak Out" {% if sesion.seccion == 'Speak Out' %}Selected{% endif %}>Speak Out</option>
                                                         <option value="Working" {% if sesion.seccion == 'Working' %}Selected{% endif %}>Working</option>
                                                         <option value="Essential" {% if sesion.seccion == 'Essential' %}Selected{% endif %}>Essential</option>
+                                                        <option value="Test Oral" {% if sesion.seccion == 'Test Oral' %}Selected{% endif %}>Test Oral</option>
+                                                        <option value="Test Escrito" {% if sesion.seccion == 'Test Escrito' %}Selected{% endif %}>Test Escrito</option>
+                                                        <option value="Test Mixto" {% if sesion.seccion == 'Test Mixto' %}Selected{% endif %}>Test Mixto</option>
                                                     </select>
                                                 </div>
                                             </div>

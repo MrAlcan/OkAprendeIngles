@@ -41,7 +41,7 @@
                         <form class="form-label-left input_mask formulario_sesiones" action="/recepcionista/sesiones/semana" method="POST" enctype="multipart/form-data">
                         
                             <div class="form-group row">
-                                <label class="col-form-label col-md-3 col-sm-3 ">Nivel</label>
+                                <label class="col-form-label col-md-3 col-sm-3 ">Fecha</label>
                                 <div class="col-md-9 col-sm-9 ">
                                     <select class="form-control select_nivel" name="fecha" required>
                                         <option>Escoge una Opción</option>
@@ -96,6 +96,9 @@
                                                             <option value="Speak Out">Speak Out</option>
                                                             <option value="Working">Working</option>
                                                             <option value="Essential">Essential</option>
+                                                            <option value="Test Oral">Test Oral</option>
+                                                            <option value="Test Escrito">Test Escrito</option>
+                                                            <option value="Test Mixto">Test Mixto</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -342,6 +345,9 @@
                                                                 endif %}>Working</option>
                                                             <option value="Essential" {% if sesion.seccion=='Essential' %}Selected{%
                                                                 endif %}>Essential</option>
+                                                            <option value="Test Oral" {% if sesion.seccion == 'Test Oral' %}Selected{% endif %}>Test Oral</option>
+                                                            <option value="Test Escrito" {% if sesion.seccion == 'Test Escrito' %}Selected{% endif %}>Test Escrito</option>
+                                                            <option value="Test Mixto" {% if sesion.seccion == 'Test Mixto' %}Selected{% endif %}>Test Mixto</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -541,7 +547,7 @@
 
 
 
-            if (selectSeccion.value == 'Welcome') {
+            if(selectSeccion.value == 'Welcome' || selectSeccion.value == 'Test Oral' || selectSeccion.value == 'Test Mixto' || selectSeccion.value == 'Test Escrito'){
 
                 const opcion_nivel_cero = document.createElement('option');
                 opcion_nivel_cero.value = '0';
@@ -646,7 +652,7 @@
 
                 
 
-                if(selectSeccion.value == 'Welcome'){
+                if(selectSeccion.value == 'Welcome' || selectSeccion.value == 'Test Oral' || selectSeccion.value == 'Test Mixto' || selectSeccion.value == 'Test Escrito'){
                     
                     const opcion_nivel_cero = document.createElement('option');
                     opcion_nivel_cero.value = '0';
