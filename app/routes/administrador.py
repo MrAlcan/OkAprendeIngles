@@ -348,7 +348,7 @@ def vista_lista_sesiones_dia(datos_usuario):
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
 
-    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '12:30', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
 
     sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
 
@@ -452,7 +452,7 @@ def vista_sesiones_semanales(datos_usuario):
         primer_nombre = nombres.split(' ')[0]
         primer_apellido = apellidos.split(' ')[0]
 
-        lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+        lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '12:30', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
 
         sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
 

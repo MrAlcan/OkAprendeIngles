@@ -20,6 +20,7 @@ class Estudiante(Usuario):
     numero_contrato = db.Column(db.Integer, nullable=False)
     inicio_contrato = db.Column(db.Date, nullable=False)
     fin_contrato = db.Column(db.Date, nullable=False)
+    paso_examen = db.Column(db.Integer, default=0)
     # ver de la lista de ids
 
     __mapper_args__ = {

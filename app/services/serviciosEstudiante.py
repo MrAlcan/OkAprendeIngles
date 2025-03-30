@@ -100,6 +100,8 @@ class ServiciosEstudiante():
             nivel_est = int(estudiante_op.working_completado)
         elif seccion_s == 'Essential':
             nivel_est = int(estudiante_op.essential_completado)
+        elif seccion_s == 'Speak Out':
+            nivel_est = int(estudiante_op.speakout_completado)
         else:
             nivel_est = int(estudiante_op.speakout_completado)
 
@@ -410,6 +412,11 @@ class ServiciosEstudiante():
     def obtener_sesiones_inscritas(estudiante):
 
         fecha_actual = datetime.now()
+        flag_domingo = False
+        if fecha_actual.strftime("%A") == 'Sunday':
+            fecha_actual = fecha_actual - timedelta(days=1)
+            flag_domingo = True
+        
 
         # hoy ida 23/03/2025 para pruebas
         #fecha_actual = fecha_actual - timedelta(days=1)
@@ -453,6 +460,9 @@ class ServiciosEstudiante():
         #hora_control = datetime.strptime(hora_string, '%H:%M')
 
         hoy = date.today()
+        if flag_domingo:
+            hoy = hoy - timedelta(days=1)
+        
         # PRUEBAS 23/03/2025 PARA VER HORARIOS
         #hoy = hoy - timedelta(days=1)
         # DINT PRUEBAS
@@ -629,11 +639,15 @@ class ServiciosEstudiante():
             
             respuesta = SerializadorUniversal.serializar_lista(datos= sesiones_disponibles, campos_requeridos= datos_requeridos)
             hora_string = fecha_actual.strftime('%H:%M')
+            if flag_domingo:
+                hora_string = '23:00'
             dia_actual = dias_fechas[fecha_actual.strftime('%Y-%m-%d')]
             return respuesta, sesiones_calendario, hora_string, dia_actual, lunes, sabado
         else:
             hora_string = fecha_actual.strftime('%H:%M')
             dia_actual = dias_fechas[fecha_actual.strftime('%Y-%m-%d')]
+            if flag_domingo:
+                hora_string = '23:00'
             return None, None, hora_string, dia_actual, lunes, sabado
         
 
@@ -675,3 +689,570 @@ class ServiciosEstudiante():
             return None
 
 
+# ---------------------------------------- NUEVAS FUNCIONES SESIONES -------------------------------------
+
+    def obtener_sesiones_disponibles_por_seccion(nivel, seccion, id_estudiante):
+        hoy = date.today()
+        manana = hoy + timedelta(days=1)
+        dias_al_lunes = hoy.weekday()
+
+        lunes = hoy - timedelta(days= dias_al_lunes)
+        sabado = lunes + timedelta(days=5)
+        hoy = hoy + timedelta(minutes=30)
+
+        fecha_hoy = hoy.strftime("%Y-%m-%d")
+        hora_hoy = hoy.strftime("%H:%M:%S")
+
+        fecha_manana = manana.strftime("%Y-%m-%d")
+        fecha_sabado = sabado.strftime("%Y-%m-%d")
+
+        sesiones = Sesion.query.filter(Sesion.activo==1, Sesion.seccion==seccion, Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+        sesiones_hoy = Sesion.query.filter(Sesion.activo==1, Sesion.seccion==seccion, Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+
+        ids_sesiones = []
+
+        for sesion in sesiones:
+            ids_sesiones.append(sesion.id_sesion)
+        for sesion in sesiones_hoy:
+            ids_sesiones.append(sesion.id_sesion)
+
+        
+        
+
+        sesiones_inscritas = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Inscrito').all()
+        sesiones_canceladas = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Cancelado').all()
+        sesiones_asistidas = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Asistio').all()
+
+        if sesiones_inscritas:
+            for sesion in sesiones_inscritas:
+                if sesion.id_sesion in ids_sesiones:
+                    return []
+        
+        if sesiones_asistidas:
+            for sesion in sesiones_asistidas:
+                if sesion.id_sesion in ids_sesiones and sesion.calificacion<1:
+                    return []
+        
+        ids_sesiones_canceladas = []
+
+        if sesiones_canceladas:
+            for sesion in sesiones_canceladas:
+                if sesion.id_sesion in ids_sesiones:
+                    ids_sesiones_canceladas.append(sesion.id_sesion)
+        
+        lista_sesiones_disponibles = []
+        
+        for sesion in sesiones:
+            nivel_inferior = 0
+            nivel_superior = 0
+
+            if sesion.nivel != '0':
+                nivel_inferior = str(sesion.nivel).split('-')[0]
+                nivel_superior = str(sesion.nivel).split('-')[1]
+            
+            if sesion.id_sesion not in ids_sesiones_canceladas and nivel_inferior<=nivel and nivel <= nivel_superior:
+                lista_sesiones_disponibles.append(sesion)
+
+        for sesion in sesiones_hoy:
+            nivel_inferior = 0
+            nivel_superior = 0
+
+            if sesion.nivel != '0':
+                nivel_inferior = str(sesion.nivel).split('-')[0]
+                nivel_superior = str(sesion.nivel).split('-')[1]
+            
+            if sesion.id_sesion not in ids_sesiones_canceladas and nivel_inferior<=nivel and nivel <= nivel_superior:
+                lista_sesiones_disponibles.append(sesion)
+
+
+        if nivel == 'Welcome':
+            print()
+        elif str(nivel).startswith('Test'):
+            print()
+        elif nivel == 'Working':
+            print()
+        
+    def obtener_sesiones_disponibles_2(id_estudiante):
+        
+        hoy = date.today()
+
+        flag_domingo = False
+
+        # en caso de ser domingo
+        if hoy.strftime("%A")=='Sunday':
+            hoy = hoy + timedelta(days=1)
+            flag_domingo = True
+        #fin caso de ser domingo 
+
+
+
+        manana = hoy + timedelta(days=1)
+        dias_al_lunes = hoy.weekday()
+
+        lunes = hoy - timedelta(days= dias_al_lunes)
+        sabado = lunes + timedelta(days=5)
+        hoy = hoy + timedelta(minutes=30)
+
+        fecha_hoy = hoy.strftime("%Y-%m-%d")
+        hora_hoy = hoy.strftime("%H:%M:%S")
+        if hoy.strftime("%A")=='Sunday':
+            hora_hoy = "06:00:00"
+        
+        toda = datetime.now()
+        hora_hoy = toda.strftime("%H:%M")
+
+        if flag_domingo:
+            hora_hoy = "06:00"
+        
+        print(hora_hoy)
+
+        fecha_lunes = lunes.strftime("%Y-%m-%d")
+
+        fecha_manana = manana.strftime("%Y-%m-%d")
+        fecha_sabado = sabado.strftime("%Y-%m-%d")
+
+        dias_fechas = {}
+
+        fechas_nombres = {}
+
+        dia_string = lunes.strftime("%Y-%m-%d")
+        fechas_nombres[dia_string] = 'Lunes'
+        fecha_aux = lunes + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        fechas_nombres[dia_string] = 'Martes'
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        fechas_nombres[dia_string] = 'Miercoles'
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        fechas_nombres[dia_string] = 'Jueves'
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        fechas_nombres[dia_string] = 'Viernes'
+        dia_string = sabado.strftime("%Y-%m-%d")
+        fechas_nombres[dia_string] = 'Sabado'
+
+        '''dia_string = lunes.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = 'Lunes'
+        fecha_aux = lunes + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = 'Martes'
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = 'Miercoles'
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = 'Jueves'
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = 'Viernes'
+        dia_string = sabado.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = 'Sabado'''''
+
+        dia_string = lunes.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = {}
+        fecha_aux = lunes + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = {}
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = {}
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = {}
+        fecha_aux = fecha_aux + timedelta(days=1)
+        dia_string = fecha_aux.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = {}
+        dia_string = sabado.strftime("%Y-%m-%d")
+        dias_fechas[dia_string] = {}
+
+        f_lunes = lunes.strftime("%Y-%m-%d")
+        f_sabado = sabado.strftime("%Y-%m-%d")
+
+        dia_actual = fechas_nombres[hoy.strftime("%Y-%m-%d")]
+        if flag_domingo:
+            dia_actual = 'Domingo'
+
+
+
+        estudiante = Estudiante.query.filter(Estudiante.activo==1, Estudiante.id_estudiante==id_estudiante).first()
+
+        if not estudiante:
+            return [], [], hora_hoy, dia_actual, f_lunes, f_sabado
+        
+        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+        
+        detalles_generales = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Inscrito', Sesion.fecha>=fecha_lunes, Sesion.fecha<=fecha_sabado).all()
+
+        if detalles_generales:
+            for sesion, detalle in detalles_generales:
+                dias_fechas[sesion.fecha.strftime("%Y-%m-%d")][sesion.hora.strftime("%H:%M:%S")] = True
+
+        speakout_completado = int(estudiante.speakout_completado)
+        working_completado = int(estudiante.working_completado)
+        essential_completado = int(estudiante.essential_completado)
+        welcome_completado = int(estudiante.welcome_completado)
+
+        paso_examen = int(estudiante.paso_examen)
+
+        if paso_examen==1:
+            paso_examen = True
+        else:
+            paso_examen = False
+
+        suma_secciones = speakout_completado + working_completado + essential_completado
+
+        sesiones_disponibles = []
+
+        if welcome_completado == 0: #ess un estudiante nuevo
+            detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Inscrito', Sesion.seccion=='Welcome').all()
+            if detalles:
+                return [], [], hora_hoy, dia_actual, f_lunes, f_sabado
+            
+            detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Asistio', Sesion.seccion=='Welcome').all()
+            if detalles:
+                for sesion, detalle in detalles:
+                    if detalle.calificacion < 1:
+                        return [], [], hora_hoy, dia_actual, f_lunes, f_sabado
+            
+            detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Cancelado', Sesion.seccion=='Welcome').all()
+            
+            ids_cancelados = []
+
+            if detalles:
+                for sesion, detalle in detalles:
+                    ids_cancelados.append(sesion.id_sesion)
+
+            sesiones = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Welcome', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+            sesiones_hoy = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Welcome', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+
+            if sesiones:
+                for sesion in sesiones:
+                    datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                    if sesion.id_sesion not in ids_cancelados:
+                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                        sesiones_disponibles.append(respuesta)
+            
+            if sesiones_hoy:
+                for sesion in sesiones_hoy:
+                    datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                    if sesion.id_sesion not in ids_cancelados:
+                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                        sesiones_disponibles.append(respuesta)
+        
+        elif suma_secciones!=0 and suma_secciones%3==0 and suma_secciones%5==0 and not paso_examen: # si es test
+            test_escrito = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Test Escrito', DetalleSesion.estado_registro=='Inscrito').all()
+            if test_escrito:
+                return [], [], hora_hoy, dia_actual, f_lunes, f_sabado
+            
+            test_oral = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Test Oral', DetalleSesion.estado_registro=='Inscrito').all()
+            if test_oral:
+                return [], [], hora_hoy, dia_actual, f_lunes, f_sabado
+            
+            test_mixto = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Test Mixto', DetalleSesion.estado_registro=='Inscrito').all()
+            if test_mixto:
+                return [], [], hora_hoy, dia_actual, f_lunes, f_sabado
+            
+            test_escrito = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Test Escrito', DetalleSesion.estado_registro=='Asistio', DetalleSesion.calificacion>=85).all()
+            test_mixto = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Test Mixto', DetalleSesion.estado_registro=='Asistio', DetalleSesion.calificacion>=85).all()
+            if test_escrito or test_mixto: # aprobado se muestran tests orales
+                sesiones_oral = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Oral', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+                sesiones_hoy_oral = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Oral', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+                sesiones_mixto = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Mixto', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+                sesiones_hoy_mixto = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Mixto', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+
+                detalles_mixto = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Cancelado', Sesion.seccion=='Test Mixto').all()
+                detalles_oral = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Cancelado', Sesion.seccion=='Test Oral').all()
+            
+                ids_cancelados = []
+
+                if detalles_mixto:
+                    for sesion, detalle in detalles_mixto:
+                        ids_cancelados.append(sesion.id_sesion)
+                if detalles_oral:
+                    for sesion, detalle in detalles_oral:
+                        ids_cancelados.append(sesion.id_sesion)
+
+                if sesiones_oral:
+                    for sesion in sesiones_oral:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+
+                if sesiones_mixto:
+                    for sesion in sesiones_mixto:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+                
+                if sesiones_hoy_oral:
+                    for sesion in sesiones_hoy_oral:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+                
+                if sesiones_hoy_mixto:
+                    for sesion in sesiones_hoy_mixto:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+
+
+            else: #no aprobo entonces se muestran tests excritos
+
+                
+
+                sesiones_oral = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Escrito', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+                sesiones_hoy_oral = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Escrito', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+                sesiones_mixto = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Mixto', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+                sesiones_hoy_mixto = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Test Mixto', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+
+                detalles_mixto = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Cancelado', Sesion.seccion=='Test Mixto').all()
+                detalles_oral = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.estado_registro=='Cancelado', Sesion.seccion=='Test Oral').all()
+            
+                ids_cancelados = []
+
+                if detalles_mixto:
+                    for sesion, detalle in detalles_mixto:
+                        ids_cancelados.append(sesion.id_sesion)
+                if detalles_oral:
+                    for sesion, detalle in detalles_oral:
+                        ids_cancelados.append(sesion.id_sesion)
+
+                if sesiones_oral:
+                    for sesion in sesiones_oral:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+
+                if sesiones_mixto:
+                    for sesion in sesiones_mixto:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+                
+                if sesiones_hoy_oral:
+                    for sesion in sesiones_hoy_oral:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+                
+                if sesiones_hoy_mixto:
+                    for sesion in sesiones_hoy_mixto:
+                        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'activo']
+                        if sesion.id_sesion not in ids_cancelados:
+                            respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                            sesiones_disponibles.append(respuesta)
+            
+        else: # no tiene examenes entonces es clases normales
+
+            speakout_actual = speakout_completado + 1
+            working_actual = working_completado + 1
+            essential_actual = essential_completado + 1
+            
+            sesiones_inscritas_working = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Working', DetalleSesion.estado_registro=='Inscrito').all()
+            sesiones_inscritas_essential = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Essential', DetalleSesion.estado_registro=='Inscrito').all()
+            sesiones_inscritas_speakout = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Speak Out', DetalleSesion.estado_registro=='Inscrito').all()
+
+            sesiones_cancelados_working = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Working', DetalleSesion.estado_registro=='Cancelado').all()
+            sesiones_cancelados_essential = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Essential', DetalleSesion.estado_registro=='Cancelado').all()
+            sesiones_cancelados_speakout = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Speak Out', DetalleSesion.estado_registro=='Cancelado').all()
+
+            sesiones_asistidas_working = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Working', DetalleSesion.estado_registro=='Asistio', DetalleSesion.calificacion<1).all()
+            sesiones_asistidas_essential = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Essential', DetalleSesion.estado_registro=='Asistio', DetalleSesion.calificacion<1).all()
+            sesiones_asistidas_speakout = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Speak Out', DetalleSesion.estado_registro=='Asistio', DetalleSesion.calificacion<1).all()
+
+            ids_cancelados = []
+
+            if sesiones_cancelados_essential:
+                for sesion, detalle in sesiones_cancelados_essential:
+                    ids_cancelados.append(sesion.id_sesion)
+            if sesiones_cancelados_working:
+                for sesion, detalle in sesiones_cancelados_working:
+                    ids_cancelados.append(sesion.id_sesion)
+            if sesiones_cancelados_speakout:
+                for sesion, detalle in sesiones_cancelados_speakout:
+                    ids_cancelados.append(sesion.id_sesion)
+            
+            sesiones_working = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Working', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+            sesiones_working_hoy = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Working', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+            sesiones_essential = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Essential', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+            sesiones_essential_hoy = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Essential', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+            sesiones_speakout = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Speak Out', Sesion.fecha>=fecha_manana, Sesion.fecha<=fecha_sabado, Sesion.cupos_disponibles>0).all()
+            sesiones_speakout_hoy = Sesion.query.filter(Sesion.activo==1, Sesion.seccion=='Speak Out', Sesion.fecha==fecha_hoy, Sesion.hora>=hora_hoy, Sesion.cupos_disponibles>0).all()
+            
+            if working_actual == essential_actual and working_actual == speakout_actual and essential_actual == speakout_actual: # mostrar todas las sesiones
+                
+                
+
+                if sesiones_inscritas_working or sesiones_asistidas_working:
+                    print("existen sesiones inscritas o que asistio pero no fue calificado del working")
+                else: # anadir sesiones disponibles no canceladas
+                    if sesiones_working:
+                        for sesion in sesiones_working:
+                            flag = True
+                            if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                    flag = False
+                            
+                            if sesion.id_sesion not in ids_cancelados and flag:
+                                respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                sesiones_disponibles.append(respuesta)
+                                
+                    if sesiones_working_hoy:
+                        for sesion in sesiones_working_hoy:
+                            flag = True
+                            if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                    flag = False
+                            if sesion.id_sesion not in ids_cancelados and flag:
+                                respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                sesiones_disponibles.append(respuesta)
+
+                if sesiones_inscritas_essential or sesiones_asistidas_essential:
+                    print("existen sesiones inscritas o que asistio pero no fue calificado del working")
+                else: # anadir sesiones disponibles no canceladas
+                    if sesiones_essential:
+                        for sesion in sesiones_essential:
+                            flag = True
+                            if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                    flag = False
+                            if sesion.id_sesion not in ids_cancelados and flag:
+                                respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                sesiones_disponibles.append(respuesta)
+                    if sesiones_essential_hoy:
+                        for sesion in sesiones_essential_hoy:
+                            flag = True
+                            if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                    flag = False
+                            if sesion.id_sesion not in ids_cancelados and flag:
+                                respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                sesiones_disponibles.append(respuesta)
+
+                if sesiones_inscritas_speakout or sesiones_asistidas_speakout:
+                    print("existen sesiones inscritas o que asistio pero no fue calificado del working")
+                else: # anadir sesiones disponibles no canceladas
+                    if sesiones_speakout:
+                        for sesion in sesiones_speakout:
+                            flag = True
+                            if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                    flag = False
+                            if sesion.id_sesion not in ids_cancelados and flag:
+                                respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                sesiones_disponibles.append(respuesta)
+                    if sesiones_speakout_hoy:
+                        for sesion in sesiones_speakout_hoy:
+                            flag = True
+                            if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                    flag = False
+                            if sesion.id_sesion not in ids_cancelados and flag:
+                                respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                sesiones_disponibles.append(respuesta)
+            else: # mostrar solo las menores
+                menor = 52
+                if working_actual<menor:
+                    menor = working_actual
+                if essential_actual<menor:
+                    menor = essential_actual
+                if speakout_actual<menor:
+                    menor = speakout_actual
+
+                if menor == working_actual: #MOSTRAR SESINOES WORKING
+                    if sesiones_inscritas_working or sesiones_asistidas_working:
+                        print("existen sesiones inscritas o que asistio pero no fue calificado del working")
+                    else: # anadir sesiones disponibles no canceladas
+                        if sesiones_working:
+                            for sesion in sesiones_working:
+                                flag = True
+                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                        flag = False
+                                if sesion.id_sesion not in ids_cancelados and flag:
+                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                    sesiones_disponibles.append(respuesta)
+                        if sesiones_working_hoy:
+                            for sesion in sesiones_working_hoy:
+                                flag = True
+                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                        flag = False
+                                if sesion.id_sesion not in ids_cancelados and flag:
+                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                    sesiones_disponibles.append(respuesta)
+                if menor == essential_actual: #MOSTRAR SESIONES ESSENTIAL
+                    if sesiones_inscritas_essential or sesiones_asistidas_essential:
+                        print("existen sesiones inscritas o que asistio pero no fue calificado del working")
+                    else: # anadir sesiones disponibles no canceladas
+                        if sesiones_essential:
+                            for sesion in sesiones_essential:
+                                flag = True
+                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                        flag = False
+                                if sesion.id_sesion not in ids_cancelados and flag:
+                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                    sesiones_disponibles.append(respuesta)
+                        if sesiones_essential_hoy:
+                            for sesion in sesiones_essential_hoy:
+                                flag = True
+                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                        flag = False
+                                if sesion.id_sesion not in ids_cancelados and flag:
+                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                    sesiones_disponibles.append(respuesta)
+                if menor == speakout_actual: #MOSTRAR SESINOES SPEAK
+                    if sesiones_inscritas_speakout or sesiones_asistidas_speakout:
+                        print("existen sesiones inscritas o que asistio pero no fue calificado del working")
+                    else: # anadir sesiones disponibles no canceladas
+                        if sesiones_speakout:
+                            for sesion in sesiones_speakout:
+                                flag = True
+                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                        flag = False
+                                if sesion.id_sesion not in ids_cancelados and flag:
+                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                    sesiones_disponibles.append(respuesta)
+                        if sesiones_speakout_hoy:
+                            for sesion in sesiones_speakout_hoy:
+                                flag = True
+                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                        flag = False
+                                if sesion.id_sesion not in ids_cancelados and flag:
+                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                    sesiones_disponibles.append(respuesta)
+
+        #aqui se deberia retornar los valores de las sesiones disponibles
+
+        sesiones_calendario = {}
+
+        print(sesiones_disponibles)
+
+        for sesion in sesiones_disponibles:
+            if sesion['hora'].strftime("%H:%M") not in sesiones_calendario:
+                sesiones_calendario[sesion['hora'].strftime("%H:%M")] = {}
+            if sesion['fecha'].strftime("%Y-%m-%d") not in sesiones_calendario[sesion['hora'].strftime("%H:%M")]:
+                sesiones_calendario[sesion['hora'].strftime("%H:%M")][sesion['fecha'].strftime("%Y-%m-%d")] = []
+            
+            sesiones_calendario[sesion['hora'].strftime("%H:%M")][sesion['fecha'].strftime("%Y-%m-%d")].append(sesion)
+        
+        
+
+        return sesiones_disponibles, sesiones_calendario, hora_hoy, dia_actual, f_lunes, f_sabado
+            
+            
+
+            

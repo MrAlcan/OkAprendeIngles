@@ -344,6 +344,8 @@ class ServiciosDocente():
         
         seccion_sesion = ob_sesion.seccion
 
+        LIMITE_NOTA = 85
+
         for estudiante in estudiantes:
             detalle = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.id_estudiante==estudiante['id_estudiante']).first()
             estudiante_ob = Estudiante.query.get(estudiante['id_estudiante'])
@@ -359,20 +361,37 @@ class ServiciosDocente():
                     estudiante_ob.working_completado = nivel_inicial
                     estudiante_ob.essential_completado = nivel_inicial
                     estudiante_ob.welcome_completado = 1
+                    estudiante_ob.paso_examen = 1
                 elif seccion_sesion == 'Working':
                     nivel = int(estudiante_ob.working_completado)
                     nivel = nivel + 1
-                    estudiante_ob.working_completado = nivel
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.working_completado = nivel
+                        if nivel % 5 == 0:
+                            estudiante_ob.paso_examen = 0
                 elif seccion_sesion == 'Essential':
                     nivel = int(estudiante_ob.essential_completado)
                     nivel = nivel + 1
-                    estudiante_ob.essential_completado = nivel
-                else:
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.essential_completado = nivel
+                        if nivel % 5 == 0:
+                            estudiante_ob.paso_examen = 0
+                elif seccion_sesion == 'Speak Out':
                     nivel = int(estudiante_ob.speakout_completado)
                     nivel = nivel + 1
-                    estudiante_ob.speakout_completado = nivel
-                
-
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.speakout_completado = nivel
+                        if nivel % 5 == 0:
+                            estudiante_ob.paso_examen = 0
+                elif seccion_sesion == 'Test Oral':
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.paso_examen = 1
+                elif seccion_sesion == 'Test Mixto':
+                    nivel = int(estudiante_ob.working_completado)
+                    detalle_auxiliar = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==estudiante['id_estudiante'], DetalleSesion.calificacion>=LIMITE_NOTA, DetalleSesion.nivel_seccion==nivel, DetalleSesion.id_sesion!=sesion).all()
+                    if detalle_auxiliar:
+                        if float(estudiante['nota'])>=LIMITE_NOTA:
+                            estudiante_ob.paso_examen = 1
         
 
             
