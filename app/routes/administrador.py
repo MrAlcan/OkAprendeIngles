@@ -7,6 +7,7 @@ from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_re
 from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosSesion import ServiciosSesion
 from app.services.serviciosEstudiante import ServiciosEstudiante
+from app.services.serviciosReportes import ServiciosReportes
 from datetime import datetime
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -556,5 +557,21 @@ def generar_pdf_okcard_estudiante(datos_usuario, id):
     response = make_response(buffer.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_pdf(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesion_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesion.pdf"'
 
     return response

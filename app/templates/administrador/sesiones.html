@@ -167,6 +167,7 @@
                                     <td>
                                         <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target=".modal_editar_sesion_{{sesion.id_sesion}}"><i class="fa fa-edit"></i></button>
                                         <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a>
+                                        <a href="/administrador/sesiones/pdf/{{sesion.id_sesion}}" target="_blank"><button>Reportes SEsion</button></a>
                                     </td>
                                 </tr>
                             {% endfor %}

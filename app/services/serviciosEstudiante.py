@@ -1397,7 +1397,14 @@ class ServiciosEstudiante():
                     nota = 'NO'
                 else:
                     nota = str(int(detalle.calificacion))
-                fila = [Paragraph(f"{detalle.nivel_seccion}", estilo_subtitulo_3), Paragraph(f"{sesion.seccion}", estilo_subtitulo_3), Paragraph(f"{sesion.fecha.strftime("%d/%m/%Y")}", estilo_subtitulo_3), Paragraph(f"{sesion.hora.strftime("%H:%M")}", estilo_subtitulo_3), Paragraph(f"{SIGLAS[str(sesion.seccion)]}", estilo_subtitulo_3), Paragraph(f"{nota}", estilo_subtitulo_3), Paragraph(f"", estilo_subtitulo_3), Paragraph(f"{lista_docentes[str(sesion.id_docente)]}", estilo_subtitulo_3)]
+                fila = [Paragraph(f"{detalle.nivel_seccion}", estilo_subtitulo_3),
+                        Paragraph(f"{sesion.seccion}", estilo_subtitulo_3),
+                        Paragraph(f"{sesion.fecha.strftime('%d/%m/%Y')}", estilo_subtitulo_3),
+                        Paragraph(f"{sesion.hora.strftime('%H:%M')}", estilo_subtitulo_3),
+                        Paragraph(f"{SIGLAS[str(sesion.seccion)]}", estilo_subtitulo_3),
+                        Paragraph(f"{nota}", estilo_subtitulo_3),
+                        Paragraph(f"", estilo_subtitulo_3),
+                        Paragraph(f"{lista_docentes[str(sesion.id_docente)]}", estilo_subtitulo_3)]
                 tabla_aux.append(fila)
             
             estilo_tabla = TableStyle([('ALIGN', (0, 0), (-1, -1), 'CENTER'),
@@ -1438,8 +1445,8 @@ class ServiciosEstudiante():
         elementos.append(Spacer(1, 20))
 
         tabla_carimbo = Table([[Paragraph(f"FULL NAME: <b>{str(estudiante.nombres).upper()} {str(estudiante.apellidos).upper()}</b>", estilo_subtitulo), '', ''],
-                               [Paragraph(f"I.D. NUMBER: <b>{estudiante.carnet_identidad} {estudiante.extension}</b>", estilo_subtitulo), Paragraph(f"REG. DATE: <b>{estudiante.inicio_contrato.strftime("%d/%m/%Y")}</b>", estilo_subtitulo), ''],
-                               [Paragraph(f"DATE OF BIRTH: <b>0/0/0</b>", estilo_subtitulo), Paragraph(f"DUE. DATE: <b>{estudiante.fin_contrato.strftime("%d/%m/%Y")}</b>", estilo_subtitulo), ''],
+                               [Paragraph(f"I.D. NUMBER: <b>{estudiante.carnet_identidad} {estudiante.extension}</b>", estilo_subtitulo), Paragraph(f"REG. DATE: <b>{estudiante.inicio_contrato.strftime('%d/%m/%Y')}</b>", estilo_subtitulo), ''],
+                               [Paragraph(f"DATE OF BIRTH: <b>0/0/0</b>", estilo_subtitulo), Paragraph(f"DUE. DATE: <b>{estudiante.fin_contrato.strftime('%d/%m/%Y')}</b>", estilo_subtitulo), ''],
                                [Paragraph(f"OCCUPATION: <b>{str(estudiante.ocupacion_tutor).upper()}</b>", estilo_subtitulo), '', ''],
                                [Paragraph(f"HOME ADDRESS: <b>{estudiante.telefono}</b>", estilo_subtitulo), '', Paragraph(f"INVOICE: <b>{estudiante.numero_cuenta}</b>", estilo_subtitulo)],
                                [Paragraph(f"E-MAIL: <b>{estudiante.correo}</b>", estilo_subtitulo), '', Paragraph(f"REGISTTER: <b>{estudiante.numero_contrato}</b>", estilo_subtitulo)]])
