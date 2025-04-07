@@ -18,8 +18,8 @@ class ServiciosSesion():
         respuesta = SerializadorUniversal.serializar_unico(dato= datos, campos_requeridos= datos_requeridos)
         return respuesta
     
-    def crear(fecha, hora, id_docente, seccion, nivel, cupos_disponibles):
-        sesion = Sesion(fecha, hora, id_docente, seccion, nivel, cupos_disponibles)
+    def crear(fecha, hora, id_docente, seccion, nivel, cupos_disponibles, tipo_virtual = 1):
+        sesion = Sesion(fecha, hora, id_docente, seccion, nivel, cupos_disponibles, tipo_virtual)
         db.session.add(sesion)
         db.session.commit()
 
