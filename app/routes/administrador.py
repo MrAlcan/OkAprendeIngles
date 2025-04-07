@@ -397,6 +397,20 @@ def crear_estudiante(datos_usuario):
     
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 
+@administrador_bp.route('/editar/estudiante/<id>', methods=['POST'])
+@token_requerido
+def editar_estudiante(datos_usuario, id):
+    datos = request.form
+
+    estudiante = ServiciosEstudiante.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'])
+
+    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
+
+@administrador_bp.route('/estudiante/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_estudiante(datos_usuario, id):
+    estudiante = ServiciosEstudiante.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 
 # -------------------------------------- GESTION SESIONES SEMANALES ------------------------------------------
 @administrador_bp.route('/sesiones/semana', methods=['GET', 'POST'])

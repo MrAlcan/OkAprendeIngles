@@ -1,0 +1,50 @@
+{% extends 'estudiante/plantilla.html' %}
+
+{% block cabecera %}
+    <style>
+        .lesson {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .completed { background-color: #4CAF50; color: white; } /* Verde para aprobadas */
+        .current { background-color: #FFEB3B; color: black; } /* Amarillo para la actual */
+        .locked { background-color: #E0E0E0; color: #757575; } /* Gris para bloqueadas */
+    </style>
+{% endblock %}
+
+{% block titulo_contenido %}
+    <h3>Progreso de Lecciones</h3>
+{% endblock %}
+
+{% block contenido %}
+    <div class="inicio-container">
+        <h4>Bienvenido, {{ estudiante.nombres }}</h4>
+        <div class="lessons-container">
+            {% set current = 'current' %}
+            {% for i in range(1, 51) %}
+                <div class="lesson {% if estudiante.welcome_completado == 1 and i == 1 %}current{% elif i <= estudiante.essential_completado %}completed{% else %}locked{% endif %}">
+                    Essential {{ i }}
+                </div>
+                <div class="lesson {% if estudiante.welcome_completado == 1 and estudiante.essential_completado >= i and estudiante.working_completado < i %}current{% elif i <= estudiante.working_completado %}completed{% else %}locked{% endif %}">
+                    Working {{ i }}
+                </div>
+                <div class="lesson {% if estudiante.welcome_completado == 1 and estudiante.essential_completado == estudiante.working_completado and estudiante.speakout_completado < i %}current{% elif i <= estudiante.speakout_completado %}completed{% else %}locked{% endif %}">
+                    Speak Out {{ i }}
+                </div>
+                {% if i % 5 == 0 and estudiante.essential_completado == estudiante.working_completado == estudiante.speakout_completado and estudiante.essential_completado >= i %}
+                    <div class="lesson current">Test Escrito y Oral {{ i // 5 }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nav_inicio = document.getElementById('nav_inicio');
+            nav_inicio.classList.add('current-page');  
+        });
+    </script>
+{% endblock %}

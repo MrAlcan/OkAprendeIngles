@@ -80,6 +80,13 @@ class ServiciosEstudiante():
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
         
+    def obtener_progreso():
+
+        datos = Estudiante.query.filter_by(activo = 1)
+
+        datos_requeridos = ['id_estudiante', 'speakout_completado', 'working_completado', 'essential_completado', 'welcome_completado']
+        respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+        return respuesta
 
     def inscribir_a_sesion(estudiante, sesion_id):
 

@@ -2,7 +2,8 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosSesion import ServiciosSesion
-
+from app.models.estudiante import Estudiante
+from app.config.extensiones import db
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 
 import os
@@ -26,6 +27,15 @@ def vista_inicio(datos_usuario):
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
     return render_template('estudiante/inicio.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+
+@estudiante_bp.route('/progreso', methods=['GET'])
+@token_requerido
+def vista_progreso(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    return render_template('estudiante/progreso.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
 # ------------------------------ SESIONES -----------------------------------------------
 
