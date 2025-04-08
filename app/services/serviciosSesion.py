@@ -11,6 +11,13 @@ class ServiciosSesion():
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
     
+    def obtener_por_id(id):
+        datos = Sesion.query.filter(Sesion.activo==1, Sesion.id_sesion==id).first()
+        
+        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'id_docente', 'seccion', 'nivel', 'cupos_disponibles', 'activo', 'link', 'imagen_url']
+        respuesta = SerializadorUniversal.serializar_unico(dato= datos, campos_requeridos= datos_requeridos)
+        return respuesta
+    
     def crear(fecha, hora, id_docente, seccion, nivel, cupos_disponibles):
         sesion = Sesion(fecha, hora, id_docente, seccion, nivel, cupos_disponibles)
         db.session.add(sesion)

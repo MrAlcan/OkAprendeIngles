@@ -1,10 +1,73 @@
 {% extends 'estudiante/plantilla.html' %}
 
 {% block cabecera %}
-    
     <link rel="stylesheet" href="{{url_for('static',filename='assets/css/slicknav.min.css')}}">
+    <style>
+        @keyframes cambio-color {
+            0% { background: linear-gradient(to right, #10c42e, #bd0ab4); }
+            50% { background: linear-gradient(to right, #bd0ab4, #10c42e); }
+            100% { background: linear-gradient(to right, #10c42e, #bd0ab4); }
+        }
 
-    
+        .inicio-container {
+            text-align: center;
+            padding: 50px 20px;
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            animation: cambio-color 6s infinite alternate ease-in-out;
+        }
+
+        .inicio-container h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .inicio-container p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .btn-reservar {
+            background: #FF6B6B;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-reservar:hover {
+            background: #ff3b3b;
+        }
+
+        .beneficios {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .beneficio {
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .beneficio img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .beneficio p {
+            font-size: 16px;
+        }
+    </style>
 {% endblock %}
 
 {% block titulo_contenido %}
@@ -12,15 +75,30 @@
 {% endblock %}
 
 {% block contenido %}
+    <div class="inicio-container">
+        <h2>¡Sigue aprendiendo inglés con los mejores!</h2>
+        <p>Ya falta poco para dominar el idioma. Avanza a tu ritmo con nuestras clases interactivas.</p>
+        <a  class="btn-reservar">Reservar mi próxima clase</a>
 
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quia ad vero deleniti provident saepe, a ratione, nulla totam aliquid id amet doloremque voluptatum, ea magni odit iure itaque error eius?</p>
-    
-
-
-
-
-
-
+        <div class="beneficios">
+            <div class="beneficio">
+                
+                <p>📚 Clases personalizadas</p>
+            </div>
+            <div class="beneficio">
+                
+                <p>🕒 Horarios flexibles</p>
+            </div>
+            <div class="beneficio">
+                
+                <p>🏆 Profesores certificados</p>
+            </div>
+            <div class="beneficio">
+                
+                <p>💬 Soporte en tiempo real</p>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -29,3 +107,4 @@
         });
     </script>
 {% endblock %}
+

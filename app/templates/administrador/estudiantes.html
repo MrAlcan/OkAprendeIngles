@@ -81,31 +81,29 @@
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row" hidden>
                                         <label class="col-form-label col-md-3 col-sm-3 ">Nombre de Usuario</label>
                                         <div class="col-md-9 col-sm-9">
                                             <input type="text" class="form-control" placeholder="Nombre de Usuario" name="nombre_usuario"
-                                                pattern="^[a-zA-Z_]+$"
-                                                title="Solo se permiten letras y barra baja (_)"
-                                                onfocus="this.setAttribute('title', 'Ingrese solo letras y barra baja (_)')" required>
+                                                value="a" hidden>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
                                         <div class="col-md-6 col-sm-6">
-                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="numero_carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
                                         </div>
                                         <div class="col-md-3 col-sm-3">
                                             <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
-                                                <option>LP</option>
-                                                <option>CBBA</option>
-                                                <option>SCZ</option>
-                                                <option>PT</option>
-                                                <option>OR</option>
-                                                <option>TJ</option>
-                                                <option>PN</option>
-                                                <option>BN</option>
+                                                <option value="LP" {% if administrador.extension == 'LP' %} selected {% endif %}>LP</option>
+                                                <option value="CBBA" {% if administrador.extension == 'CBBA' %} selected {% endif %}>CBBA</option>
+                                                <option value="SCZ" {% if administrador.extension == 'SCZ' %} selected {% endif %}>SCZ</option>
+                                                <option value="PT" {% if administrador.extension == 'PT' %} selected {% endif %}>PT</option>
+                                                <option value="OR" {% if administrador.extension == 'OR' %} selected {% endif %}>OR</option>
+                                                <option value="TJ" {% if administrador.extension == 'TJ' %} selected {% endif %}>TJ</option>
+                                                <option value="PN" {% if administrador.extension == 'PN' %} selected {% endif %}>PN</option>
+                                                <option value="BN" {% if administrador.extension == 'BN' %} selected {% endif %}>BN</option>
                                             </select>
                                         </div>
                                     </div>
@@ -171,35 +169,39 @@
                                     </div>
                                     
                                     <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Número de Cuenta</label>
+                                        <div class="col-md-9 col-sm-9">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 10000" name="numero_cuenta" min="1" title="Ingresa solo números para el número de contrato">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Número de Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="number" class="form-control" placeholder="Ejemplo: 123456" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
+                                            <input type="number" class="form-control" placeholder="Ejemplo: 266" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
                                         </div>
                                     </div>
                                     
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Inicio del Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="date" class="form-control" name="fecha_inicio_contrato" title="Selecciona la fecha de inicio del contrato">
+                                            <input type="date" class="form-control" name="inicio_contrato" title="Selecciona la fecha de inicio del contrato">
                                         </div>
                                     </div>
                                     
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Fecha de Expiración del Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="date" class="form-control" name="fecha_expiracion_contrato" title="Selecciona la fecha de expiración del contrato">
+                                            <input type="date" class="form-control" name="fin_contrato" title="Selecciona la fecha de expiración del contrato">
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
+                                    <div class="form-group row" hidden>
                                         <label class="col-form-label col-md-3 col-sm-3">Contraseña<span class="required">*</span></label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input class="form-control" type="password" id="password1" name="contrasena" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}" title="Minimo 8 Caracteres Incluyento por lo menos una Letra Mayuscula y una Minuscula, un Numero y un caracter Especial" required />
+                                            <input class="form-control" type="password" id="password1" name="contrasena" value="a" hidden/>
                                             
-                                            <span style="position: absolute;right:15px;top:7px;" onclick="hideshow()" >
-                                                <i id="slash" class="fa fa-eye-slash"></i>
-                                                <i id="eye" class="fa fa-eye"></i>
-                                            </span>
+                                            
                                         </div>
                                     </div>
                                     
@@ -231,6 +233,7 @@
                             <th>Nombres</th>
                             <th>Apellidos</th>
                             <th>Telefono</th>
+                            <th>Carnet</th>
                             <th>Correo</th>
                             <th>Opciones</th>
                         </tr>
@@ -238,23 +241,123 @@
                     <tbody>
 
                         {% if estudiantes %}
-                            {% for recepcionista in estudiantes %}
+                            {% for estudiante in estudiantes %}
                             <tr>
-                                <td>{{recepcionista.id_estudiante}}</td>
-                                <td>{{recepcionista.nombres}}</td>
-                                <td>{{recepcionista.apellidos}}</td>
-                                <td>{{recepcionista.telefono}}</td>
-                                <td>{{recepcionista.correo}}</td>
-                                <td><a>Eliminar</a><a>Editar</a></td>
+                                <td>{{estudiante.id_estudiante}}</td>
+                                <td>{{estudiante.nombres}}</td>
+                                <td>{{estudiante.apellidos}}</td>
+                                <td>{{estudiante.telefono}}</td>
+                                <td>{{estudiante.carnet_identidad}}</td>
+                                <td>{{estudiante.correo}}</td>
+                                
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                        data-target=".modal_editar_estudiante_{{ estudiante.id_estudiante }}">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <a href="/administrador/administradores/eliminar/{{ estudiante.id_administrador }}">
+                                        <button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                                    </a>
+                                </td>
                             </tr>
+
                             {% endfor %}
                         {% endif %}
 
-                        
-
-
-                    </tbody>
+                        </tbody>
                 </table>
+                {% if estudiantes %}
+                {% for estudiante in estudiantes %}
+                    <div class="modal fade modal_editar_estudiante_{{ estudiante.id_estudiante }}" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+            
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Editar Estudiante</h4>
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+                                </div>
+            
+                                <div class="modal-body">
+                                    <form class="form-label-left input_mask formulario_administrador formulario_administrador_editar"
+                                          action="/administrador/editar/estudiante/{{ estudiante.id_estudiante }}" 
+                                          method="POST" enctype="multipart/form-data">
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="text" class="form-control has-feedback-left" 
+                                                   placeholder="Nombres" name="nombres" value="{{ estudiante.nombres }}">
+                                            <span class="fa fa-user form-control-feedback left"></span>
+                                        </div>
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="text" class="form-control" 
+                                                   placeholder="Apellidos" name="apellidos" value="{{ estudiante.apellidos }}">
+                                            <span class="fa fa-user form-control-feedback right"></span>
+                                        </div>
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="email" class="form-control has-feedback-left" 
+                                                   placeholder="Correo" name="correo" value="{{ estudiante.correo }}">
+                                            <span class="fa fa-envelope form-control-feedback left"></span>
+                                        </div>
+            
+                                        <div class="col-md-6 col-sm-6 form-group has-feedback">
+                                            <input type="number" class="form-control" 
+                                                   placeholder="Telefono" name="telefono" min="60000000" max="79999999" 
+                                                   value="{{ estudiante.telefono }}">
+                                            <span class="fa fa-phone form-control-feedback right"></span>
+                                        </div>
+            
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-3 col-sm-3">Nombre de Usuario</label>
+                                            <div class="col-md-9 col-sm-9">
+                                                <input type="text" class="form-control" 
+                                                       placeholder="Nombre de Usuario" name="nombre_usuario" value="{{ estudiante.nombre_usuario }}">
+                                            </div>
+                                        </div>
+            
+                                        <div class="form-group row">
+                                            <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
+                                            <div class="col-md-6 col-sm-6">
+                                                <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)" value="{{estudiante.carnet_identidad}}">
+                                            </div>
+                                            <div class="col-md-3 col-sm-3">
+                                                <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
+                                                    <option value="LP" {% if administrador.extension == 'LP' %} selected {% endif %}>LP</option>
+                                                    <option value="CBBA" {% if administrador.extension == 'CBBA' %} selected {% endif %}>CBBA</option>
+                                                    <option value="SCZ" {% if administrador.extension == 'SCZ' %} selected {% endif %}>SCZ</option>
+                                                    <option value="PT" {% if administrador.extension == 'PT' %} selected {% endif %}>PT</option>
+                                                    <option value="OR" {% if administrador.extension == 'OR' %} selected {% endif %}>OR</option>
+                                                    <option value="TJ" {% if administrador.extension == 'TJ' %} selected {% endif %}>TJ</option>
+                                                    <option value="PN" {% if administrador.extension == 'PN' %} selected {% endif %}>PN</option>
+                                                    <option value="BN" {% if administrador.extension == 'BN' %} selected {% endif %}>BN</option>
+                                                </select>
+                                            </div>
+                                        </div>
+            
+                                        <div class="ln_solid"></div>
+                                        <div class="form-group row">
+                                            <div class="col-md-9 col-sm-9 offset-md-3">
+                                                <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                            </div>
+                                        </div>
+            
+                                    </form>
+                                </div>
+            
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                                </div>
+            
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+
+
+
 
 
             </div>

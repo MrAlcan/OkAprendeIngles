@@ -14,18 +14,30 @@ class Estudiante(Usuario):
     essential_completado = db.Column(db.Integer, nullable=True, default=0)
     welcome_completado = db.Column(db.Integer, nullable=True, default = 0)
     activo = db.Column(db.Integer, nullable=False, default=1)
+    ocupacion_tutor = db.Column(db.String(30), nullable=True)
+    parentesco_tutor = db.Column(db.String(7), nullable=False)
+    numero_cuenta = db.Column(db.Integer, nullable=False)
+    numero_contrato = db.Column(db.Integer, nullable=False)
+    inicio_contrato = db.Column(db.Date, nullable=False)
+    fin_contrato = db.Column(db.Date, nullable=False)
     # ver de la lista de ids
 
     __mapper_args__ = {
         'polymorphic_identity': 'estudiante'
     }
 
-    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel = None, rango_nivel = None, extension=None):
+    def __init__(self, nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel = None, rango_nivel = None, extension=None, ocupacion_tutor=None, parentesco_tutor=None, numero_cuenta=None, numero_contrato=None, inicio_contrato=None, fin_contrato=None):
         super().__init__(nombre_usuario, contrasena, correo, nombres, apellidos, carnet, telefono, rol='estudiante', extension=extension)
         self.celular_titular = telefono_titular
         self.nombres_titular = nombres_titular
         self.rango_nivel = rango_nivel
         self.nombre_nivel = nombre_nivel
+        self.ocupacion_tutor = ocupacion_tutor
+        self.parentesco_tutor = parentesco_tutor
+        self.numero_cuenta = numero_cuenta
+        self.numero_contrato = numero_contrato
+        self.inicio_contrato = inicio_contrato
+        self.fin_contrato = fin_contrato
     
     def reservar_sesion(self, id_sesion):
         ''
