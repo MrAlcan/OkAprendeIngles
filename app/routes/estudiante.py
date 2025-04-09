@@ -262,3 +262,16 @@ def vista_sesiones_disponibles_2(datos_usuario):
 
     #hora_actual = hora_actual, dia_actual = dia_actual, f_lunes = f_lunes, f_sabado = f_sabado
     return render_template('estudiante/sesiones_disponibles_2.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones_disponibles, lista_horas = lista_horas, sesiones_calendario = sesiones_calendario, hora_actual = hora_actual, dia_actual = dia_actual, f_lunes = f_lunes, f_sabado = f_sabado, lista_fechas = lista_fechas)
+
+@estudiante_bp.route('/sesiones/pasadas', methods = ['GET'])
+@token_requerido
+def vista_lista_sesiones_pasadas(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    id_estudiante = datos_usuario['id_usuario']
+
+    sesiones_pasadas = ServiciosEstudiante.obtener_sesiones_pasadas_estudiante_id(id_estudiante)
+
+    return render_template('estudiante/sesiones_pasadas.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones_pasadas)

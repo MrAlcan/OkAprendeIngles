@@ -2116,3 +2116,38 @@ class ServiciosEstudiante():
         
         
 
+
+    def obtener_sesiones_pasadas_estudiante_id(id_estudiante):
+        estudiante = Estudiante.query.filter(Estudiante.activo==1, Estudiante.id_estudiante==id_estudiante).first()
+        if not estudiante:
+            return None
+        
+        fecha_actual = datetime.now()
+        fecha_string = fecha_actual.strftime("%Y-%m-%d")
+        sesiones_detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.id_estudiante==id_estudiante, Sesion.fecha<=fecha_string).order_by(Sesion.fecha, Sesion.hora).all()
+
+        if not sesiones_detalles:
+            return None
+        
+        sesiones_pasadas = []
+
+
+        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'activo', 'tipo_virtual']
+        for sesion, detalle in sesiones_detalles:
+            dict_sesion = SerializadorUniversal.serializar_unico(sesion, datos_requeridos)
+            nivel = int(detalle.nivel_seccion)
+            if (sesion.seccion == 'Test Oral' or sesion.seccion=='Test Escrito'):
+                nivel = str(nivel-4) + "-" + str(nivel)
+            elif(sesion.seccion=='Welcome'):
+                nivel = '0'
+            else:
+                nivel = str(nivel+1)
+            
+            dict_sesion['nivel'] = nivel
+            sesiones_pasadas.append(dict_sesion)
+        
+        return sesiones_pasadas
+
+            
+
+        
