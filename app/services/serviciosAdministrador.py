@@ -141,7 +141,8 @@ class serviciosAdministrador():
 
         if sesion:
             if int(sesion.cupos_disponibles)>0:
-                seccion_sesion = sesion.seccion
+                seccion_sesion = str(sesion.seccion)
+
                 rango = sesion.nivel
                 nivel_superior = 0
                 nivel_inferior = 0
@@ -163,8 +164,10 @@ class serviciosAdministrador():
                     estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.working_completado<nivel_superior, Estudiante.working_completado>=nivel_inferior).all()
                 elif seccion_sesion == 'Essential':
                     estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.essential_completado<nivel_superior, Estudiante.essential_completado>=nivel_inferior).all()
-                else:
+                elif seccion_sesion == 'Speak Out':
                     estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.speakout_completado<nivel_superior, Estudiante.speakout_completado>=nivel_inferior).all()
+                else:
+                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.paso_examen==0, Estudiante.welcome_completado!=0).all()
                 
 
                 estudiantes_disponibles = []
@@ -174,7 +177,31 @@ class serviciosAdministrador():
                 if estudiantes:
                     for estud in estudiantes:
                         id_est = estud.id_estudiante
-                        if id_est not in estudiantes_inscritos:
+                        nivel_working = int(estud.working_completado)
+                        nivel_essential = int(estud.essential_completado)
+                        nivel_speakout = int(estud.speakout_completado)
+                        nivel_welcome = int(estud.welcome_completado)
+                        paso_examen = int(estud.paso_examen)
+
+                        seccion_dada = 'Welcome'
+
+                        if(nivel_welcome == 0):
+                            seccion_dada = 'Welcome'
+                        elif(nivel_essential == nivel_working and nivel_working == nivel_speakout and nivel_speakout%5==0 and paso_examen==0):
+                            detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==nivel_speakout, DetalleSesion.calificacion>=85).all()
+                            if detalles:
+                                seccion_dada = 'Test Oral'
+                            else:
+                                seccion_dada = 'Test Escrito'
+
+                        elif(nivel_essential == nivel_working and nivel_working == nivel_speakout):
+                            seccion_dada = 'Essential'
+                        elif(nivel_working == nivel_speakout):
+                            seccion_dada = 'Working'
+                        elif(nivel_essential == nivel_working):
+                            seccion_dada = 'Speak Out'
+                        
+                        if (id_est not in estudiantes_inscritos and seccion_sesion==seccion_dada):
                             
                             respuesta = SerializadorUniversal.serializar_unico(dato= estud, campos_requeridos= datos_requeridos)
                             estudiantes_disponibles.append(respuesta)
