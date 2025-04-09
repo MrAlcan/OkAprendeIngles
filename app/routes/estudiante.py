@@ -28,14 +28,14 @@ def vista_inicio(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
     return render_template('estudiante/inicio.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
-@estudiante_bp.route('/progreso', methods=['GET'])
+@estudiante_bp.route('/material', methods=['GET'])
 @token_requerido
-def vista_progreso(datos_usuario):
+def vista_material(datos_usuario):
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('estudiante/progreso.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+    return render_template('estudiante/material.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
 # ------------------------------ SESIONES -----------------------------------------------
 

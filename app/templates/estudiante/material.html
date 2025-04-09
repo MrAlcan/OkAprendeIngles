@@ -1,0 +1,90 @@
+{% extends 'estudiante/plantilla.html' %}
+
+{% block cabecera %}
+    <style>
+        .leccion {
+            margin-bottom: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 1rem;
+            background-color: #f9f9f9;
+        }
+
+        .leccion h3 {
+            color: #2c3e50;
+        }
+
+        .seccion {
+            margin-top: 1rem;
+        }
+
+        .seccion h4 {
+            margin-bottom: 0.5rem;
+            color: #34495e;
+        }
+
+        .botones-descarga {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-descargar {
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-descargar:hover {
+            background-color: #2980b9;
+        }
+    </style>
+{% endblock %}
+
+{% block titulo_contenido %}
+    <h2>📚 Descarga tu Material por Lección</h2>
+{% endblock %}
+
+{% block contenido %}
+
+{% for i in range(1, 51) %}
+<div class="leccion">
+    <h3>Lección {{ i }}</h3>
+
+    <div class="seccion">
+        <h4>Essential</h4>
+        <div class="botones-descarga">
+            <a href="/media/lecciones/{{ i }}/essential.pdf" class="btn-descargar" download>📘 Descargar PDF</a>
+            <a href="/media/lecciones/{{ i }}/essential.mp3" class="btn-descargar" download>🔊 Descargar Audio</a>
+        </div>
+    </div>
+
+    <div class="seccion">
+        <h4>Working</h4>
+        <div class="botones-descarga">
+            <a href="/media/lecciones/{{ i }}/working.pdf" class="btn-descargar" download>📘 Descargar PDF</a>
+            <a href="/media/lecciones/{{ i }}/working.mp3" class="btn-descargar" download>🔊 Descargar Audio</a>
+        </div>
+    </div>
+
+    <div class="seccion">
+        <h4>Speak Out</h4>
+        <div class="botones-descarga">
+            <a href="/media/lecciones/{{ i }}/speakout.pdf" class="btn-descargar" download>📘 Descargar PDF</a>
+            <a href="/media/lecciones/{{ i }}/speakout.mp3" class="btn-descargar" download>🔊 Descargar Audio</a>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nav_inicio = document.getElementById('nav_inicio');
+            nav_inicio.classList.add('current-page');  
+        });
+    </script>
+
+{% endblock %}
+
