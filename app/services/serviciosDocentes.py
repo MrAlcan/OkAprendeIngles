@@ -266,7 +266,7 @@ class ServiciosDocente():
     def obtener_sesion_por_id(docente, sesion):
         datos = Sesion.query.filter(Sesion.activo==1, Sesion.id_docente==docente, Sesion.id_sesion==sesion).first()
         if datos:
-            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url']
+            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'tipo_virtual']
             respuesta = SerializadorUniversal.serializar_unico(dato= datos, campos_requeridos= datos_requeridos)
             
             return respuesta
@@ -276,7 +276,7 @@ class ServiciosDocente():
     def obtener_sesiones_docente(docente):
         datos = Sesion.query.filter(Sesion.activo==1, Sesion.id_docente==docente).order_by(Sesion.fecha.desc(), Sesion.hora.desc()).all()
         if datos:
-            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url']
+            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'tipo_virtual']
             respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
             
             return respuesta

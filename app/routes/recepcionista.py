@@ -253,7 +253,7 @@ def crear_sesion(datos_usuario):
 
     datos = request.form
 
-    sesion = ServiciosSesion.crear(datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
+    sesion = ServiciosSesion.crear(datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'], datos['tipo_sesion'])
 
     # Rediriges al usuario a la página de donde vino
     if referer:
@@ -268,7 +268,7 @@ def crear_sesion(datos_usuario):
 def editar_sesion(datos_usuario, id):
     datos = request.form
 
-    sesion = ServiciosSesion.actualizar(id, datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
+    sesion = ServiciosSesion.actualizar(id, datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'], datos['tipo_sesion'])
 
     return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
 
