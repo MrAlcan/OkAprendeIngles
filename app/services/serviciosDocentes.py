@@ -386,6 +386,7 @@ class ServiciosDocente():
                     estudiante_ob.essential_completado = nivel_inicial
                     estudiante_ob.welcome_completado = 1
                     estudiante_ob.paso_examen = 1
+                    estudiante_ob.nombre_nivel = 'Basico'
                 elif seccion_sesion == 'Working':
                     nivel = int(estudiante_ob.working_completado)
                     nivel = nivel + 1
@@ -410,12 +411,26 @@ class ServiciosDocente():
                 elif seccion_sesion == 'Test Oral':
                     if float(estudiante['nota'])>=LIMITE_NOTA:
                         estudiante_ob.paso_examen = 1
+                        nivel = int(estudiante_ob.speakout_completado)
+                        if nivel > 30:
+                            estudiante_ob.nombre_nivel = 'Avanzado'
+                        elif nivel >15:
+                            estudiante_ob.nombre_nivel = 'Intermedio'
+                        else:
+                            estudiante_ob.nombre_nivel = 'Basico'
                 elif seccion_sesion == 'Test Mixto':
                     nivel = int(estudiante_ob.working_completado)
                     detalle_auxiliar = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==estudiante['id_estudiante'], DetalleSesion.calificacion>=LIMITE_NOTA, DetalleSesion.nivel_seccion==nivel, DetalleSesion.id_sesion!=sesion).all()
                     if detalle_auxiliar:
                         if float(estudiante['nota'])>=LIMITE_NOTA:
                             estudiante_ob.paso_examen = 1
+                            nivel = int(estudiante_ob.speakout_completado)
+                            if nivel > 30:
+                                estudiante_ob.nombre_nivel = 'Avanzado'
+                            elif nivel >15:
+                                estudiante_ob.nombre_nivel = 'Intermedio'
+                            else:
+                                estudiante_ob.nombre_nivel = 'Basico'
         
 
             
