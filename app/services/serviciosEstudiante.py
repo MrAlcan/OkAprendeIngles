@@ -1342,7 +1342,7 @@ class ServiciosEstudiante():
         if not estudiante:
             return None
         
-        detalles_sesion = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1).order_by(Sesion.fecha, Sesion.hora).all()
+        detalles_sesion = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante).order_by(Sesion.fecha, Sesion.hora).all()
 
         docentes = Docente.query.all()
 

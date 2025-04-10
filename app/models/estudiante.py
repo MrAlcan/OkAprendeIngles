@@ -1,5 +1,6 @@
 from app.config.extensiones import db
 from app.models.usuario import Usuario
+from datetime import datetime
 
 class Estudiante(Usuario):
     __tablename__ = 'estudiantes'
@@ -37,6 +38,12 @@ class Estudiante(Usuario):
         self.parentesco_tutor = parentesco_tutor
         self.numero_cuenta = numero_cuenta
         self.numero_contrato = numero_contrato
+        if not inicio_contrato:
+            inicio_contrato = datetime.now()
+            inicio_contrato = inicio_contrato.strftime("%Y-%m-%d")
+        if not fin_contrato:
+            fin_contrato = datetime.now()
+            fin_contrato = fin_contrato.strftime("%Y-%m-%d")
         self.inicio_contrato = inicio_contrato
         self.fin_contrato = fin_contrato
     
