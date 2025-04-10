@@ -20,6 +20,7 @@ def allowed_file_homework(filename):
 estudiante_bp = Blueprint('estudiante_bp', __name__)
 
 
+
 @estudiante_bp.route('/inicio', methods=['GET'])
 @token_requerido
 def vista_inicio(datos_usuario):
