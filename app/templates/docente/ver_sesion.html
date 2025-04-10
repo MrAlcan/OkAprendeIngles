@@ -112,6 +112,7 @@
                                                     <th>Id</th>
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
+                                                    <th>Nivel</th>
                                                     <th>Asistio</th>
                                                     <th>Calificación</th>
                                                     <th>Notas</th>
@@ -125,6 +126,7 @@
                                                                 <td>{{estudiante_s.id_estudiante}}</td>
                                                                 <td>{{estudiante_s.nombres}}</td>
                                                                 <td>{{estudiante_s.apellidos}}</td>
+                                                                <td>{{estudiante_s.nivel}}</td>
                                                                 {% if estudiante_s.estado == 'Asistio' %}
                                                                     <td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" checked></td>
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}"></td>
