@@ -9,6 +9,10 @@ actividad_bp = Blueprint('actividad_bp', __name__)
 @actividad_bp.route('/actividades', methods=['GET'])
 @token_requerido
 def obtener_actividades(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
     actividades = ServiciosActividad.obtener_todos()
     return jsonify(actividades)
 
@@ -19,6 +23,14 @@ def obtener_actividad_por_id(datos_usuario, id):
     if not actividad:
        return jsonify({"status": "error", "message": "Actividad no encontrada"}), 404
     return jsonify(actividad)
+
+@actividad_bp.route('/actividades/inscribirse/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def inscribir_en_actividad(datos_usuario, id_actividad):
+    id_estudiante = datos_usuario['id_usuario']
+    # Aquí podrías llamar a ServiciosActividad.inscribir(id_estudiante, id_actividad)
+    return redirect(url_for('actividad_bp.vista_actividades_disponibles'))
+
 
 @actividad_bp.route('/actividades/docente/<int:id_docente>', methods=['GET'])
 @token_requerido
@@ -64,10 +76,4 @@ def vista_actividades_disponibles(datos_usuario):
                            primer_apellido=primer_apellido, 
                            actividades=actividades)
 
-@actividad_bp.route('/actividades/inscribirse/<int:id_actividad>', methods=['GET'])
-@token_requerido
-def inscribir_en_actividad(datos_usuario, id_actividad):
-    id_estudiante = datos_usuario['id_usuario']
-    
-    # Aquí iría la lógica de inscripción a la actividad, por ahora solo redirige
-    return redirect(url_for('actividad_bp.vista_actividades_disponibles'))
+

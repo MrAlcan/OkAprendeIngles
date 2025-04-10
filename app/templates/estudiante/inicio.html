@@ -11,7 +11,7 @@
 
         .inicio-container {
             text-align: center;
-            padding: 50px 20px;
+            padding: 20px 20px;
             color: white;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -67,6 +67,64 @@
         .beneficio p {
             font-size: 16px;
         }
+        .actividades-container {
+            padding: 10px 20px;
+            background-color: #f7f7f7;
+            margin-top: 40px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .grid-actividades {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .actividad-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            text-align: left;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .actividad-card:hover {
+            transform: scale(1.02);
+        }
+        
+        .btn-inscribirse {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-inscribirse:hover {
+            background-color: #218838;
+        }
+        
+        .btn-lleno {
+            display: inline-block;
+            background-color: #ccc;
+            color: #666;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            border: none;
+        }
+        
+        
+        
     </style>
 {% endblock %}
 
@@ -97,6 +155,32 @@
             </div>
         </div>
     </div>
+    <div class="actividades-container">
+        <h3>📌 Actividades disponibles</h3>
+        {% if actividades %}
+            <div class="grid-actividades">
+                {% for act in actividades %}
+                <div class="actividad-card">
+                    <h4>{{ act.descripcion }}</h4>
+                    <p><strong>Fecha:</strong> {{ act.fecha }}</p>
+                    <p><strong>Hora:</strong> {{ act.hora }}</p>
+                    <p><strong>Nivel:</strong> {{ act.nivel }}</p>
+                    <p><strong>Cupos disponibles:</strong> {{ act.cupos_disponibles }}</p>
+                  
+                    {% if act.cupos_disponibles > 0 %}
+                      <a href="{{ url_for('actividad_bp.inscribir_en_actividad', id_actividad=act['id_actividad']) }}" class="btn-inscribirse">Inscribirse</a>
+                    {% else %}
+                      <button class="btn-lleno" disabled>Actividad llena</button>
+                    {% endif %}
+                  </div>
+                  
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No hay actividades disponibles por el momento.</p>
+        {% endif %}
+    </div>
+    
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

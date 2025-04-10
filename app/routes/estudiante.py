@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, render_template, request, redirect, url_fo
 
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosSesion import ServiciosSesion
+from app.services.serviciosActividad import ServiciosActividad
 from app.models.estudiante import Estudiante
 from app.config.extensiones import db
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
@@ -26,8 +27,17 @@ def vista_inicio(datos_usuario):
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('estudiante/inicio.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
+    actividades = ServiciosActividad.obtener_todos()
+    
+    actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
+
+    return render_template('estudiante/inicio.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido,
+        actividades=actividades, actividades_ordenadas
+    )
+    
 @estudiante_bp.route('/material', methods=['GET'])
 @token_requerido
 def vista_material(datos_usuario):

@@ -386,7 +386,8 @@ def crear_actividad(datos_usuario):
                                            datos['nivel'],
                                            datos['cupos'] )
     print(actividades)
-    mensaje = actividades.status
+    mensaje = actividades['status']
+
     if mensaje == 'success':
         flash('Éxito', "success")
     else: flash('Fracaso', "error")
