@@ -8,6 +8,7 @@ from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosSesion import ServiciosSesion
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosReportes import ServiciosReportes
+from app.services.serviciosReportesInformes import ServiciosReportesInformes
 from datetime import datetime
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -673,5 +674,25 @@ def generar_reporte_sesion_mes_docente_pdf(datos_usuario, fecha, id):
     response = make_response(buffer.getvalue())
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES INFORMES  -----------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@administrador_bp.route('/reportes/informe/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_mensual_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_mensual_estudiantes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
 
     return response
