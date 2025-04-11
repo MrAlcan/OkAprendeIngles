@@ -696,3 +696,53 @@ def generar_reporte_informe_mensual_pdf(datos_usuario, fecha):
     response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
 
     return response
+
+
+@administrador_bp.route('/reportes/informe/carga/horaria/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_mensual_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_carga_horaria_docentes_mes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+@administrador_bp.route('/reportes/informe/carga/horaria/semana/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_carga_horaria_docentes_semana_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+
+@administrador_bp.route('/reportes/informe/carga/horaria/semana/detallado/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_detallado_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_carga_horaria_docentes_semana_detallado_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
