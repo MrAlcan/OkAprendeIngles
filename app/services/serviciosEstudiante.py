@@ -1,8 +1,12 @@
 from app.models.estudiante import Estudiante
 from app.models.detalleSesion import DetalleSesion
+from app.models.detalleActividad import DetalleActividad
 from app.models.sesion import Sesion
 from app.models.tarea import Tarea
 from app.models.detalleTarea import DetalleTarea
+from app.models.actividad import Actividad
+from sqlalchemy.exc import SQLAlchemyError
+
 
 
 from app.serializer.serializadorUniversal import SerializadorUniversal
@@ -79,6 +83,15 @@ class ServiciosEstudiante():
         datos_requeridos = ['id_estudiante', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'celular_titular', 'nombres_titular', 'nombre_nivel', 'rango_nivel', 'speakout_completado', 'working_completado', 'essential_completado', 'welcome_completado', 'activo']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
+    
+    def obtener_por_id(id_estudiante):
+        estudiante = Estudiante.query.get(id_estudiante)
+        if estudiante:
+            datos_requeridos = ['id_estudiante', 'nombres', 'apellidos', 'essential_completado', 
+                                'working_completado', 'speakout_completado', 'welcome_completado']
+            respuesta = SerializadorUniversal.serializar_unico(dato=estudiante, campos_requeridos=datos_requeridos)
+            return respuesta
+        return None
         
     def obtener_progreso():
 
@@ -681,4 +694,27 @@ class ServiciosEstudiante():
         else:
             return None
 
+        
+    def inscribir_a_actividad(id_estudiante, id_actividad):
+        try:
+            actividad = Actividad.query.get(id_actividad)
+            estudiante = Estudiante.query.get(id_estudiante)
 
+            if not actividad or not estudiante:
+                return {"status": "error", "message": "Actividad o Estudiante no encontrado"}
+
+                # Verificar si hay cupos disponibles
+            if actividad.cupos_disponibles <= 0:
+                return {"status": "error", "message": "No hay cupos disponibles"}
+
+                # Crear el registro de la inscripción
+            detalle = DetalleActividad(id_actividad=id_actividad, id_estudiante=id_estudiante)
+            db.session.add(detalle)
+            actividad.cupos_disponibles -= 1  # Restar cupo
+            db.session.commit()
+
+            return {"status": "success", "message": "Inscripción exitosa"}
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"status": "error", "message": str(e)}

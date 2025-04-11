@@ -396,6 +396,7 @@ def crear_actividad(datos_usuario):
 
 
 
+
 @recepcionista_bp.route('/sesiones/semana', methods=['GET', 'POST'])
 @token_requerido
 def vista_sesiones_semanales(datos_usuario):
@@ -512,3 +513,35 @@ def agregar_estudiante_manualmente(datos_usuario, id):
     else:
         # Si no hay referencia, rediriges a una página predeterminada
         return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
+
+@recepcionista_bp.route('/actividades/estudiantes/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def ver_estudiantes_inscritos(datos_usuario, id_actividad):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    estudiantes = ServiciosActividad.obtener_estudiantes_inscritos(id_actividad)
+    actividad = ServiciosActividad.obtener_por_id(id_actividad)
+    return render_template('recepcionista/estudiantes_inscritos.html', 
+                           primer_nombre=primer_nombre, 
+                           primer_apellido=primer_apellido, 
+                           actividad=actividad, 
+                           estudiantes=estudiantes)
+
+@recepcionista_bp.route('/actividades/inscribir/<int:id_actividad>', methods=['POST'])
+@token_requerido
+def inscribir_estudiante(datos_usuario, id_actividad):
+    # Aquí la lógica para inscribir a un estudiante en la actividad
+    actividad = ServiciosActividad.obtener_por_id(id_actividad)
+    if actividad and actividad.cupos > 0:
+        # Inscripción
+        estudiante = ServiciosEstudiante.obtener_estudiante(datos_usuario['id'])
+        # Lógica para registrar al estudiante
+        ServiciosActividad.inscribir_estudiante(actividad, estudiante)
+        return redirect(url_for('recepcionista.ver_estudiantes_inscritos', id_actividad=id_actividad))
+    else:
+        # Manejo de error si no hay cupos
+        flash("No hay cupos disponibles para esta actividad", 'error')
+        return redirect(url_for('recepcionista.vista_lista_actividades'))

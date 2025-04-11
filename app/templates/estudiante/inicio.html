@@ -11,7 +11,7 @@
 
         .inicio-container {
             text-align: center;
-            padding: 20px 20px;
+            padding: 10px 20px;
             color: white;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -29,28 +29,11 @@
             margin-bottom: 20px;
         }
 
-        .btn-reservar {
-            background: #FF6B6B;
-            color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-reservar:hover {
-            background: #ff3b3b;
-        }
-
         .beneficios {
             display: flex;
             justify-content: center;
             gap: 50px;
-            margin-top: 50px;
+            margin-top: 20px;
         }
 
         .beneficio {
@@ -67,8 +50,20 @@
         .beneficio p {
             font-size: 16px;
         }
+        .lesson {
+            padding: 10px;
+            margin: 5px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .completed { background-color: #4CAF50; color: white; } /* Verde para aprobadas */
+        .current { background-color: #FFEB3B; color: black; } /* Amarillo para la actual */
+        .locked { background-color: #E0E0E0; color: #757575; } /* Gris para bloqueadas */
+
+
         .actividades-container {
-            padding: 10px 20px;
+            padding: 0px 20px;
             background-color: #f7f7f7;
             margin-top: 40px;
             border-radius: 10px;
@@ -129,7 +124,7 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    <h3>Inicio</h3>
+    <h3>Panel de Estudiante</h3>
 {% endblock %}
 
 {% block contenido %}
@@ -155,6 +150,11 @@
             </div>
         </div>
     </div>
+
+    
+    
+    </div>
+
     <div class="actividades-container">
         <h3>📌 Actividades disponibles</h3>
         {% if actividades %}
@@ -168,7 +168,8 @@
                     <p><strong>Cupos disponibles:</strong> {{ act.cupos_disponibles }}</p>
                   
                     {% if act.cupos_disponibles > 0 %}
-                      <a href="{{ url_for('actividad_bp.inscribir_en_actividad', id_actividad=act['id_actividad']) }}" class="btn-inscribirse">Inscribirse</a>
+                    <a href="/estudiante/actividades/inscribirse/{{ act.id }}" class="btn-inscribirse">Inscribirse</a>
+
                     {% else %}
                       <button class="btn-lleno" disabled>Actividad llena</button>
                     {% endif %}

@@ -24,20 +24,19 @@ estudiante_bp = Blueprint('estudiante_bp', __name__)
 @estudiante_bp.route('/inicio', methods=['GET'])
 @token_requerido
 def vista_inicio(datos_usuario):
+    #id_estudiante = datos_usuario['id_estudiante']
+    #estudiante = ServiciosEstudiante.obtener_por_id(id_estudiante)
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-
     actividades = ServiciosActividad.obtener_todos()
-    
     actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
 
     return render_template('estudiante/inicio.html',
-        primer_nombre=primer_nombre,
-        primer_apellido=primer_apellido,
-        actividades=actividades, actividades_ordenadas
-    )
+                           primer_nombre = primer_nombre, primer_apellido = primer_apellido,
+                           actividades=actividades_ordenadas)
+
     
 @estudiante_bp.route('/material', methods=['GET'])
 @token_requerido
@@ -251,3 +250,26 @@ def asignar_tarea(datos_usuario, id):
     else:
         # Si no hay referencia, rediriges a una página predeterminada
         return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))
+
+@estudiante_bp.route('/actividades/inscribirse/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def inscribir_a_actividad(datos_usuario, id_actividad):
+    id_estudiante = datos_usuario['id_usuario']
+    
+    # Aquí estamos llamando el método con los parámetros correctos
+    resultado = ServiciosEstudiante.inscribir_a_actividad(id_estudiante, id_actividad)
+
+    if resultado["status"] == "success":
+        return redirect(url_for('estudiante_bp.vista_actividades_disponibles'))
+    else:
+        return jsonify(resultado), 500
+
+@estudiante_bp.route('/actividades', methods=['GET'])
+@token_requerido
+def vista_actividades_disponibles(datos_usuario):
+    # Aquí implementas la lógica para obtener y mostrar las actividades disponibles.
+    actividades = ServiciosActividad.obtener_todos()
+    actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
+    
+    # Renderizas la plantilla correspondiente
+    return render_template('estudiante/actividades.html', actividades=actividades_ordenadas)
