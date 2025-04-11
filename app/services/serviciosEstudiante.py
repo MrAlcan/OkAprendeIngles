@@ -1386,7 +1386,8 @@ class ServiciosEstudiante():
             'Speak Out': 'SP',
             'Test Oral': 'Test',
             'Test Escrito': 'Test',
-            'Test Mixto': 'Test'
+            'Test Mixto': 'Test',
+            'Test': 'Test'
         }
 
         if detalles_sesion:
@@ -1397,7 +1398,7 @@ class ServiciosEstudiante():
                     nota = 'NO'
                 else:
                     nota = str(int(detalle.calificacion))
-                fila = [Paragraph(f"{detalle.nivel_seccion}", estilo_subtitulo_3),
+                fila = [Paragraph(f"{detalle.nivel_seccion+1}", estilo_subtitulo_3),
                         Paragraph(f"{sesion.seccion}", estilo_subtitulo_3),
                         Paragraph(f"{sesion.fecha.strftime('%d/%m/%Y')}", estilo_subtitulo_3),
                         Paragraph(f"{sesion.hora.strftime('%H:%M')}", estilo_subtitulo_3),
@@ -1788,7 +1789,7 @@ class ServiciosEstudiante():
                         respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
                         sesiones_disponibles.append(respuesta)
         
-        elif suma_secciones!=0 and suma_secciones%3==0 and suma_secciones%5==0 and not paso_examen: # si es test
+        elif suma_secciones!=0 and suma_secciones%3==0 and suma_secciones%5==0 and not paso_examen and speakout_completado!=45 and speakout_completado!=35: # si es test
             test_escrito = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, Sesion.id_sesion==DetalleSesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.seccion=='Test Escrito', DetalleSesion.estado_registro=='Inscrito').all()
             if test_escrito:
                 return [], [], hora_hoy, dia_actual, f_lunes, f_sabado

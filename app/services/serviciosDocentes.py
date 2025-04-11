@@ -151,14 +151,15 @@ class ServiciosDocente():
             datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
             respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
             horario_por_dia = {}
-            for horario in respuesta_h:
-                if horario['dia'] not in horario_por_dia:
-                    horario_por_dia[horario['dia']] = []
-                horario_por_dia[horario['dia']].append({
-                    'id_horario' : horario['id_horario'],
-                    'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
-                    'hora_final' : horario['hora_final'].strftime('%H:%M')
-                })
+            if respuesta_h:
+                for horario in respuesta_h:
+                    if horario['dia'] not in horario_por_dia:
+                        horario_por_dia[horario['dia']] = []
+                    horario_por_dia[horario['dia']].append({
+                        'id_horario' : horario['id_horario'],
+                        'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
+                        'hora_final' : horario['hora_final'].strftime('%H:%M')
+                    })
             docente['horarios'] = horario_por_dia
         #print("-*-"*100)
         #print("imprimeindo horarios")

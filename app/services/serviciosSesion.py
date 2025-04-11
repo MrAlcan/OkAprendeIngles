@@ -5,10 +5,27 @@ from app.config.extensiones import db
 class ServiciosSesion():
 
     def obtener_todos():
-        datos = Sesion.query.filter_by(activo = 1)
+        datos = Sesion.query.filter(Sesion.activo==1).order_by(Sesion.fecha.desc(), Sesion.hora.desc()).all()
+        vec_aux = []
+        contador = 0
+        for dato in datos:
+            contador = contador + 1
+            vec_aux.append(dato)
+            if contador >= 500:
+                break
+        
+        datos = vec_aux
 
         datos_requeridos = ['id_sesion', 'fecha', 'hora', 'id_docente', 'seccion', 'nivel', 'cupos_disponibles', 'activo', 'tipo_virtual']
+        vec_aux = []
+
+        
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+
+        contador = 1
+        for dato in respuesta:
+            dato['id_mostrar'] = contador
+            contador = contador + 1
         return respuesta
     
     def obtener_por_id(id):
