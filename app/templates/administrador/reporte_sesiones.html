@@ -1,0 +1,236 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Sesiones</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Reporte de Sesiones por Día</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija una fecha</p>
+                        </div>
+                        <div class="col">
+                            <input type="date" class="form-control" id="input_fecha_dia"/>
+                        </div>
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_dia"><button class="btn btn-primary">Ver Reporte  <i class="fa fa-file-pdf-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Reporte de Sesiones por Semana</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija una fecha de una semana en específico</p>
+                        </div>
+                        <div class="col">
+                            <input type="week" class="form-control" id="input_fecha_semana"/>
+                        </div>
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_semana"><button class="btn btn-primary">Ver Reporte  <i class="fa fa-file-pdf-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Reporte de Sesiones por Mes</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija un Mes y Año</p>
+                        </div>
+                        <div class="col">
+                            <input type="month" class="form-control" id="input_fecha_mes"/>
+                        </div>
+                        
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_mes"><button class="btn btn-primary">Ver Reporte  <i class="fa fa-file-pdf-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <p class="text-muted font-13 m-b-30">
+                    Tabla de Sesiones
+                </p>
+                
+
+                <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Fecha</th>
+                            <th>Hora</th>
+                            <th>Docente</th>
+                            <th>Seccion</th>
+                            <th>Niveles</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if sesiones %}
+                            {% for sesion in sesiones %}
+                                <tr>
+                                    <td>{{sesion.id_mostrar}}</td>
+                                    <td>{{sesion.fecha}}</td>
+                                    <td>{{sesion.hora}}</td>
+                                    <td>{{sesion.nombre_docente}}</td>
+                                    <td>{{sesion.seccion}}</td>
+                                    <td>{{sesion.nivel}}</td>
+                                    <td>
+                                        <!--button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target=".modal_editar_sesion_{{sesion.id_sesion}}"><i class="fa fa-edit"></i></button>
+                                        <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a-->
+                                        <a href="/administrador/sesiones/pdf/{{sesion.id_sesion}}" target="_blank"><button class="btn btn-primary btn-sm">Reporte Sesión <i class="fa fa-file-o"></i></button></a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                        
+
+
+                    </tbody>
+                </table>
+
+                
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_sesiones');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_sesiones ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_sesiones = document.getElementById('nav_sesiones');
+        nav_sesiones.classList.add('current-page');
+    });
+</script>
+
+<script>
+
+    function formatearFecha(dateObj) {
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    
+
+    document.getElementById('input_fecha_dia').addEventListener('change', function() {
+        const valor = this.value; // ya está en formato YYYY-MM-DD
+        if (valor) {
+            document.getElementById('boton_fecha_dia').href = `/administrador/sesiones/fecha/pdf/${valor}`;
+        }
+    });
+    
+
+    document.getElementById('input_fecha_semana').addEventListener('change', function() {
+        const valor = this.value;
+        const [year, week] = valor.split('-W');
+    
+        // Calcular el lunes de esa semana
+        const simpleDate = new Date(year, 0, 1 + (week - 1) * 7);
+        const day = simpleDate.getDay();
+        const mondayOffset = day <= 4 ? day - 1 : day - 8;
+        const monday = new Date(simpleDate);
+        monday.setDate(simpleDate.getDate() - mondayOffset);
+    
+        const fechaFormateada = formatearFecha(monday);
+        document.getElementById('boton_fecha_semana').href = `/administrador/sesiones/semana/pdf/${fechaFormateada}`;
+    });
+
+    document.getElementById('input_fecha_mes').addEventListener('change', function () {
+        const valor = this.value; // formato: YYYY-MM
+        if (valor) {
+            // Agregamos el día 01 manualmente
+            const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/pdf/${fechaFormateada}`;
+        }
+    });
+</script>
+
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+{% endblock %}
