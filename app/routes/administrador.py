@@ -772,3 +772,27 @@ def vista_sesiones_reporte(datos_usuario):
         sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
 
     return render_template('administrador/reporte_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones)
+
+
+@administrador_bp.route('/docentes/reportes', methods=['GET'])
+@token_requerido
+def vista_docentes_reporte(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_administrador = datos_usuario['id_usuario']
+
+    #sesiones = ServiciosSesion.obtener_todos()
+
+    docentes = ServiciosDocente.obtener_todos()
+    #lista_docentes = {}
+    #for docente in docentes:
+        #lista_docentes[docente['id_docente']] = docente['nombres'] + " " + docente['apellidos']
+    
+    #for sesion in sesiones:
+        #sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
+
+    return render_template('administrador/reporte_docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
