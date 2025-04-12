@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask import render_template, request, redirect, url_for, make_response
+from flask import render_template, request, redirect, url_for, make_response, send_file
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
@@ -9,6 +9,7 @@ from app.services.serviciosSesion import ServiciosSesion
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosReportes import ServiciosReportes
 from app.services.serviciosReportesInformes import ServiciosReportesInformes
+from app.services.serviciosReportesExcelInformes import ServiciosReportesExcelInformes
 from datetime import datetime
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -796,3 +797,29 @@ def vista_docentes_reporte(datos_usuario):
         #sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
 
     return render_template('administrador/reporte_docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
+
+
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES INFORMES  EXCELS -----------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@administrador_bp.route('/reportes/excel/informe/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_mensual_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_mensual_estudiantes_excel(nombre_usuario, fecha)
+
+    '''response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response'''
+    return send_file(buffer,
+                     download_name="Reporte_Productos.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
