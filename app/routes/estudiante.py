@@ -49,7 +49,7 @@ def vista_material(datos_usuario):
 
 # ------------------------------ SESIONES -----------------------------------------------
 
-@estudiante_bp.route('/sesiones/disponibles', methods=['GET'])
+@estudiante_bp.route('/sesiones/disponiblesss', methods=['GET'])
 @token_requerido
 def vista_sesiones_disponibles(datos_usuario):
     nombres = str(datos_usuario['primer_nombre'])
@@ -73,7 +73,7 @@ def inscribir_a_sesion(datos_usuario, id):
 
     inscripcion_sesion = ServiciosEstudiante.inscribir_a_sesion(id_estudiante, id)
 
-    return redirect(url_for('estudiante_bp.vista_sesiones_disponibles'))
+    return redirect(url_for('estudiante_bp.vista_sesiones_disponibles_2'))
 
 
 @estudiante_bp.route('/sesiones/inscritas', methods=['GET'])
@@ -251,6 +251,7 @@ def asignar_tarea(datos_usuario, id):
         # Si no hay referencia, rediriges a una página predeterminada
         return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))
 
+
 @estudiante_bp.route('/actividades/inscribirse/<int:id_actividad>', methods=['GET'])
 @token_requerido
 def inscribir_a_actividad(datos_usuario, id_actividad):
@@ -283,7 +284,6 @@ def vista_reportes(datos_usuario):
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-
     return render_template(
         'estudiante/reportes.html',
         primer_nombre=primer_nombre,
@@ -305,3 +305,51 @@ def generar_pdf_okcard_estudiante(datos_usuario, id):
     response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
 
     return response
+
+
+# --------------------------------- NUEVAS RUTAS SESIONES --------------------
+
+@estudiante_bp.route('/sesiones/disponibles', methods=['GET'])
+@token_requerido
+def vista_sesiones_disponibles_2(datos_usuario):
+
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_estudiante = datos_usuario['id_usuario']
+
+    sesiones_disponibles, sesiones_calendario, hora_actual, dia_actual, f_lunes, f_sabado = ServiciosEstudiante.obtener_sesiones_disponibles_estudiante_id(id_estudiante) # obtener_sesiones_disponibles_2(id_estudiante)
+
+    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00','13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+    fecha_lunes = datetime.strptime(f_lunes, "%Y-%m-%d")
+    lista_fechas = []
+    lista_fechas.append(fecha_lunes.strftime("%Y-%m-%d"))
+    fecha_aa = fecha_lunes + timedelta(days=1)
+    lista_fechas.append(fecha_aa.strftime("%Y-%m-%d"))
+    fecha_aa = fecha_aa + timedelta(days=1)
+    lista_fechas.append(fecha_aa.strftime("%Y-%m-%d"))
+    fecha_aa = fecha_aa + timedelta(days=1)
+    lista_fechas.append(fecha_aa.strftime("%Y-%m-%d"))
+    fecha_aa = fecha_aa + timedelta(days=1)
+    lista_fechas.append(fecha_aa.strftime("%Y-%m-%d"))
+    fecha_aa = fecha_aa + timedelta(days=1)
+    lista_fechas.append(fecha_aa.strftime("%Y-%m-%d"))
+
+    #hora_actual = hora_actual, dia_actual = dia_actual, f_lunes = f_lunes, f_sabado = f_sabado
+    return render_template('estudiante/sesiones_disponibles_2.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones_disponibles, lista_horas = lista_horas, sesiones_calendario = sesiones_calendario, hora_actual = hora_actual, dia_actual = dia_actual, f_lunes = f_lunes, f_sabado = f_sabado, lista_fechas = lista_fechas)
+
+@estudiante_bp.route('/sesiones/pasadas', methods = ['GET'])
+@token_requerido
+def vista_lista_sesiones_pasadas(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    id_estudiante = datos_usuario['id_usuario']
+
+    sesiones_pasadas = ServiciosEstudiante.obtener_sesiones_pasadas_estudiante_id(id_estudiante)
+
+    return render_template('estudiante/sesiones_pasadas.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones_pasadas)
+

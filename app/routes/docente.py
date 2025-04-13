@@ -352,3 +352,23 @@ def download_file_h(filename):
 
     return jsonify({"error": "File not found"}), 404
 
+
+
+@docente_bp.route('/sesiones/semana', methods=['GET'])
+@token_requerido
+def vista_lista_sesiones_semana(datos_usuario):
+
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+
+    id_docente = datos_usuario['id_usuario']
+
+    lista_horarios, lista_sesiones, dia_actual, fecha_actual, f_lunes, f_sabado = ServiciosDocente.obtener_sesiones_semana_docente_por_id(id_docente)
+
+    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00','13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00']
+    
+
+    return render_template("docente/sesiones_semana.html", primer_nombre = primer_nombre, primer_apellido = primer_apellido, lista_horarios=lista_horarios, lista_sesiones=lista_sesiones, dia_actual=dia_actual, fecha_actual=fecha_actual, lista_horas=lista_horas, f_sabado=f_sabado, f_lunes=f_lunes)

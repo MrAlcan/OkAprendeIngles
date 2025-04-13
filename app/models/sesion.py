@@ -14,15 +14,17 @@ class Sesion(db.Model):
     link = db.Column(db.Text, nullable=True, default=None)
     imagen_url = db.Column(db.Text, nullable=True, default=None)
     activo = db.Column(db.Integer, nullable=False, default=1)
+    tipo_virtual = db.Column(db.Integer, nullable=True, default=1)
     #Estudiantes Registrados
 
-    def __init__(self, fecha, hora, docente, seccion, nivel=None, cupos=None):
+    def __init__(self, fecha, hora, docente, seccion, nivel=None, cupos=None, tipo_virtual=1):
         self.fecha = fecha
         self.hora = hora
         self.id_docente = docente
         self.seccion = seccion
         self.nivel = nivel
         self.cupos_disponibles = cupos
+        self.tipo_virtual = tipo_virtual
     
     def verificar_cupo(self):
         return True if self.cupos_disponibles - 1 >= 0 else False

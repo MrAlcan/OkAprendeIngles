@@ -30,6 +30,12 @@ def no_iniciar_sesion(f):
 def token_requerido(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
+
+        token = request.cookies.get('access_token_cookie')
+        #print(token)
+        if not token:
+            return redirect(url_for('inicio_bp.vista_ingresar'))
+
         cookie_cabecera = request.headers['Cookie'].split('; ')
         ruta = str(request.path)
         #print(f"ruta: {ruta}")

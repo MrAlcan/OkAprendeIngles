@@ -1,0 +1,249 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Informes de Sesiones</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+
+                
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Informe de Estudiantes por Mes</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija un Mes y Año</p>
+                        </div>
+                        <div class="col">
+                            <input type="month" class="form-control" id="input_fecha_mes_estudiantes"/>
+                        </div>
+                        
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_mes_estudiantes"><button class="btn btn-primary">Ver Informe  <i class="fa fa-file-pdf-o"></i></button></a>
+                            <a href="#" download="Reporte_Estudiantes.xlsx" id="boton_fecha_mes_excel_estudiantes" hidden><button class="btn btn-primary">Descargar Informe  <i class="fa fa-file-excel-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Informe de Carga Horaria por Semana</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija una semana en específico</p>
+                        </div>
+                        <div class="col">
+                            <input type="week" class="form-control" id="input_fecha_semana"/>
+                        </div>
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_semana"><button class="btn btn-primary">Ver Informe  <i class="fa fa-file-pdf-o"></i></button></a>
+                            <a href="#" download="Reporte_Carga_Horaria_Semanal.xlsx" id="boton_fecha_semana_excel" hidden><button class="btn btn-primary">Descargar Informe  <i class="fa fa-file-excel-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Informe de Carga Horaria por Mes</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija un Mes y Año</p>
+                        </div>
+                        <div class="col">
+                            <input type="month" class="form-control" id="input_fecha_mes"/>
+                        </div>
+                        
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_mes"><button class="btn btn-primary">Ver Informe  <i class="fa fa-file-pdf-o"></i></button></a>
+                            <a href="#" download="Reporte_Carga_Horaria_Mensual.xlsx" id="boton_fecha_mes_excel" hidden><button class="btn btn-primary">Descargar Informe  <i class="fa fa-file-excel-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Informe de Carga Horaria Detallada por Mes</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija un Mes y Año</p>
+                        </div>
+                        <div class="col">
+                            <input type="month" class="form-control" id="input_fecha_mes_detallado"/>
+                        </div>
+                        
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_mes_detallado"><button class="btn btn-primary">Ver Informe  <i class="fa fa-file-pdf-o"></i></button></a>
+                            <a href="#" download="Reporte_Carga_Horaria_Mensual.xlsx" id="boton_fecha_mes_excel_detallado" hidden><button class="btn btn-primary">Descargar Informe  <i class="fa fa-file-excel-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_sesiones');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_sesiones ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_sesiones = document.getElementById('nav_sesiones');
+        nav_sesiones.classList.add('current-page');
+    });
+</script>
+
+<script>
+
+    function formatearFecha(dateObj) {
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    
+    
+
+    document.getElementById('input_fecha_semana').addEventListener('change', function() {
+        const valor = this.value;
+        //console.log(valor);
+        if (valor){
+            const [year, week] = valor.split('-W');
+    
+            // Calcular el lunes de esa semana
+            const simpleDate = new Date(year, 0, 1 + (week - 1) * 7);
+            const day = simpleDate.getDay();
+            const mondayOffset = day <= 4 ? day - 1 : day - 8;
+            const monday = new Date(simpleDate);
+            monday.setDate(simpleDate.getDate() - mondayOffset);
+        
+            const fechaFormateada = formatearFecha(monday);
+            document.getElementById('boton_fecha_semana').href = `/administrador/reportes/informe/carga/horaria/semana/${fechaFormateada}`;
+            document.getElementById('boton_fecha_semana_excel').href = `/administrador/reportes/excel/informe/carga/horaria/semana/${fechaFormateada}`;
+            document.getElementById('boton_fecha_semana_excel').hidden = false;
+            
+        }else{
+            //console.log("null");
+            document.getElementById('boton_fecha_semana_excel').hidden = true;
+            
+        }
+        
+    });
+
+    document.getElementById('input_fecha_mes').addEventListener('change', function () {
+        const valor = this.value; // formato: YYYY-MM
+        if (valor) {
+            // Agregamos el día 01 manualmente
+            const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            document.getElementById('boton_fecha_mes').href = `/administrador/reportes/informe/carga/horaria/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel').href = `/administrador/reportes/excel/informe/carga/horaria/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel').hidden = false;
+        }else{
+            document.getElementById('boton_fecha_mes_excel').hidden = true;
+        }
+    });
+
+    document.getElementById('input_fecha_mes_estudiantes').addEventListener('change', function () {
+        const valor = this.value; // formato: YYYY-MM
+        if (valor) {
+            // Agregamos el día 01 manualmente
+            const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            document.getElementById('boton_fecha_mes_estudiantes').href = `/administrador/reportes/informe/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel_estudiantes').href = `/administrador/reportes/excel/informe/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel_estudiantes').hidden = false;
+        }else{
+            document.getElementById('boton_fecha_mes_excel_estudiantes').hidden = true;
+        }
+    });
+
+    document.getElementById('input_fecha_mes_detallado').addEventListener('change', function () {
+        const valor = this.value; // formato: YYYY-MM
+        if (valor) {
+            // Agregamos el día 01 manualmente
+            const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            document.getElementById('boton_fecha_mes_detallado').href = `/administrador/reportes/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel_detallado').href = `/administrador/reportes/excel/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel_detallado').hidden = false;
+        }else{
+            document.getElementById('boton_fecha_mes_excel_detallado').hidden = true;
+        }
+    });
+</script>
+
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+{% endblock %}
