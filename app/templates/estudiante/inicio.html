@@ -50,17 +50,22 @@
         .beneficio p {
             font-size: 16px;
         }
-        .lesson {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .completed { background-color: #4CAF50; color: white; } /* Verde para aprobadas */
-        .current { background-color: #FFEB3B; color: black; } /* Amarillo para la actual */
-        .locked { background-color: #E0E0E0; color: #757575; } /* Gris para bloqueadas */
-
+        .btn-inscribirse {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+        
+          .btn-inscribirse.inscrito {
+            background-color: #28a745 !important; /* verde */
+            pointer-events: none;
+          }
 
         .actividades-container {
             padding: 0px 20px;
@@ -124,7 +129,7 @@
 {% endblock %}
 
 {% block titulo_contenido %}
-    <h3>Panel de Estudiante</h3>
+    <h3>Bienvenid@ {{estudiante.nombres}} </h3>
 {% endblock %}
 
 {% block contenido %}
@@ -151,7 +156,26 @@
         </div>
     </div>
 
+    <div class="sesion-container" style="margin: 30px auto; max-width: 800px; background: linear-gradient(to right, #6a11cb, #2575fc); padding: 30px; border-radius: 16px; color: white; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+        <h4 style="font-size: 26px; font-weight: bold; margin-bottom: 20px;">📌 LA SESIÓN QUE TE CORRESPONDE ES:</h4>
+        <div class="lessons-container" style="font-size: 20px; line-height: 1.6; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 12px;">
+            {% if estudiante.welcome_completado == 0 %}
+                <p>❤️ <strong>Reserva tu WELCOME</strong> – ¡Tu primera experiencia en inglés te espera!</p>
     
+            {% elif estudiante.working_completado == estudiante.essential_completado and estudiante.essential_completado == estudiante.speakout_completado %}
+                <p>📘 <strong>ESSENTIAL {{ estudiante.essential_completado + 1 }}</strong> – ¡Construye tus cimientos en inglés!</p>
+    
+            {% elif estudiante.working_completado == estudiante.essential_completado %}
+                <p>🗣️ <strong>SPEAK OUT {{ estudiante.speakout_completado + 1 }}</strong> – ¡Exprésate con seguridad en inglés!</p>
+    
+            {% elif estudiante.working_completado == estudiante.speakout_completado %}
+                <p>💼 <strong>WORKING {{ estudiante.working_completado + 1 }}</strong> – ¡Habla inglés como un profesional!</p>
+            {% endif %}
+        </div>
+    </div>
+    
+
+
     
     </div>
 
@@ -168,13 +192,13 @@
                     <p><strong>Cupos disponibles:</strong> {{ act.cupos_disponibles }}</p>
                   
                     {% if act.cupos_disponibles > 0 %}
-                    <a href="/estudiante/actividades/inscribirse/{{ act.id }}" class="btn-inscribirse">Inscribirse</a>
-
+                    <button 
+                        class="btn-inscribirse" 
+                        onclick="inscribirse(this, '{{ act.id_actividad }}')">Inscribirse</button>
                     {% else %}
-                      <button class="btn-lleno" disabled>Actividad llena</button>
+                    <button class="btn-lleno" disabled>Actividad llena</button>
                     {% endif %}
-                  </div>
-                  
+                </div>
                 {% endfor %}
             </div>
         {% else %}
@@ -189,5 +213,20 @@
             nav_inicio.classList.add('current-page');  
         });
     </script>
+    <script>
+        function inscribirse(boton, idActividad) {
+          // Cambia el texto y el color del botón
+          boton.textContent = "Inscrito";
+          boton.classList.add("inscrito");
+      
+          // Desactiva el botón para evitar clics múltiples
+          boton.disabled = true;
+      
+          // Redirige (simula clic al enlace real)
+          setTimeout(() => {
+            window.location.href = `/estudiante/actividades/inscribirse/${idActividad}`;
+          }, 500); // medio segundo
+        }
+      </script>
 {% endblock %}
 

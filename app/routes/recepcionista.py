@@ -370,8 +370,12 @@ def vista_lista_actividades(datos_usuario):
     print(actividades)
     fecha = datos_usuario.get('fecha')
     hora = datos_usuario.get('hora')
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
 
-    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades, docentes = docentes)
+    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades, docentes = docentes, primer_nombre = primer_nombre, primer_apellido = primer_apellido,)
 
 
 @recepcionista_bp.route('/actividades/crear', methods=['POST'])
@@ -545,3 +549,9 @@ def inscribir_estudiante(datos_usuario, id_actividad):
         # Manejo de error si no hay cupos
         flash("No hay cupos disponibles para esta actividad", 'error')
         return redirect(url_for('recepcionista.vista_lista_actividades'))
+
+@recepcionista_bp.route('/actividades/eliminar/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def eliminar_actividad(datos_usuario, id_actividad):
+    actividad = ServiciosActividad.eliminar(id_actividad)
+    return redirect(url_for('recepcionista_bp.vista_lista_actividades'))

@@ -58,50 +58,50 @@ class ServiciosActividad():
     
     
 
-def eliminar(id_actividad):
-    actividad = Actividad.query.get(id_actividad)
-    if actividad:
-        db.session.delete(actividad)
-        db.session.commit()
-        return {"status": "success", "message": "Actividad eliminada correctamente"}
-    return {"status": "error", "message": "Actividad no encontrada"}
+    def eliminar(id_actividad):
+        actividad = Actividad.query.get(id_actividad)
 
-def inscribir(id_estudiante, id_actividad):
-        try:
-            actividad = Actividad.query.get(id_actividad)
-            estudiante = Estudiante.query.get(id_estudiante)
-
-            if not actividad or not estudiante:
-                return {"status": "error", "message": "Actividad o estudiante no encontrado"}
-
-            if actividad.cupos_disponibles <= 0:
-                return {"status": "error", "message": "No hay cupos disponibles"}
-
-            # Verificar si ya está inscrito
-            ya_inscrito = DetalleActividad.query.filter_by(
-                id_actividad=id_actividad,
-                id_estudiante=id_estudiante,
-                activo=True
-            ).first()
-
-            if ya_inscrito:
-                return {"status": "warning", "message": "Ya estás inscrito en esta actividad"}
-
-            # Crear nueva inscripción
-            nueva_inscripcion = DetalleActividad(
-                id_actividad=id_actividad,
-                id_estudiante=id_estudiante,
-                estado_registro="Inscrito",  # Ajusta según tu modelo
-                activo=True
-            )
-
-            actividad.cupos_disponibles -= 1
-
-            db.session.add(nueva_inscripcion)
+        if actividad:
+            actividad.activo = 0
             db.session.commit()
+        return {"status": "success", "message": "Administrador eliminado exitosamente"}
 
-            return {"status": "success", "message": "Inscripción exitosa"}
+    def inscribir(id_estudiante, id_actividad):
+            try:
+                actividad = Actividad.query.get(id_actividad)
+                estudiante = Estudiante.query.get(id_estudiante)
 
-        except Exception as e:
-            db.session.rollback()
-            return {"status": "error", "message": str(e)}
+                if not actividad or not estudiante:
+                    return {"status": "error", "message": "Actividad o estudiante no encontrado"}
+
+                if actividad.cupos_disponibles <= 0:
+                    return {"status": "error", "message": "No hay cupos disponibles"}
+
+                # Verificar si ya está inscrito
+                ya_inscrito = DetalleActividad.query.filter_by(
+                    id_actividad=id_actividad,
+                    id_estudiante=id_estudiante,
+                    activo=1
+                ).first()
+
+                if ya_inscrito:
+                    return {"status": "warning", "message": "Ya estás inscrito en esta actividad"}
+
+                # Crear nueva inscripción
+                nueva_inscripcion = DetalleActividad(
+                    id_actividad=id_actividad,
+                    id_estudiante=id_estudiante,
+                    estado_registro="Inscrito",  # Ajusta según tu modelo
+                    activo=1
+                )
+
+                actividad.cupos_disponibles -= 1
+
+                db.session.add(nueva_inscripcion)
+                db.session.commit()
+
+                return {"status": "success", "message": "Inscripción exitosa"}
+
+            except Exception as e:
+                db.session.rollback()
+                return {"status": "error", "message": str(e)}

@@ -24,8 +24,8 @@ estudiante_bp = Blueprint('estudiante_bp', __name__)
 @estudiante_bp.route('/inicio', methods=['GET'])
 @token_requerido
 def vista_inicio(datos_usuario):
-    #id_estudiante = datos_usuario['id_estudiante']
-    #estudiante = ServiciosEstudiante.obtener_por_id(id_estudiante)
+    id_estudiante = datos_usuario['id_usuario']
+    estudiante = ServiciosEstudiante.obtener_por_id(id_estudiante)
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
@@ -35,7 +35,7 @@ def vista_inicio(datos_usuario):
 
     return render_template('estudiante/inicio.html',
                            primer_nombre = primer_nombre, primer_apellido = primer_apellido,
-                           actividades=actividades_ordenadas)
+                           actividades=actividades_ordenadas, estudiante = estudiante)
 
     
 @estudiante_bp.route('/material', methods=['GET'])
@@ -267,9 +267,10 @@ def inscribir_a_actividad(datos_usuario, id_actividad):
 @estudiante_bp.route('/actividades', methods=['GET'])
 @token_requerido
 def vista_actividades_disponibles(datos_usuario):
-    # Aquí implementas la lógica para obtener y mostrar las actividades disponibles.
+    id_estudiante = datos_usuario['id_usuario']
+    estudiante = ServiciosEstudiante.obtener_por_id(id_estudiante)
     actividades = ServiciosActividad.obtener_todos()
     actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
     
     # Renderizas la plantilla correspondiente
-    return render_template('estudiante/actividades.html', actividades=actividades_ordenadas)
+    return render_template('estudiante/inicio.html', actividades=actividades_ordenadas, estudiante = estudiante)

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, make_response
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
@@ -7,6 +7,8 @@ from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_re
 from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosSesion import ServiciosSesion
 from app.services.serviciosEstudiante import ServiciosEstudiante
+from app.services.serviciosReportes import ServiciosReportes
+
 from datetime import datetime
 
 administrador_bp = Blueprint('administrador_bp', __name__)
@@ -529,3 +531,187 @@ def agregar_estudiante_manualmente(datos_usuario, id):
     else:
         # Si no hay referencia, rediriges a una página predeterminada
         return redirect(url_for('administrador_bp.vista_lista_sesiones'))
+
+# -------------------- generacion pdf's ----------------------------
+
+@administrador_bp.route('/usuarios/estudiantes/pdf', methods=['GET'])
+@token_requerido
+def generar_pdf_estudiantes_completos(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_reporte_todos_estudiantes(nombre_usuario)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="informe_estudiantes.pdf"'
+
+    return response
+
+@administrador_bp.route('/usuarios/estudiantes/okcard/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf_okcard_estudiante(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_ok_card_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_pdf(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesion_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesion.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/fecha/pdf/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_dia_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_dia_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/semana/pdf/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_semana_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_semana_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/mes/pdf/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_mes_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_mes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES SESIONES DOCENTES ---------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@administrador_bp.route('/sesiones/fecha/docente/pdf/<fecha>/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_dia_docente_pdf(datos_usuario, fecha, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_dia_docente_pdf(nombre_usuario, fecha, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/semana/docente/pdf/<fecha>/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_semana_docente_pdf(datos_usuario, fecha, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_semana_docente_pdf(nombre_usuario, fecha, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@administrador_bp.route('/sesiones/mes/docente/pdf/<fecha>/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_mes_docente_pdf(datos_usuario, fecha, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_mes_docente_pdf(nombre_usuario, fecha, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES INFORMES  -----------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@administrador_bp.route('/reportes/informe/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_mensual_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_mensual_estudiantes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+@administrador_bp.route('/reportes', methods=['GET'])
+@token_requerido
+def vista_reportes(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'administrador/reportes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido
+    )

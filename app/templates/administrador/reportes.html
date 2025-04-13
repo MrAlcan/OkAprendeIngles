@@ -1,0 +1,148 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Reportes</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Generar reportes en PDF</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <!-- Reporte de todos los estudiantes -->
+                <form method="GET" action="{{ url_for('administrador_bp.generar_pdf_estudiantes_completos') }}" target="_blank">
+                    <button type="submit" class="btn btn-primary">📄 Estudiantes Completos</button>
+                </form>
+                <hr>
+
+                <!-- Reporte okcard estudiante -->
+                <form method="GET" action="{{ url_for('administrador_bp.generar_pdf_okcard_estudiante', id='') }}" onsubmit="this.action += this.id_input.value;" target="_blank">
+                    <div class="form-group">
+                        <label for="id_input">ID del Estudiante (OK Card):</label>
+                        <input type="text" class="form-control" name="id_input" id="id_input" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">📄 OK Card Estudiante</button>
+                </form>
+                <hr>
+
+                <!-- Reportes por fecha -->
+                <form method="GET" action="{{ url_for('administrador_bp.generar_reporte_sesion_dia_pdf', fecha='') }}" onsubmit="this.action = this.action + '?fecha=' + this.fecha.value;" target="_blank">
+                    <div class="form-group">
+                        <label>Fecha (YYYY-MM-DD):</label>
+                        <input type="date" class="form-control" name="fecha" required>
+                    </div>
+                    <button type="submit" class="btn btn-info">📄 Sesiones del Día</button>
+                </form>
+                
+                <hr>
+
+
+
+                <!-- Reportes por semana -->
+                <form method="GET" action="{{ url_for('administrador_bp.generar_reporte_sesion_semana_pdf', fecha='') }}" onsubmit="this.action += this.fecha.value;" target="_blank">
+                    <div class="form-group">
+                        <label>Fecha dentro de la Semana:</label>
+                        <input type="date" class="form-control" name="fecha" required>
+                    </div>
+                    <button type="submit" class="btn btn-info">📄 Sesiones por Semana</button>
+                </form>
+                <hr>
+
+                <!-- Reportes por mes -->
+                <form method="GET" action="{{ url_for('administrador_bp.generar_reporte_sesion_mes_pdf', fecha='') }}" onsubmit="this.action += this.fecha.value;" target="_blank">
+                    <div class="form-group">
+                        <label>Mes (elige un día del mes):</label>
+                        <input type="month" class="form-control" name="fecha" required>
+                    </div>
+                    <button type="submit" class="btn btn-info">📄 Sesiones por Mes</button>
+                </form>
+                <hr>
+
+                <!-- Reportes informe mensual -->
+                <form method="GET" action="{{ url_for('administrador_bp.generar_reporte_informe_mensual_pdf', fecha='') }}" onsubmit="this.action += this.fecha.value;" target="_blank">
+                    <div class="form-group">
+                        <label>Mes del Informe:</label>
+                        <input type="month" class="form-control" name="fecha" required>
+                    </div>
+                    <button type="submit" class="btn btn-warning">📄 Informe Mensual Estudiantes</button>
+                </form>
+                <hr>
+
+                <!-- Reporte sesiones por docente -->
+                <form method="GET" onsubmit="this.action = `/administrador/sesiones/fecha/docente/pdf/${this.fecha.value}/${this.id_docente.value}`" target="_blank">
+                    <div class="form-group">
+                        <label>Fecha:</label>
+                        <input type="date" class="form-control" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ID Docente:</label>
+                        <input type="text" class="form-control" name="id_docente" required>
+                    </div>
+                    <button type="submit" class="btn btn-secondary">📄 Sesiones Día por Docente</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_sesiones');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_sesiones ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_sesiones = document.getElementById('nav_sesiones_dia');
+        nav_sesiones.classList.add('current-page');
+    });
+</script>
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+{% endblock %}
