@@ -1107,7 +1107,10 @@ class ServiciosReportesInformes():
                             id_sesion_obj = sesion.id_sesion
                             hora_sesion = sesion.hora.strftime("%H:%M")
                             diccionario_horas[hora_sesion] = True
-                            seccion_nivel = str(sesion.seccion) + " " + str(sesion.nivel)
+                            if (str(sesion.nivel)=='0'):
+                                seccion_nivel = str(sesion.seccion)
+                            else:
+                                seccion_nivel = str(sesion.seccion) + " " + str(sesion.nivel)
                             cantidad_asistentes = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==id_sesion_obj, DetalleSesion.estado_registro=='Asistio').count()
                             cantidad_reservados = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==id_sesion_obj).count()
                             if cantidad_asistentes > 0:
@@ -1125,35 +1128,37 @@ class ServiciosReportesInformes():
         lista_spans = []
         if len(datos_docente_general)>0:
             for dato_docente in datos_docente_general:
-                flag_color = not flag_color
+                
                 dict_horas = dato_docente[0]
-                list_dias = dato_docente[1]
-                nombre_doc = dato_docente[2]
-                totales = dato_docente[3]
-                inicio_span = contador_celdas + 1
-                fin_span = contador_celdas + 1
-                for hora_d in lista_horas:
-                    if hora_d in dict_horas:
-                        contador_celdas = contador_celdas + 1
-                        fin_span = contador_celdas
-                        fila_datt = []
-                        fila_datt.append(Paragraph(f"{nombre_doc}", estilo_cantidad_tabla))
-                        for dia_l in list_dias:
-                            if hora_d in dia_l:
-                                fila_datt.append(Paragraph(f"{hora_d}", estilo_cantidad_tabla))
-                                fila_datt.append(Paragraph(f"{dia_l[hora_d][0]}", estilo_cantidad_tabla))
-                                fila_datt.append(Paragraph(f"{dia_l[hora_d][1]}", estilo_cantidad_tabla))
-                            else:
-                                fila_datt.append(Paragraph(f"{hora_d}", estilo_cantidad_tabla))
-                                fila_datt.append('')
-                                fila_datt.append('')
-                        
-                        fila_datt.append(Paragraph(f"{totales}", estilo_cantidad_tabla))
+                if len(dict_horas)>0:
+                    flag_color = not flag_color
+                    list_dias = dato_docente[1]
+                    nombre_doc = dato_docente[2]
+                    totales = dato_docente[3]
+                    inicio_span = contador_celdas + 1
+                    fin_span = contador_celdas + 1
+                    for hora_d in lista_horas:
+                        if hora_d in dict_horas:
+                            contador_celdas = contador_celdas + 1
+                            fin_span = contador_celdas
+                            fila_datt = []
+                            fila_datt.append(Paragraph(f"{nombre_doc}", estilo_cantidad_tabla))
+                            for dia_l in list_dias:
+                                if hora_d in dia_l:
+                                    fila_datt.append(Paragraph(f"{hora_d}", estilo_cantidad_tabla))
+                                    fila_datt.append(Paragraph(f"{dia_l[hora_d][0]}", estilo_cantidad_tabla))
+                                    fila_datt.append(Paragraph(f"{dia_l[hora_d][1]}", estilo_cantidad_tabla))
+                                else:
+                                    fila_datt.append(Paragraph(f"{hora_d}", estilo_cantidad_tabla))
+                                    fila_datt.append('')
+                                    fila_datt.append('')
+                            
+                            fila_datt.append(Paragraph(f"{totales}", estilo_cantidad_tabla))
 
-                        tabla_general.append(fila_datt)
-                                
+                            tabla_general.append(fila_datt)
+                                    
 
-                lista_spans.append([inicio_span, fin_span, flag_color])
+                    lista_spans.append([inicio_span, fin_span, flag_color])
         
 
         contador_spp = 1
@@ -1161,7 +1166,7 @@ class ServiciosReportesInformes():
             coloracion_1 = ('BACKGROUND', (0, spanes[0]), (-1, spanes[1]), color_titulos_tabla)
             #coloracion_2 = ('BACKGROUND', (-1, spanes[0]), (-1, spanes[1]), color_titulos_tabla)
             #coloracion_3 = ('BACKGROUND', (1, spanes[0]), (-2, spanes[1]), color_titulos_tabla)
-            if contador_spp%2==0:
+            if spanes[2]:
                 estilo_tabla_datos_est.append(coloracion_1)
                 #estilo_tabla_datos_est.append(coloracion_2)
                 #estilo_tabla_datos_est.append(coloracion_3)

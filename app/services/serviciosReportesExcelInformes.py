@@ -1064,5 +1064,348 @@ class ServiciosReportesExcelInformes():
         buffer.seek(0)
 
         return buffer
+    
+
+
+    def generar_informe_carga_horaria_docentes_semana_detallado_excel(nombre_usuario, fecha):
+
+        color_titulos_tabla = '#A7C7E7'
+
+
+        buffer = BytesIO()
+
+        # Crear el Workbook en memoria
+        workbook = xlsxwriter.Workbook(buffer, {'in_memory': True})
+
+        # Agregar una hoja de trabajo con nombre personalizado
+        worksheet = workbook.add_worksheet('Informe Carga Horaria Detallado')
+
+        ancho_columnas = [0.7*inch,
+                          0.9*inch, 0.9*inch, 0.2*inch, 0.1*inch, 0.2*inch,
+                          0.9*inch, 0.9*inch, 0.2*inch, 0.1*inch, 0.2*inch,
+                          0.9*inch, 0.9*inch, 0.2*inch, 0.1*inch, 0.2*inch,
+                          0.9*inch, 0.9*inch, 0.2*inch, 0.1*inch, 0.2*inch,
+                          0.9*inch, 0.9*inch, 0.2*inch, 0.1*inch, 0.2*inch,
+                          0.9*inch, 0.9*inch, 0.2*inch, 0.1*inch, 0.2*inch,
+                          0.7*inch]
+        col_widths = [round(i, 2) for i in ancho_columnas]
+        for col, width in enumerate(col_widths):
+            worksheet.set_column(col, col, width)
+
+        formato_titulo_tutor = workbook.add_format({
+            'font_size': 8,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bold': True,
+            'font_name': 'Helvetica',  # XlsxWriter usa fuentes del sistema, "Helvetica" si está disponible
+            'font_color': 'white',
+            'bg_color': '#0000FF',
+            'text_wrap': True,
+            'border': 1
+        })
+
+        formato_titulo_total = workbook.add_format({
+            'font_size': 8,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bold': True,
+            'font_name': 'Helvetica',  # XlsxWriter usa fuentes del sistema, "Helvetica" si está disponible
+            'font_color': 'white',
+            'bg_color': '#FF0000',
+            'text_wrap': True,
+            'border': 1
+        })
+
+        formato_cuerpo_1 = workbook.add_format({
+            'font_size': 8,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bold': False,
+            'font_name': 'Helvetica',  # XlsxWriter usa fuentes del sistema, "Helvetica" si está disponible
+            'font_color': 'black',
+            'bg_color': '#FFFFFF',
+            'text_wrap': True,
+            'border': 1
+        })
+
+        formato_cuerpo_2 = workbook.add_format({
+            'font_size': 8,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bold': False,
+            'font_name': 'Helvetica',  # XlsxWriter usa fuentes del sistema, "Helvetica" si está disponible
+            'font_color': 'black',
+            'bg_color': color_titulos_tabla,
+            'text_wrap': True,
+            'border': 1
+        })
+
+        formato_cuerpo_vacio = workbook.add_format({
+            'font_size': 8,
+            'align': 'center',
+            'valign': 'vcenter',
+            'bold': False,
+            'font_name': 'Helvetica',  # XlsxWriter usa fuentes del sistema, "Helvetica" si está disponible
+            'font_color': 'black',
+            'bg_color': '#FF0000',
+            'text_wrap': True,
+            'border': 1
+        })
+
+        
+
+        fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        fecha_objetivo = datetime.strptime(fecha, "%Y-%m-%d")
+
+        mes_actual = fecha_objetivo.date()
+        dias_al_lunes = mes_actual.weekday()
+        mes_actual = mes_actual - timedelta(days=dias_al_lunes)
+        #mes_actual = mes_actual.replace(day=1)
+
+        fecha_no_expirados = mes_actual + timedelta(days=6)
+
+        #fecha_no_expirados = fecha_no_expirados.replace(day=1)
+
+        
+        fecha_actual = datetime.now()
+
+        
+        
+        fecha_actual_str = fecha_actual.strftime("%d/%m/%Y")
+        mes_string = MES_INGLES[mes_actual.strftime("%B")]
+        fecha_mes_str = mes_actual.strftime("%d/%m/%Y")
+        ultimo_dia = fecha_no_expirados - timedelta(days=1)
+        ultimo_dia_str = ultimo_dia.strftime("%d/%m/%Y")
+
+        
+        
+
+        #estilo_titulos_tabla = ParagraphStyle('titulo_tabla', fontSize=6, alignment=1, fontName="Helvetica-Bold", textColor=colors.white)
+        #estilo_cantidad_tabla = ParagraphStyle('cantidad_tabla', fontSize=6, alignment=1, textColor=colors.black)
+
+
+        lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:30', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00']
+
+        docentes = Docente.query.filter(Docente.activo==1).all()
+
+        
+
+        flag_color = True
+
+        
+        contador_celdas_tutor = 1
+        
+        tabla_general = []
+
+        fecha_en_string = mes_actual.strftime("%d-%m-%Y")
+        dia_en_string = fecha_en_string.split('-')[0]
+
+        dia_numero = int(dia_en_string)
+
+
+
+        fila = 2
+
+        worksheet.write(fila, 0, "TUTOR", formato_titulo_tutor)
+
+        worksheet.write(fila, 1, "HORA", formato_titulo_total)
+        worksheet.merge_range(fila, 2, fila, 5, f"LUNES {dia_numero}", formato_titulo_total)
+
+        worksheet.write(fila, 6, "HORA", formato_titulo_tutor)
+        worksheet.merge_range(fila, 7, fila, 10, f"MARTES {dia_numero + 1}", formato_titulo_tutor)
+
+        worksheet.write(fila, 11, "HORA", formato_titulo_total)
+        worksheet.merge_range(fila, 12, fila, 15, f"MIERCOLES {dia_numero + 2}", formato_titulo_total)
+
+        worksheet.write(fila, 16, "HORA", formato_titulo_tutor)
+        worksheet.merge_range(fila, 17, fila, 20, f"JUEVES {dia_numero + 3}", formato_titulo_tutor)
+
+        worksheet.write(fila, 21, "HORA", formato_titulo_total)
+        worksheet.merge_range(fila, 22, fila, 25, f"VIERNES {dia_numero + 4}", formato_titulo_total)
+
+        worksheet.write(fila, 26, "HORA", formato_titulo_tutor)
+        worksheet.merge_range(fila, 27, fila, 30, f"SABADO {dia_numero + 5}", formato_titulo_tutor)
+
+        worksheet.write(fila, 31, "TOTAL", formato_titulo_total)
+
+        fila = fila + 1
+
+        contador_celdas = fila - 1
+
+
+        #cabecera = [Paragraph(f"TUTOR", estilo_titulos_tabla), Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"LUNES {dia_numero}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"MARTES {dia_numero+1}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"MIERCOLES {dia_numero+2}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"JUEVES {dia_numero+3}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"VIERNES {dia_numero+4}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"SABADO {dia_numero+5}", estilo_titulos_tabla), '', Paragraph(f"TOTAL", estilo_titulos_tabla)]
+
+        #tabla_general.append(cabecera)
+
+        datos_docente_general = []
+
+        if docentes:
+
+            for docente in docentes:
+                #flag_color = not flag_color
+                contador_celdas_tutor = 0
+
+                fecha_aux = mes_actual
+
+                nombres_doc = str(docente.nombres).split(' ')[0] + " " + str(docente.apellidos).split(' ')[0]
+
+                id_docente_obj = docente.id_docente
+
+                diccionario_horas = {}
+
+                lista_dias = []
+
+                cantida_tot = 0
+                
+
+                while fecha_aux<fecha_no_expirados:
+                    diccionario_datos = {}
+                    sesiones = Sesion.query.filter(Sesion.activo==1, Sesion.id_docente==id_docente_obj, Sesion.fecha==fecha_aux).order_by(Sesion.fecha, Sesion.hora).all()
+                    if sesiones:
+                        for sesion in sesiones:
+                            id_sesion_obj = sesion.id_sesion
+                            hora_sesion = sesion.hora.strftime("%H:%M")
+                            diccionario_horas[hora_sesion] = True
+                            if (str(sesion.nivel)=='0'):
+                                seccion_nivel = str(sesion.seccion)
+                            else:
+                                seccion_nivel = str(sesion.seccion) + "\n" + str(sesion.nivel)
+                            #seccion_nivel = str(sesion.seccion) + " " + str(sesion.nivel)
+                            cantidad_asistentes = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==id_sesion_obj, DetalleSesion.estado_registro=='Asistio').count()
+                            cantidad_reservados = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==id_sesion_obj).count()
+                            if cantidad_asistentes > 0:
+                                cantida_tot = cantida_tot + 1
+                            #cantida_tot = cantida_tot + int(cantidad_asistentes)
+                            dato_registros = str(cantidad_asistentes) + "/" + str(cantidad_reservados)
+
+                            diccionario_datos[hora_sesion] = [seccion_nivel, dato_registros]
+                    
+                    lista_dias.append(diccionario_datos)
+                    fecha_aux = fecha_aux + timedelta(days=1)
+                datos_docente_general.append([diccionario_horas, lista_dias, nombres_doc, cantida_tot])
+        
+
+        lista_spans = []
+        if len(datos_docente_general)>0:
+            for dato_docente in datos_docente_general:
+                #flag_color = not flag_color
+                dict_horas = dato_docente[0]
+                if len(dict_horas)>0:
+                    flag_color = not flag_color
+                    # el original era uno atras toda la columna de abajo
+                    list_dias = dato_docente[1]
+                    nombre_doc = dato_docente[2]
+                    totales = dato_docente[3]
+                    inicio_span = contador_celdas + 1
+                    fin_span = contador_celdas + 1
+
+                    formato_cuerpo_tabla = formato_cuerpo_2
+
+                    if not flag_color:
+                        formato_cuerpo_tabla = formato_cuerpo_1
+
+                    #contador_nombre = 0
+                    for hora_d in lista_horas:
+                        if hora_d in dict_horas:
+                            #contador_nombre = contador_nombre + 1
+                            
+                            contador_celdas = contador_celdas + 1
+                            fin_span = contador_celdas
+                            
+                            fila_datt = []
+                            #if contador_nombre == 1:
+                            contador_columna = 1
+
+                            #fila_datt.append(Paragraph(f"{nombre_doc}", estilo_cantidad_tabla))
+                            #worksheet.merge_range(inicio_span, 0, fin_span, 0, f"{nombre_doc}", formato_cuerpo_tabla)
+                            for dia_l in list_dias:
+                                if hora_d in dia_l:
+                                    worksheet.write(fila, contador_columna, f"{hora_d}", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, f"{dia_l[hora_d][0]}", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    cantidad_alumnos = str(dia_l[hora_d][1])
+                                    cantidad_asistio = cantidad_alumnos.split('/')[0]
+                                    cantidad_total = cantidad_alumnos.split('/')[1]
+                                    
+                                    if int(cantidad_asistio)==0:
+                                        worksheet.write(fila, contador_columna, f"{cantidad_asistio}", formato_cuerpo_vacio)
+                                        contador_columna = contador_columna + 1
+                                    else:
+                                        worksheet.write(fila, contador_columna, f"{cantidad_asistio}", formato_cuerpo_tabla)
+                                        contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, "/", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, f"{cantidad_total}", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    
+                                    #fila_datt.append(Paragraph(f"{hora_d}", estilo_cantidad_tabla))
+                                    #fila_datt.append(Paragraph(f"{dia_l[hora_d][0]}", estilo_cantidad_tabla))
+                                    #fila_datt.append(Paragraph(f"{dia_l[hora_d][1]}", estilo_cantidad_tabla))
+                                else:
+                                    worksheet.write(fila, contador_columna, f"{hora_d}", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, "", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, "", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, "", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+                                    worksheet.write(fila, contador_columna, "", formato_cuerpo_tabla)
+                                    contador_columna = contador_columna + 1
+
+                                    #fila_datt.append(Paragraph(f"{hora_d}", estilo_cantidad_tabla))
+                                    #fila_datt.append('')
+                                    #fila_datt.append('')
+                            fila = fila + 1
+                            
+                            #fila_datt.append(Paragraph(f"{totales}", estilo_cantidad_tabla))
+                            #worksheet.merge_range(inicio_span, 19, fin_span, 19, f"{totales}", formato_cuerpo_tabla)
+                            tabla_general.append(fila_datt)
+                                    
+                    worksheet.merge_range(inicio_span, 0, fin_span, 0, f"{nombre_doc}", formato_cuerpo_tabla)
+                    worksheet.merge_range(inicio_span, 31, fin_span, 31, f"{totales}", formato_cuerpo_tabla)
+                    lista_spans.append([inicio_span, fin_span, flag_color])
+        
+
+        '''contador_spp = 1
+        for spanes in lista_spans:
+            coloracion_1 = ('BACKGROUND', (0, spanes[0]), (-1, spanes[1]), color_titulos_tabla)
+            #coloracion_2 = ('BACKGROUND', (-1, spanes[0]), (-1, spanes[1]), color_titulos_tabla)
+            #coloracion_3 = ('BACKGROUND', (1, spanes[0]), (-2, spanes[1]), color_titulos_tabla)
+            if contador_spp%2==0:
+                estilo_tabla_datos_est.append(coloracion_1)
+                #estilo_tabla_datos_est.append(coloracion_2)
+                #estilo_tabla_datos_est.append(coloracion_3)
+            span_nombre = ('SPAN', (0, spanes[0]), (0, spanes[1]))
+            span_total = ('SPAN', (-1, spanes[0]), (-1, spanes[1]))
+            
+            estilo_tabla_datos_est.append(span_nombre)
+            estilo_tabla_datos_est.append(span_total)
+            
+            contador_spp = contador_spp + 1'''
+        
+        '''estilo_tabla_datos_est = TableStyle(estilo_tabla_datos_est)
+ 
+
+        tabla_general_pdf = Table(tabla_general)
+        tabla_general_pdf.setStyle(estilo_tabla_datos_est)
+
+
+
+        elementos.append(Spacer(1, 20))
+        elementos.append(tabla_general_pdf)
+        elementos.append(Spacer(1, 20))'''
+
+
+
+
+        
+
+        workbook.close()
+        buffer.seek(0)
+
+        return buffer
 
 
