@@ -820,6 +820,48 @@ def generar_reporte_informe_mensual_excel(datos_usuario, fecha):
 
     return response'''
     return send_file(buffer,
-                     download_name="Reporte_Productos.xlsx",
+                     download_name="Reporte_Estudiantes.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+@administrador_bp.route('/reportes/excel/informe/carga/horaria/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_mensual_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_carga_horaria_docentes_mes_excel(nombre_usuario, fecha)
+
+    '''response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response'''
+    return send_file(buffer,
+                     download_name="Reporte_Carga_Horaria.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+@administrador_bp.route('/reportes/excel/informe/carga/horaria/semana/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_carga_horaria_docentes_semana_excel(nombre_usuario, fecha)
+
+    '''response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response'''
+    return send_file(buffer,
+                     download_name="Reporte_Carga_Horaria_Semanal.xlsx",
                      as_attachment=True,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
