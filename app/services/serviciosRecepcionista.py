@@ -79,3 +79,11 @@ class ServiciosRecepcionista():
             recepcionista.activo = 0
             db.session.commit()
         return {"status": "success", "message": "Recepcionista eliminado exitosamente"}
+
+    def obtener_por_id(id_recepcionista):
+        recepcionista = Recepcionista.query.get(id_recepcionista)
+        if recepcionista:
+            datos_requeridos = ['id_recepcionista', 'nombres', 'apellidos', 'nombre_usuario', 'carnet_identidad', 'telefono', 'correo']
+            respuesta = SerializadorUniversal.serializar_unico(dato=recepcionista, campos_requeridos=datos_requeridos)
+            return respuesta
+        return None

@@ -1,0 +1,74 @@
+{% extends 'estudiante/plantilla.html' %}
+
+{% block titulo_contenido %}
+    <h3>Perfil del Estudiante</h3>
+{% endblock %}
+
+{% block contenido %}
+<style>
+    .perfil-card {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .perfil-card th {
+        width: 40%;
+        background-color: #f8f9fa;
+    }
+    .perfil-card td, .perfil-card th {
+        padding: 8px 12px;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="container mt-4 perfil-card">
+    <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+        <div class="card-body">
+
+            <table class="table table-bordered table-sm">
+                <tbody>
+                    <tr>
+                        <th>Nombre:</th>
+                        <td>{{ estudiante.nombres }}</td>
+                    </tr>
+                    <tr>
+                        <th>Apellido:</th>
+                        <td>{{ estudiante.apellidos }}</td>
+                    </tr>
+                    <tr>
+                        <th>Carnet de identidad:</th>
+                        <td>{{ estudiante.carnet_identidad }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo electrónico:</th>
+                        <td>{{ estudiante.correo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Teléfono / Celular:</th>
+                        <td>{{ estudiante.telefono }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de usuario:</th>
+                        <td>{{ estudiante.nombre_usuario }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rol:</th>
+                        <td>Estudiante</td>
+                    </tr>
+                    <tr>
+                        <th>Celular del Titular:</th>
+                        <td>{{ estudiante.celular_titular }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre del Titular:</th>
+                        <td>{{ estudiante.nombres_titular }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rol:</th>
+                        <td>Estudiante</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

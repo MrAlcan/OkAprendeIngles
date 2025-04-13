@@ -395,7 +395,7 @@ def crear_estudiante(datos_usuario):
                                            datos['apellidos'],
                                            datos['carnet'],
                                            datos['telefono'],
-                                           datos['telefono_titular'],
+                                           datos['celular_titular'],
                                            datos['nombres_titular'],
                                            datos['nombre_nivel'],
                                            datos['rango_nivel'],
@@ -415,7 +415,7 @@ def crear_estudiante(datos_usuario):
 def editar_estudiante(datos_usuario, id):
     datos = request.form
 
-    estudiante = ServiciosEstudiante.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'])
+    estudiante = ServiciosEstudiante.actualizar(id, datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['nombres_titular'], datos.get('celular_titular'), datos.get('ocupacion_tutor'))
 
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 
@@ -932,3 +932,18 @@ def vista_sesiones_informes(datos_usuario):
     return render_template('administrador/informe_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
 
+
+@administrador_bp.route('/perfil', methods=['GET'])
+@token_requerido
+def vista_perfil(datos_usuario):
+    administrador = serviciosAdministrador.obtener_por_id(datos_usuario['id_usuario'])
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'administrador/perfil.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, administrador=administrador
+    )

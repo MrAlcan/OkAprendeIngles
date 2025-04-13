@@ -1,0 +1,61 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block titulo_contenido %}
+    <h3>Perfil del Administrador</h3>
+{% endblock %}
+
+{% block contenido %}
+<style>
+    .perfil-card {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .perfil-card th {
+        width: 40%;
+        background-color: #f8f9fa;
+    }
+    .perfil-card td, .perfil-card th {
+        padding: 8px 12px;
+        vertical-align: middle;
+    }
+</style>
+<div class="container mt-4 perfil-card">
+    <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+        <div class="card-body">
+            <table class="table table-bordered table-sm">
+                <tbody>
+                    <tr>
+                        <th>Nombre: </th>
+                        <td>{{ administrador.nombres }}</td>
+                    </tr>
+                    <tr>
+                        <th>Apellido:</th>
+                        <td>{{ administrador.apellidos }}</td>
+                    </tr>
+                    <tr>
+                        <th>Carnet de identidad:</th>
+                        <td>{{ administrador.carnet_identidad }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo electrónico:</th>
+                        <td>{{ administrador.correo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Telefono / Celular:</th>
+                        <td>{{ administrador.telefono }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de usuario:</th>
+                        <td>{{ administrador.nombre_usuario }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rol</th>
+                        <td>Administrador</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

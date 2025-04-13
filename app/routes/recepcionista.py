@@ -335,10 +335,17 @@ def vista_lista_estudiantes(datos_usuario):
     estudiantes = ServiciosEstudiante.obtener_todos()
     primer_nombre = datos_usuario.get('primer_nombre', 'Usuario')
     primer_apellido = datos_usuario.get('primer_apellido', '')
-
     
+    # Asegúrate de que esta función devuelve un objeto con el atributo 'extension'
+    recepcionista = ServiciosRecepcionista.obtener_por_id(['id_datos_usuario'])
 
-    return render_template('recepcionista/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes)
+    return render_template(
+        'recepcionista/estudiantes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido,
+        estudiantes=estudiantes,
+        recepcionista=recepcionista  # 👈 Esta línea evita el error
+    )
 
 
 @recepcionista_bp.route('/estudiantes/crear', methods = ['POST'])
@@ -352,7 +359,7 @@ def crear_estudiante(datos_usuario):
                                            datos['apellidos'],
                                            datos['carnet'],
                                            datos['telefono'],
-                                           datos['telefono_titular'],
+                                           datos['celular_titular'],
                                            datos['nombres_titular'],
                                            datos['nombre_nivel'],
                                            datos['rango_nivel'],
@@ -367,6 +374,15 @@ def crear_estudiante(datos_usuario):
                                            )
     
     return redirect(url_for('recepcionista_bp.vista_lista_estudiantes'))
+
+@recepcionista_bp.route('/editar/estudiante/<id>', methods=['POST'])
+@token_requerido
+def editar_estudiante(datos_usuario, id):
+    datos = request.form
+
+    estudiante = ServiciosEstudiante.actualizar(id, datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['nombres_titular'], datos.get('celular_titular'), datos.get('ocupacion_tutor'))
+
+    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 #----------------------------------- GESTION ACTIVIDADES ------------------------------------------------
 
 @recepcionista_bp.route('/actividades', methods=['GET'])
@@ -610,3 +626,18 @@ def generar_pdf_okcard_estudiante(datos_usuario, id):
     response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
 
     return response
+
+@recepcionista_bp.route('/perfil', methods=['GET'])
+@token_requerido
+def vista_perfil(datos_usuario):
+    recepcionista = ServiciosRecepcionista.obtener_por_id(datos_usuario['id_usuario'])
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'recepcionista/perfil.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, recepcionista=recepcionista
+    )

@@ -231,3 +231,10 @@ class serviciosAdministrador():
         db.session.commit()
         return True
 
+    def obtener_por_id(id_administrador):
+        administrador = Administrador.query.get(id_administrador)
+        if administrador:
+            datos_requeridos = ['id_administrador', 'nombres', 'apellidos', 'nombre_usuario', 'carnet_identidad', 'telefono', 'correo']
+            respuesta = SerializadorUniversal.serializar_unico(dato=administrador, campos_requeridos=datos_requeridos)
+            return respuesta
+        return None

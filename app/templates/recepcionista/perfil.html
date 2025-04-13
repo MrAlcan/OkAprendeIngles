@@ -1,0 +1,63 @@
+{% extends 'recepcionista/plantilla.html' %}
+
+{% block titulo_contenido %}
+    <h3>Perfil de Recepcionista</h3>
+{% endblock %}
+
+{% block contenido %}
+<style>
+    .perfil-card {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .perfil-card th {
+        width: 40%;
+        background-color: #f8f9fa;
+    }
+    .perfil-card td, .perfil-card th {
+        padding: 8px 12px;
+        vertical-align: middle;
+    }
+</style>
+
+<div class="container mt-4 perfil-card">
+    <div class="card shadow-sm p-3 mb-4 bg-white rounded">
+        <div class="card-body">
+
+            <table class="table table-bordered table-sm">
+                <tbody>
+                    <tr>
+                        <th>Nombre:</th>
+                        <td>{{ recepcionista.nombres }}</td>
+                    </tr>
+                    <tr>
+                        <th>Apellido:</th>
+                        <td>{{ recepcionista.apellidos }}</td>
+                    </tr>
+                    <tr>
+                        <th>Carnet de identidad:</th>
+                        <td>{{ recepcionista.carnet_identidad }}</td>
+                    </tr>
+                    <tr>
+                        <th>Correo electrónico:</th>
+                        <td>{{ recepcionista.correo }}</td>
+                    </tr>
+                    <tr>
+                        <th>Teléfono / Celular:</th>
+                        <td>{{ recepcionista.telefono }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de usuario:</th>
+                        <td>{{ recepcionista.nombre_usuario }}</td>
+                    </tr>
+                    <tr>
+                        <th>Rol:</th>
+                        <td>Recepcionista</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
