@@ -60,6 +60,9 @@
                                                 <option value="Speak Out">Speak Out</option>
                                                 <option value="Working">Working</option>
                                                 <option value="Essential">Essential</option>
+                                                <option value="Test Oral">Test Oral</option>
+                                                <option value="Test Escrito">Test Escrito</option>
+                                                <option value="Test Mixto">Test Mixto</option>
                                             </select>
                                         </div>
                                     </div>
@@ -110,6 +113,16 @@
                                     </div>
 
                                     <div class="form-group row">
+                                        <label class="col-form-label col-md-3 col-sm-3 ">Tipo de Sesión</label>
+                                        <div class="col-md-9 col-sm-9 ">
+                                            <select class="form-control select_tipo_sesion" name="tipo_sesion" required>
+                                                <option value="1">Virtual</option>
+                                                <option value="0">Presencial</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Cupos</label>
                                         <div class="col-md-9 col-sm-9 ">
                                             <input type="number" class="form-control" name="cupos" min="1" max="10" step="1" value="6" required>
@@ -154,16 +167,17 @@
                         {% if sesiones %}
                             {% for sesion in sesiones %}
                                 <tr>
-                                    <td>{{sesion.id_sesion}}</td>
+                                    <td>{{sesion.id_mostrar}}</td>
                                     <td>{{sesion.fecha}}</td>
                                     <td>{{sesion.hora}}</td>
-                                    <td>{{sesion.id_docente}}</td>
+                                    <td>{{sesion.nombre_docente}}</td>
                                     <td>{{sesion.seccion}}</td>
                                     <td>{{sesion.nivel}}</td>
                                     <td>{{sesion.cupos_disponibles}}</td>
                                     <td>
                                         <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target=".modal_editar_sesion_{{sesion.id_sesion}}"><i class="fa fa-edit"></i></button>
                                         <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a>
+                                        <a href="/administrador/sesiones/pdf/{{sesion.id_sesion}}" target="_blank"><button>Reportes SEsion</button></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -198,6 +212,9 @@
                                                         <option value="Speak Out" {% if sesion.seccion == 'Speak Out' %}Selected{% endif %}>Speak Out</option>
                                                         <option value="Working" {% if sesion.seccion == 'Working' %}Selected{% endif %}>Working</option>
                                                         <option value="Essential" {% if sesion.seccion == 'Essential' %}Selected{% endif %}>Essential</option>
+                                                        <option value="Test Oral" {% if sesion.seccion == 'Test Oral' %}Selected{% endif %}>Test Oral</option>
+                                                        <option value="Test Escrito" {% if sesion.seccion == 'Test Escrito' %}Selected{% endif %}>Test Escrito</option>
+                                                        <option value="Test Mixto" {% if sesion.seccion == 'Test Mixto' %}Selected{% endif %}>Test Mixto</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -245,6 +262,16 @@
                                                         <option value="11-15" {% if sesion.nivel == '11-15' %}Selected{% endif %}>11 - 15</option>
                                                         <option value="16-30" {% if sesion.nivel == '16-30' %}Selected{% endif %}>16 - 30</option>
                                                         <option value="31-50" {% if sesion.nivel == '31-50' %}Selected{% endif %}>31 - 50</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group row">
+                                                <label class="col-form-label col-md-3 col-sm-3 ">Tipo de Sesión</label>
+                                                <div class="col-md-9 col-sm-9 ">
+                                                    <select class="form-control select_tipo_sesion" name="tipo_sesion" required>
+                                                        <option value="1" {% if sesion.tipo_virtual == 1 %}Selected{% endif %}>Virtual</option>
+                                                        <option value="0" {% if sesion.tipo_virtual == 0 %}Selected{% endif %}>Presencial</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -376,7 +403,7 @@
 
             
 
-            if(selectSeccion.value == 'Welcome'){
+            if(selectSeccion.value == 'Welcome' || selectSeccion.value == 'Test Oral' || selectSeccion.value == 'Test Mixto' || selectSeccion.value == 'Test Escrito'){
                 
                 const opcion_nivel_cero = document.createElement('option');
                 opcion_nivel_cero.value = '0';
@@ -481,7 +508,7 @@
 
                 
 
-                if(selectSeccion.value == 'Welcome'){
+                if(selectSeccion.value == 'Welcome' || selectSeccion.value == 'Test Oral' || selectSeccion.value == 'Test Mixto' || selectSeccion.value == 'Test Escrito'){
                     
                     const opcion_nivel_cero = document.createElement('option');
                     opcion_nivel_cero.value = '0';

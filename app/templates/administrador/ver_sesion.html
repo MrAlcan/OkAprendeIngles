@@ -117,13 +117,14 @@
                             </div>
 
                             <div class="col">
-                                {% if sesion.link %}
+                                {% if sesion.tipo_virtual == 0 %}
+                                    <div class="row"><p>Sesión Presencial</p></div>
+                                {% elif sesion.link %}
                                     <div class="row"><p>Link para la sesión: <a href="{{sesion.link}}" target="_blank">{{sesion.link}}</a></p></div>
                                     
                                     
                                 {% else %}
                                     <div class="row"><p>Sin link para la sesión disponible</p></div>
-                                    
                                     
                                 {% endif %}
                             </div>
@@ -139,6 +140,7 @@
                                                     <th>Id</th>
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
+                                                    <th>Nivel</th>
                                                     <th>Asistio</th>
                                                     <th>Calificación</th>
                                                     <th>Notas</th>
@@ -152,6 +154,7 @@
                                                                 <td>{{estudiante_s.id_estudiante}}</td>
                                                                 <td>{{estudiante_s.nombres}}</td>
                                                                 <td>{{estudiante_s.apellidos}}</td>
+                                                                <td>{{estudiante_s.nivel}}</td>
                                                                 {% if estudiante_s.estado == 'Asistio' %}
                                                                     <td><i class="fa fa-check" style="color: green;"></i></td>
                                                                     <td>{{estudiante_s.calificacion}}</td>
@@ -214,54 +217,57 @@
                                 
 
                             
-
-                            <div class="col">
-                                <h2>Tarea de la Sesión</h2>
-                                <div>
-                                    {% if tarea %}
-                                        <p>{{tarea.descripcion}}</p>
-                                        {% if tarea.material_adicional %}
-                                            <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
-                                                <button class="btn btn-primary btn-sm">Descargar Archivo</button>
-                                            </a>
-                                        {% endif %}
+                            {% if sesion.tipo_virtual == 1%}
+                                <div class="col">
+                                    <h2>Tarea de la Sesión</h2>
+                                    <div>
                                         
-                                        <br>
-                                        <p></p>
-                                        {% if detalle_tareas %}
-                                            <p class="text-muted font-13 m-b-30">Tareas Presentadas</p>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Nombres</th>
-                                                        <th>Apellidos</th>
-                                                        <th>Tarea</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for d_tarea in detalle_tareas %}
+                                        
+                                        {% if tarea %}
+                                            <p>{{tarea.descripcion}}</p>
+                                            {% if tarea.material_adicional %}
+                                                <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
+                                                    <button class="btn btn-primary btn-sm">Descargar Archivo</button>
+                                                </a>
+                                            {% endif %}
+                                            
+                                            <br>
+                                            <p></p>
+                                            {% if detalle_tareas %}
+                                                <p class="text-muted font-13 m-b-30">Tareas Presentadas</p>
+                                                <table class="table table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <td>{{d_tarea.id_estudiante}}</td>
-                                                            <td>{{d_tarea.nombres}}</td>
-                                                            <td>{{d_tarea.apellidos}}</td>
-                                                            <td><a href="{{ url_for('docente_bp.download_file_h', filename=d_tarea.material_subido) }}" target="_blank">
-                                                                <button class="btn btn-primary btn-sm">Ver Archivo</button>
-                                                            </a></td>
+                                                            <th>Id</th>
+                                                            <th>Nombres</th>
+                                                            <th>Apellidos</th>
+                                                            <th>Tarea</th>
                                                         </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for d_tarea in detalle_tareas %}
+                                                            <tr>
+                                                                <td>{{d_tarea.id_estudiante}}</td>
+                                                                <td>{{d_tarea.nombres}}</td>
+                                                                <td>{{d_tarea.apellidos}}</td>
+                                                                <td><a href="{{ url_for('docente_bp.download_file_h', filename=d_tarea.material_subido) }}" target="_blank">
+                                                                    <button class="btn btn-primary btn-sm">Ver Archivo</button>
+                                                                </a></td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <p>Ningún Estudiante presento la Tarea hasta el momento </p>
+                                            {% endif %}
+                                            
                                         {% else %}
-                                            <p>Ningún Estudiante presento la Tarea hasta el momento </p>
+                                            <p>Sin tarea asignada para esta sesión</p>
+                                            
                                         {% endif %}
-                                        
-                                    {% else %}
-                                        <p>Sin tarea asignada para esta sesión</p>
-                                        
-                                    {% endif %}
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
 
                             
                 

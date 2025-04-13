@@ -7,7 +7,7 @@ class Usuario(db.Model):
     id_usuario = db.Column(db.Integer, primary_key=True)
     nombre_usuario = db.Column(db.String(50), nullable=False, unique=True)
     contrasena_hash = db.Column(db.Text, nullable=False)
-    correo = db.Column(db.String(50), nullable=False)
+    correo = db.Column(db.String(50), nullable=True)
     nombres = db.Column(db.String(50), nullable=False)
     apellidos = db.Column(db.String(50), nullable=False)
     carnet_identidad = db.Column(db.String(20), nullable=False, unique=True)

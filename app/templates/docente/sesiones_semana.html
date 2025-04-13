@@ -1,0 +1,178 @@
+{% extends 'docente/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+    <!-- FullCalendar -->
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.print.css')}}" rel="stylesheet" media="print">
+
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Sesiones</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                <p class="text-muted font-13 m-b-30">
+                    Tabla de Sesiones asignadas en la semana
+                </p>
+
+
+                <div class="col-md-12 col-sm-12  ">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{dia_actual}}, Semana del {{f_lunes}} al {{f_sabado}}</h2>
+                            
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Hora</th>
+                                        <th>Lunes</th>
+                                        <th>Martes</th>
+                                        <th>Miercoles</th>
+                                        <th>Jueves</th>
+                                        <th>Viernes</th>
+                                        <th>Sabado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for hora_d in lista_horas %}
+                                        <tr>
+                                            <th scope="row" class="fila_hora">{{hora_d}}</th>
+                                            
+                                            <td {% if lista_horarios[0][hora_d] %} style="background-color: #005500AA"{% endif %}>
+                                                {% if lista_sesiones[0][hora_d] %}
+                                                    {{lista_sesiones[0][hora_d].seccion}} {{lista_sesiones[0][hora_d].nivel}}<br>
+                                                    Cupos: {{lista_sesiones[0][hora_d].cupos_disponibles}}<br>
+                                                    <a href="/docente/sesiones/ver/{{lista_sesiones[0][hora_d].id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                {% endif %}
+                                            </td>
+                                            
+                                            <td {% if lista_horarios[1][hora_d] %} style="background-color: #005500AA"{% endif %}>
+                                                {% if lista_sesiones[1][hora_d] %}
+                                                    {{lista_sesiones[1][hora_d].seccion}} {{lista_sesiones[1][hora_d].nivel}}<br>
+                                                    Cupos: {{lista_sesiones[1][hora_d].cupos_disponibles}}<br>
+                                                    <a href="/docente/sesiones/ver/{{lista_sesiones[1][hora_d].id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                {% endif %}
+                                            </td>
+                                            <td {% if lista_horarios[2][hora_d] %} style="background-color: #005500AA"{% endif %}>
+                                                {% if lista_sesiones[2][hora_d] %}
+                                                    {{lista_sesiones[2][hora_d].seccion}} {{lista_sesiones[2][hora_d].nivel}}<br>
+                                                    Cupos: {{lista_sesiones[2][hora_d].cupos_disponibles}}<br>
+                                                    <a href="/docente/sesiones/ver/{{lista_sesiones[2][hora_d].id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                {% endif %}
+                                            </td>
+                                            <td {% if lista_horarios[3][hora_d] %} style="background-color: #005500AA"{% endif %}>
+                                                {% if lista_sesiones[3][hora_d] %}
+                                                    {{lista_sesiones[3][hora_d].seccion}} {{lista_sesiones[3][hora_d].nivel}}<br>
+                                                    Cupos: {{lista_sesiones[3][hora_d].cupos_disponibles}}<br>
+                                                    <a href="/docente/sesiones/ver/{{lista_sesiones[3][hora_d].id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                {% endif %}
+                                            </td>
+                                            <td {% if lista_horarios[4][hora_d] %} style="background-color: #005500AA"{% endif %}>
+                                                {% if lista_sesiones[4][hora_d] %}
+                                                    {{lista_sesiones[4][hora_d].seccion}} {{lista_sesiones[4][hora_d].nivel}}<br>
+                                                    Cupos: {{lista_sesiones[4][hora_d].cupos_disponibles}}<br>
+                                                    <a href="/docente/sesiones/ver/{{lista_sesiones[4][hora_d].id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                {% endif %}
+                                            </td>
+                                            <td {% if lista_horarios[5][hora_d] %} style="background-color: #005500AA"{% endif %}>
+                                                {% if lista_sesiones[5][hora_d] %}
+                                                    {{lista_sesiones[5][hora_d].seccion}} {{lista_sesiones[5][hora_d].nivel}}<br>
+                                                    Cupos: {{lista_sesiones[5][hora_d].cupos_disponibles}}<br>
+                                                    <a href="/docente/sesiones/ver/{{lista_sesiones[5][hora_d].id_sesion}}"><button class="btn btn-warning btn-sm">Ver Sesión <i class="fa fa-eye"></i></button><br></a>
+                                                {% endif %}
+                                            </td>
+
+                                            
+                                            
+                                            
+                                        </tr>
+                                    {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                
+                        </div>
+                    </div>
+                </div>
+
+
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+{% block scripts_final %}
+
+
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+
+<!-- FullCalendar -->
+<script src="{{url_for('static', filename='vendors/moment/min/moment.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/fullcalendar/dist/fullcalendar.min.js')}}"></script>
+{% endblock %}

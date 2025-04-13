@@ -10,7 +10,17 @@ from app.config.extensiones import db
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.services.serviciosSesion import ServiciosSesion
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
+
+DIAS_INGLES = {
+    "Monday": "Lunes",
+    "Tuesday": "Martes",
+    "Wednesday": "Miércoles",
+    "Thursday": "Jueves",
+    "Friday": "Viernes",
+    "Saturday": "Sabado",
+    "Sunday": "Domingo"
+}
 
 class ServiciosDocente():
 
@@ -141,14 +151,15 @@ class ServiciosDocente():
             datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']
             respuesta_h = SerializadorUniversal.serializar_lista(datos= horarios, campos_requeridos= datos_requeridos_h)
             horario_por_dia = {}
-            for horario in respuesta_h:
-                if horario['dia'] not in horario_por_dia:
-                    horario_por_dia[horario['dia']] = []
-                horario_por_dia[horario['dia']].append({
-                    'id_horario' : horario['id_horario'],
-                    'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
-                    'hora_final' : horario['hora_final'].strftime('%H:%M')
-                })
+            if respuesta_h:
+                for horario in respuesta_h:
+                    if horario['dia'] not in horario_por_dia:
+                        horario_por_dia[horario['dia']] = []
+                    horario_por_dia[horario['dia']].append({
+                        'id_horario' : horario['id_horario'],
+                        'hora_inicio' : horario['hora_inicio'].strftime('%H:%M'),
+                        'hora_final' : horario['hora_final'].strftime('%H:%M')
+                    })
             docente['horarios'] = horario_por_dia
         #print("-*-"*100)
         #print("imprimeindo horarios")
@@ -266,7 +277,7 @@ class ServiciosDocente():
     def obtener_sesion_por_id(docente, sesion):
         datos = Sesion.query.filter(Sesion.activo==1, Sesion.id_docente==docente, Sesion.id_sesion==sesion).first()
         if datos:
-            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url']
+            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'tipo_virtual']
             respuesta = SerializadorUniversal.serializar_unico(dato= datos, campos_requeridos= datos_requeridos)
             
             return respuesta
@@ -276,7 +287,7 @@ class ServiciosDocente():
     def obtener_sesiones_docente(docente):
         datos = Sesion.query.filter(Sesion.activo==1, Sesion.id_docente==docente).order_by(Sesion.fecha.desc(), Sesion.hora.desc()).all()
         if datos:
-            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url']
+            datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'link', 'imagen_url', 'tipo_virtual']
             respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
             
             return respuesta
@@ -285,6 +296,12 @@ class ServiciosDocente():
     
     def obtener_detalles_sesion(sesion):
         datos = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion).all()
+        sesion_obj = Sesion.query.get(sesion)
+
+        bandera = False
+
+        if str(sesion_obj.seccion).startswith('Test'):
+            bandera = True
         
         inscritos = 0
         cancelados = 0
@@ -301,13 +318,21 @@ class ServiciosDocente():
             for dato in datos:
                 id_estudiante = dato.id_estudiante
                 estudiante = Estudiante.query.get(id_estudiante)
+                nivel_seccion = int(dato.nivel_seccion)
+                if bandera:
+                    nivel_seccion = str(nivel_seccion-4) + "-" + str(nivel_seccion)
+                elif sesion_obj.seccion=='Welcome':
+                    nivel_seccion = str(nivel_seccion)
+                else:
+                    nivel_seccion = nivel_seccion + 1
                 diccionario_estudiante = {
                     'id_estudiante': estudiante.id_estudiante,
                     'nombres': estudiante.nombres,
                     'apellidos': estudiante.apellidos,
                     'calificacion': dato.calificacion,
                     'recomendacion': dato.recomendacion,
-                    'estado': dato.estado_registro
+                    'estado': dato.estado_registro,
+                    'nivel': nivel_seccion
                 }
                 inscritos = inscritos + 1
                 if str(dato.estado_registro) == "Cancelado":
@@ -344,6 +369,8 @@ class ServiciosDocente():
         
         seccion_sesion = ob_sesion.seccion
 
+        LIMITE_NOTA = 85
+
         for estudiante in estudiantes:
             detalle = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.id_estudiante==estudiante['id_estudiante']).first()
             estudiante_ob = Estudiante.query.get(estudiante['id_estudiante'])
@@ -359,20 +386,52 @@ class ServiciosDocente():
                     estudiante_ob.working_completado = nivel_inicial
                     estudiante_ob.essential_completado = nivel_inicial
                     estudiante_ob.welcome_completado = 1
+                    estudiante_ob.paso_examen = 1
+                    estudiante_ob.nombre_nivel = 'Basico'
                 elif seccion_sesion == 'Working':
                     nivel = int(estudiante_ob.working_completado)
                     nivel = nivel + 1
-                    estudiante_ob.working_completado = nivel
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.working_completado = nivel
+                        if nivel % 5 == 0:
+                            estudiante_ob.paso_examen = 0
                 elif seccion_sesion == 'Essential':
                     nivel = int(estudiante_ob.essential_completado)
                     nivel = nivel + 1
-                    estudiante_ob.essential_completado = nivel
-                else:
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.essential_completado = nivel
+                        if nivel % 5 == 0:
+                            estudiante_ob.paso_examen = 0
+                elif seccion_sesion == 'Speak Out':
                     nivel = int(estudiante_ob.speakout_completado)
                     nivel = nivel + 1
-                    estudiante_ob.speakout_completado = nivel
-                
-
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.speakout_completado = nivel
+                        if nivel % 5 == 0:
+                            estudiante_ob.paso_examen = 0
+                elif seccion_sesion == 'Test Oral':
+                    if float(estudiante['nota'])>=LIMITE_NOTA:
+                        estudiante_ob.paso_examen = 1
+                        nivel = int(estudiante_ob.speakout_completado)
+                        if nivel > 30:
+                            estudiante_ob.nombre_nivel = 'Avanzado'
+                        elif nivel >15:
+                            estudiante_ob.nombre_nivel = 'Intermedio'
+                        else:
+                            estudiante_ob.nombre_nivel = 'Basico'
+                elif seccion_sesion == 'Test Mixto':
+                    nivel = int(estudiante_ob.working_completado)
+                    detalle_auxiliar = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==estudiante['id_estudiante'], DetalleSesion.calificacion>=LIMITE_NOTA, DetalleSesion.nivel_seccion==nivel, DetalleSesion.id_sesion!=sesion).all()
+                    if detalle_auxiliar:
+                        if float(estudiante['nota'])>=LIMITE_NOTA:
+                            estudiante_ob.paso_examen = 1
+                            nivel = int(estudiante_ob.speakout_completado)
+                            if nivel > 30:
+                                estudiante_ob.nombre_nivel = 'Avanzado'
+                            elif nivel >15:
+                                estudiante_ob.nombre_nivel = 'Intermedio'
+                            else:
+                                estudiante_ob.nombre_nivel = 'Basico'
         
 
             
@@ -472,7 +531,135 @@ class ServiciosDocente():
 
         else:
             return None
+    
+
+    def obtener_sesiones_semana_docente_por_id(id_docente):
+        docente = Docente.query.filter(Docente.activo==1, Docente.id_docente == id_docente).first()
+
+        if not docente:
+            return None
         
 
-        
+        horarios = Horario.query.filter(Horario.activo==1, Horario.id_docente==id_docente).all()
+
+        if not horarios:
+            return None
+
+        hoy = date.today()
+
+        dia_actual = DIAS_INGLES[hoy.strftime("%A")]
+        fecha_actual = hoy.strftime("%d/%m/%Y")
+
+        flag_domingo = False
+
+        # en caso de ser domingo
+        if hoy.strftime("%A")=='Sunday':
+            hoy = hoy - timedelta(days=1)
+            flag_domingo = True
+        #fin caso de ser domingo 
+
+        manana = hoy + timedelta(days=1)
+        dias_al_lunes = hoy.weekday()
+
+        lunes = hoy - timedelta(days = dias_al_lunes)
+        sabado = lunes + timedelta(days=5)
+
+        lunes_str = lunes.strftime("%Y-%m-%d")
+        sabado_str = sabado.strftime("%Y-%m-%d")
+
+        sesiones = Sesion.query.filter(Sesion.activo==1, Sesion.fecha>=lunes_str, Sesion.fecha<=sabado_str, Sesion.id_docente==id_docente).all()
+
+        lista_horarios = []
+
+        horarios_lunes = {}
+        horarios_martes = {}
+        horarios_miercoles = {}
+        horarios_jueves = {}
+        horarios_viernes = {}
+        horarios_sabado = {}
+
+        for horario in horarios:
             
+            hora_ini = horario.hora_inicio
+            hora_fin = horario.hora_final
+
+            hora_aux = hora_ini
+
+            fecha_dummy = datetime.combine(datetime.today(), hora_aux)
+            fecha_dummy_fin = datetime.combine(datetime.today(), hora_fin)
+
+            while(fecha_dummy<fecha_dummy_fin):
+                if horario.dia == 'Lunes':
+                    horarios_lunes[fecha_dummy.strftime("%H:%M")] = True
+                elif horario.dia == 'Martes':
+                    horarios_martes[fecha_dummy.strftime("%H:%M")] = True
+                elif horario.dia == 'Miercoles':
+                    horarios_miercoles[fecha_dummy.strftime("%H:%M")] = True
+                elif horario.dia == 'Jueves':
+                    horarios_jueves[fecha_dummy.strftime("%H:%M")] = True
+                elif horario.dia == 'Viernes':
+                    horarios_viernes[fecha_dummy.strftime("%H:%M")] = True
+                elif horario.dia == 'Sabado':
+                    horarios_sabado[fecha_dummy.strftime("%H:%M")] = True
+                fecha_dummy = fecha_dummy + timedelta(minutes=60)
+        
+        lista_horarios.append(horarios_lunes)
+        lista_horarios.append(horarios_martes)
+        lista_horarios.append(horarios_miercoles)
+        lista_horarios.append(horarios_jueves)
+        lista_horarios.append(horarios_viernes)
+        lista_horarios.append(horarios_sabado)
+
+
+
+        lista_sesiones = []
+
+        sesiones_lunes = {}
+        sesiones_martes = {}
+        sesiones_miercoles = {}
+        sesiones_jueves = {}
+        sesiones_viernes = {}
+        sesiones_sabado = {}
+
+        datos_requeridos = ['id_sesion', 'fecha', 'hora', 'seccion', 'nivel', 'cupos_disponibles', 'activo', 'tipo_virtual']
+
+        if sesiones:
+
+            for sesion in sesiones:
+
+                fecha_sesion = sesion.fecha.strftime("%A")
+                dia_esp = DIAS_INGLES[fecha_sesion]
+
+                hora_sesion = sesion.hora.strftime("%H:%M")
+
+                sesion_dict = SerializadorUniversal.serializar_unico(sesion, datos_requeridos)
+                
+                if dia_esp == 'Lunes':
+                    sesiones_lunes[hora_sesion] = sesion_dict
+                elif dia_esp == 'Martes':
+                    sesiones_martes[hora_sesion] = sesion_dict
+                elif dia_esp == 'Miercoles':
+                    sesiones_miercoles[hora_sesion] = sesion_dict
+                elif dia_esp == 'Jueves':
+                    sesiones_jueves[hora_sesion] = sesion_dict
+                elif dia_esp == 'Viernes':
+                    sesiones_viernes[hora_sesion] = sesion_dict
+                elif dia_esp == 'Sabado':
+                    sesiones_sabado[hora_sesion] = sesion_dict
+        
+        lista_sesiones.append(sesiones_lunes)
+        lista_sesiones.append(sesiones_martes)
+        lista_sesiones.append(sesiones_miercoles)
+        lista_sesiones.append(sesiones_jueves)
+        lista_sesiones.append(sesiones_viernes)
+        lista_sesiones.append(sesiones_sabado)
+
+        f_lunes = lunes.strftime("%d-%m-%Y")
+        f_sabado = sabado.strftime("%d-%m-%Y")
+
+        return lista_horarios, lista_sesiones, dia_actual, fecha_actual, f_lunes, f_sabado
+
+
+
+
+        

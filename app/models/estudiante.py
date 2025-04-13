@@ -1,5 +1,6 @@
 from app.config.extensiones import db
 from app.models.usuario import Usuario
+from datetime import datetime
 
 class Estudiante(Usuario):
     __tablename__ = 'estudiantes'
@@ -16,10 +17,11 @@ class Estudiante(Usuario):
     activo = db.Column(db.Integer, nullable=False, default=1)
     ocupacion_tutor = db.Column(db.String(30), nullable=True)
     parentesco_tutor = db.Column(db.String(7), nullable=False)
-    numero_cuenta = db.Column(db.Integer, nullable=False)
-    numero_contrato = db.Column(db.Integer, nullable=False)
+    numero_cuenta = db.Column(db.String(20), nullable=False)
+    numero_contrato = db.Column(db.String(20), nullable=False)
     inicio_contrato = db.Column(db.Date, nullable=False)
     fin_contrato = db.Column(db.Date, nullable=False)
+    paso_examen = db.Column(db.Integer, default=0)
     # ver de la lista de ids
 
     __mapper_args__ = {
@@ -36,6 +38,12 @@ class Estudiante(Usuario):
         self.parentesco_tutor = parentesco_tutor
         self.numero_cuenta = numero_cuenta
         self.numero_contrato = numero_contrato
+        if not inicio_contrato:
+            inicio_contrato = datetime.now()
+            inicio_contrato = inicio_contrato.strftime("%Y-%m-%d")
+        if not fin_contrato:
+            fin_contrato = datetime.now()
+            fin_contrato = fin_contrato.strftime("%Y-%m-%d")
         self.inicio_contrato = inicio_contrato
         self.fin_contrato = fin_contrato
     

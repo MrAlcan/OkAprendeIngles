@@ -231,6 +231,14 @@ def vista_lista_sesiones(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
 
     sesiones = ServiciosSesion.obtener_todos()
+
+    lista_docentes = {}
+    for docente in docentes:
+        lista_docentes[docente['id_docente']] = docente['nombres'] + " " + docente['apellidos']
+    
+    for sesion in sesiones:
+        sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
+        
     return render_template('recepcionista/sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones)
 
 @recepcionista_bp.route('/sesiones/crear', methods=['POST'])
@@ -245,7 +253,7 @@ def crear_sesion(datos_usuario):
 
     datos = request.form
 
-    sesion = ServiciosSesion.crear(datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
+    sesion = ServiciosSesion.crear(datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'], datos['tipo_sesion'])
 
     # Rediriges al usuario a la página de donde vino
     if referer:
@@ -260,7 +268,7 @@ def crear_sesion(datos_usuario):
 def editar_sesion(datos_usuario, id):
     datos = request.form
 
-    sesion = ServiciosSesion.actualizar(id, datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'])
+    sesion = ServiciosSesion.actualizar(id, datos['fecha'], datos['hora'], datos['docente'], datos['seccion'], datos['nivel'], datos['cupos'], datos['tipo_sesion'])
 
     return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
 
@@ -349,12 +357,12 @@ def crear_estudiante(datos_usuario):
                                            datos['nombre_nivel'],
                                            datos['rango_nivel'],
                                            datos['departamento_carnet'],
-                                           datos.get('ocupacion_tutor', ''),  
-                                           datos.get('parentesco_tutor', ''),
+                                           datos.get('ocupacion_titular', ''),  
+                                           datos.get('parentesco_titular', ''),
                                            datos.get('numero_cuenta', ''),
                                            datos.get('numero_contrato', ''),
-                                           datos.get('inicio_contrato', ''),
-                                           datos.get('fin_contrato', '')
+                                           datos.get('fecha_inicio_contrato', ''),
+                                           datos.get('fecha_expiracion_contrato', '')
                                            
                                            )
     

@@ -83,7 +83,9 @@
                         <div class="x_content">
 
                             <div class="col">
-                                {% if sesion.link %}
+                                {% if sesion.tipo_virtual == 0 %}
+                                    <div class="row"><p>Sesión Presencial</p></div>
+                                {% elif sesion.link %}
                                     <div class="row"><p>Link para la sesión: <a href="{{sesion.link}}" target="_blank">{{sesion.link}}</a></p></div>
                                     <div class="row"><button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                         data-target=".modal_agregar_link" id="boton_agregar_link">Modificar Link <i class="fa fa-edit"></i></button></div>
@@ -110,6 +112,7 @@
                                                     <th>Id</th>
                                                     <th>Nombres</th>
                                                     <th>Apellidos</th>
+                                                    <th>Nivel</th>
                                                     <th>Asistio</th>
                                                     <th>Calificación</th>
                                                     <th>Notas</th>
@@ -123,6 +126,7 @@
                                                                 <td>{{estudiante_s.id_estudiante}}</td>
                                                                 <td>{{estudiante_s.nombres}}</td>
                                                                 <td>{{estudiante_s.apellidos}}</td>
+                                                                <td>{{estudiante_s.nivel}}</td>
                                                                 {% if estudiante_s.estado == 'Asistio' %}
                                                                     <td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" checked></td>
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}"></td>
@@ -180,55 +184,57 @@
 
                             </form>
 
-                            <div class="col">
-                                <h2>Tarea de la Sesión</h2>
-                                <div>
-                                    {% if tarea %}
-                                        <p>{{tarea.descripcion}}</p>
-                                        {% if tarea.material_adicional %}
-                                            <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
-                                                <button class="btn btn-primary btn-sm">Descargar Archivo</button>
-                                            </a>
-                                        {% endif %}
-                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                            data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Editar Tarea <i class="fa fa-edit"></i></button>
-                                        <br>
-                                        <p></p>
-                                        {% if detalle_tareas %}
-                                            <p class="text-muted font-13 m-b-30">Tareas Presentadas</p>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Id</th>
-                                                        <th>Nombres</th>
-                                                        <th>Apellidos</th>
-                                                        <th>Tarea</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for d_tarea in detalle_tareas %}
+                            {% if sesion.tipo_virtual == 1 %}
+                                <div class="col">
+                                    <h2>Tarea de la Sesión</h2>
+                                    <div>
+                                        {% if tarea %}
+                                            <p>{{tarea.descripcion}}</p>
+                                            {% if tarea.material_adicional %}
+                                                <a href="{{ url_for('docente_bp.download_file_h', filename=tarea.material_adicional) }}" target="_blank">
+                                                    <button class="btn btn-primary btn-sm">Descargar Archivo</button>
+                                                </a>
+                                            {% endif %}
+                                            <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Editar Tarea <i class="fa fa-edit"></i></button>
+                                            <br>
+                                            <p></p>
+                                            {% if detalle_tareas %}
+                                                <p class="text-muted font-13 m-b-30">Tareas Presentadas</p>
+                                                <table class="table table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <td>{{d_tarea.id_estudiante}}</td>
-                                                            <td>{{d_tarea.nombres}}</td>
-                                                            <td>{{d_tarea.apellidos}}</td>
-                                                            <td><a href="{{ url_for('docente_bp.download_file_h', filename=d_tarea.material_subido) }}" target="_blank">
-                                                                <button class="btn btn-primary btn-sm">Ver Archivo</button>
-                                                            </a></td>
+                                                            <th>Id</th>
+                                                            <th>Nombres</th>
+                                                            <th>Apellidos</th>
+                                                            <th>Tarea</th>
                                                         </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for d_tarea in detalle_tareas %}
+                                                            <tr>
+                                                                <td>{{d_tarea.id_estudiante}}</td>
+                                                                <td>{{d_tarea.nombres}}</td>
+                                                                <td>{{d_tarea.apellidos}}</td>
+                                                                <td><a href="{{ url_for('docente_bp.download_file_h', filename=d_tarea.material_subido) }}" target="_blank">
+                                                                    <button class="btn btn-primary btn-sm">Ver Archivo</button>
+                                                                </a></td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            {% else %}
+                                                <p>Ningún Estudiante presento la Tarea hasta el momento </p>
+                                            {% endif %}
+                                            
                                         {% else %}
-                                            <p>Ningún Estudiante presento la Tarea hasta el momento </p>
+                                            <p>Sin tarea asignada para esta sesión</p>
+                                            <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Agregar Tarea <i class="fa fa-check"></i></button>
                                         {% endif %}
-                                        
-                                    {% else %}
-                                        <p>Sin tarea asignada para esta sesión</p>
-                                        <button type="button" class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target=".modal_agregar_tarea" id="boton_agregar_tarea">Agregar Tarea <i class="fa fa-check"></i></button>
-                                    {% endif %}
+                                    </div>
                                 </div>
-                            </div>
+                            {% endif %}
 
                             
                 
