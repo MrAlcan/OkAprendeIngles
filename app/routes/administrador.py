@@ -841,7 +841,7 @@ def generar_reporte_informe_carga_horaria_mensual_excel(datos_usuario, fecha):
 
     return response'''
     return send_file(buffer,
-                     download_name="Reporte_Carga_Horaria.xlsx",
+                     download_name="Reporte_Carga_Horaria_Mensual.xlsx",
                      as_attachment=True,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
@@ -881,3 +881,21 @@ def generar_reporte_informe_carga_horaria_semana_detallado_excel(datos_usuario, 
                      download_name="Reporte_Carga_Horaria_Semanal_Detallado.xlsx",
                      as_attachment=True,
                      mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+
+#---------------------------------------------- VISTAS INFORMES ----------------------------------------------------
+@administrador_bp.route('/sesiones/informes', methods=['GET'])
+@token_requerido
+def vista_sesiones_informes(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_administrador = datos_usuario['id_usuario']
+
+
+    return render_template('administrador/informe_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+
