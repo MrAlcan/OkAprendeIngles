@@ -1,0 +1,54 @@
+{% extends 'recepcionista/plantilla.html' %}
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+{% endblock %}
+
+{% block contenido %}
+<div class="container mt-4">
+    <h3>Estudiantes inscritos en: <strong>{{ actividad.descripcion }}</strong></h3>
+    <a href="/recepcionista/actividades" class="btn btn-secondary btn-sm mb-3">⬅️ Volver</a>
+    
+    {% if estudiantes %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID Estudiante</th>
+                <th>Nombre</th>
+                <th>Estado</th>
+                <th>Calificación</th>
+                <th>Justificación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for est in estudiantes %}
+            <tr>
+                <td>{{ est.id_estudiante }}</td>
+                <td>{{ est.nombres }}</td>
+                <td>{{ est.estado_registro }}</td>
+                <td>{{ est.calificacion }}</td>
+                <td>{{ est.justificacion }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning">No hay estudiantes inscritos en esta actividad.</div>
+    {% endif %}
+</div>
+{% endblock %}

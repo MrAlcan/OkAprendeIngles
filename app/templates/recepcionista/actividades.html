@@ -113,6 +113,7 @@
                             <th>Descripción</th>
                             <th>Nivel</th>
                             <th>Cupos</th>
+                            <th>Opciones</th> 
                         </tr>
                     </thead>
                     <tbody>
@@ -126,15 +127,25 @@
                                 <td>{{ actividad.descripcion }}</td>
                                 <td>{{ actividad.nivel }}</td>
                                 <td>{{ actividad.cupos_disponibles }}</td>
+                                <td>
+                                    <a href="/recepcionista/actividades/estudiantes/{{actividad.id_actividad}}" class="btn btn-info btn-sm">👀 Ver inscritos</a>
+                                    <form action="{{ url_for('actividad_bp.eliminar_actividad', id_actividad=actividad.id_actividad) }}" method="POST" style="display:inline;">
+
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de eliminar esta actividad?');">🗑️ Eliminar</button>
+                                    </form>
+                                </td>
                             </tr>
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="7" class="text-center">No hay actividades registradas.</td>
+                                <td colspan="8" class="text-center">No hay actividades registradas.</td>
                             </tr>
                         {% endif %}
                     </tbody>
                 </table>
+                
+
+
             </div>
         </div>
     </div>

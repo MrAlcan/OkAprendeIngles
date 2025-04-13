@@ -1,8 +1,10 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, send_from_directory
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, send_from_directory, make_response
 
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosSesion import ServiciosSesion
-
+from app.services.serviciosActividad import ServiciosActividad
+from app.models.estudiante import Estudiante
+from app.config.extensiones import db
 from app.services.serviciosAutenticacion import ServiciosAutenticacion, token_requerido
 
 import os
@@ -18,14 +20,32 @@ def allowed_file_homework(filename):
 estudiante_bp = Blueprint('estudiante_bp', __name__)
 
 
+
 @estudiante_bp.route('/inicio', methods=['GET'])
 @token_requerido
 def vista_inicio(datos_usuario):
+    id_estudiante = datos_usuario['id_usuario']
+    estudiante = ServiciosEstudiante.obtener_por_id(id_estudiante)
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
-    return render_template('estudiante/inicio.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+    actividades = ServiciosActividad.obtener_todos()
+    actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
+
+    return render_template('estudiante/inicio.html',
+                           primer_nombre = primer_nombre, primer_apellido = primer_apellido,
+                           actividades=actividades_ordenadas, estudiante = estudiante)
+
+    
+@estudiante_bp.route('/material', methods=['GET'])
+@token_requerido
+def vista_material(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    return render_template('estudiante/material.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
 # ------------------------------ SESIONES -----------------------------------------------
 
@@ -232,15 +252,72 @@ def asignar_tarea(datos_usuario, id):
         return redirect(url_for('estudiante_bp.vista_sesiones_inscritas'))
 
 
+@estudiante_bp.route('/actividades/inscribirse/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def inscribir_a_actividad(datos_usuario, id_actividad):
+    id_estudiante = datos_usuario['id_usuario']
+    
+    # Aquí estamos llamando el método con los parámetros correctos
+    resultado = ServiciosEstudiante.inscribir_a_actividad(id_estudiante, id_actividad)
+
+    if resultado["status"] == "success":
+        return redirect(url_for('estudiante_bp.vista_actividades_disponibles'))
+    else:
+        return jsonify(resultado), 500
+
+@estudiante_bp.route('/actividades', methods=['GET'])
+@token_requerido
+def vista_actividades_disponibles(datos_usuario):
+    id_estudiante = datos_usuario['id_usuario']
+    estudiante = ServiciosEstudiante.obtener_por_id(id_estudiante)
+    actividades = ServiciosActividad.obtener_todos()
+    actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
+    
+    # Renderizas la plantilla correspondiente
+    return render_template('estudiante/inicio.html', actividades=actividades_ordenadas, estudiante = estudiante)
+
+@estudiante_bp.route('/reportes', methods=['GET'])
+@token_requerido
+def vista_reportes(datos_usuario):
+    estudiante = ServiciosEstudiante.obtener_por_id(datos_usuario['id_usuario'])
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+    return render_template(
+        'estudiante/reportes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, estudiante=estudiante
+    )
+
+@estudiante_bp.route('/usuarios/estudiantes/okcard/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf_okcard_estudiante(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_ok_card_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response
+
+
 # --------------------------------- NUEVAS RUTAS SESIONES --------------------
 
 @estudiante_bp.route('/sesiones/disponibles', methods=['GET'])
 @token_requerido
 def vista_sesiones_disponibles_2(datos_usuario):
+
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
+
     id_estudiante = datos_usuario['id_usuario']
 
     sesiones_disponibles, sesiones_calendario, hora_actual, dia_actual, f_lunes, f_sabado = ServiciosEstudiante.obtener_sesiones_disponibles_estudiante_id(id_estudiante) # obtener_sesiones_disponibles_2(id_estudiante)
@@ -275,3 +352,4 @@ def vista_lista_sesiones_pasadas(datos_usuario):
     sesiones_pasadas = ServiciosEstudiante.obtener_sesiones_pasadas_estudiante_id(id_estudiante)
 
     return render_template('estudiante/sesiones_pasadas.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones_pasadas)
+

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, make_response
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
@@ -378,8 +378,12 @@ def vista_lista_actividades(datos_usuario):
     print(actividades)
     fecha = datos_usuario.get('fecha')
     hora = datos_usuario.get('hora')
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
 
-    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades, docentes = docentes)
+    return render_template('recepcionista/actividades.html', fecha = fecha, hora = hora, actividades = actividades, docentes = docentes, primer_nombre = primer_nombre, primer_apellido = primer_apellido,)
 
 
 @recepcionista_bp.route('/actividades/crear', methods=['POST'])
@@ -394,12 +398,14 @@ def crear_actividad(datos_usuario):
                                            datos['nivel'],
                                            datos['cupos'] )
     print(actividades)
-    mensaje = actividades.status
+    mensaje = actividades['status']
+
     if mensaje == 'success':
         flash('Éxito', "success")
     else: flash('Fracaso', "error")
 
     return redirect(url_for('recepcionista_bp.vista_lista_actividades'))
+
 
 
 
@@ -519,3 +525,88 @@ def agregar_estudiante_manualmente(datos_usuario, id):
     else:
         # Si no hay referencia, rediriges a una página predeterminada
         return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
+
+@recepcionista_bp.route('/actividades/estudiantes/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def ver_estudiantes_inscritos(datos_usuario, id_actividad):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    estudiantes = ServiciosActividad.obtener_estudiantes_inscritos(id_actividad)
+    actividad = ServiciosActividad.obtener_por_id(id_actividad)
+    return render_template('recepcionista/estudiantes_inscritos.html', 
+                           primer_nombre=primer_nombre, 
+                           primer_apellido=primer_apellido, 
+                           actividad=actividad, 
+                           estudiantes=estudiantes)
+
+@recepcionista_bp.route('/actividades/inscribir/<int:id_actividad>', methods=['POST'])
+@token_requerido
+def inscribir_estudiante(datos_usuario, id_actividad):
+    # Aquí la lógica para inscribir a un estudiante en la actividad
+    actividad = ServiciosActividad.obtener_por_id(id_actividad)
+    if actividad and actividad.cupos > 0:
+        # Inscripción
+        estudiante = ServiciosEstudiante.obtener_estudiante(datos_usuario['id'])
+        # Lógica para registrar al estudiante
+        ServiciosActividad.inscribir_estudiante(actividad, estudiante)
+        return redirect(url_for('recepcionista.ver_estudiantes_inscritos', id_actividad=id_actividad))
+    else:
+        # Manejo de error si no hay cupos
+        flash("No hay cupos disponibles para esta actividad", 'error')
+        return redirect(url_for('recepcionista.vista_lista_actividades'))
+
+@recepcionista_bp.route('/actividades/eliminar/<int:id_actividad>', methods=['GET'])
+@token_requerido
+def eliminar_actividad(datos_usuario, id_actividad):
+    actividad = ServiciosActividad.eliminar(id_actividad)
+    return redirect(url_for('recepcionista_bp.vista_lista_actividades'))
+
+
+@recepcionista_bp.route('/reportes', methods=['GET'])
+@token_requerido
+def vista_reportes(datos_usuario):
+    estudiantes = ServiciosEstudiante.obtener_todos()
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'recepcionista/reportes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, estudiantes=estudiantes
+    )
+@recepcionista_bp.route('/usuarios/estudiantes/pdf', methods=['GET'])
+@token_requerido
+def generar_pdf_estudiantes_completos(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_reporte_todos_estudiantes(nombre_usuario)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="informe_estudiantes.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/usuarios/estudiantes/okcard/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf_okcard_estudiante(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_ok_card_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response

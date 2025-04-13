@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+
 from flask import render_template, request, redirect, url_for, make_response, send_file
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
@@ -379,6 +380,7 @@ def vista_lista_estudiantes(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
 
     estudiantes = ServiciosEstudiante.obtener_todos()
+    print(estudiantes)
 
     return render_template('administrador/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes, administrador=datos_usuario)
 
@@ -408,6 +410,20 @@ def crear_estudiante(datos_usuario):
     
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 
+@administrador_bp.route('/editar/estudiante/<id>', methods=['POST'])
+@token_requerido
+def editar_estudiante(datos_usuario, id):
+    datos = request.form
+
+    estudiante = ServiciosEstudiante.actualizar(id, datos['nombre_usuario'], datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['asignacion_tutor'])
+
+    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
+
+@administrador_bp.route('/estudiante/eliminar/<id>', methods=['GET'])
+@token_requerido
+def eliminar_estudiante(datos_usuario, id):
+    estudiante = ServiciosEstudiante.eliminar(id)
+    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 
 # -------------------------------------- GESTION SESIONES SEMANALES ------------------------------------------
 @administrador_bp.route('/sesiones/semana', methods=['GET', 'POST'])
@@ -699,6 +715,22 @@ def generar_reporte_informe_mensual_pdf(datos_usuario, fecha):
     return response
 
 
+@administrador_bp.route('/reportes', methods=['GET'])
+@token_requerido
+def vista_reportes(datos_usuario):
+    estudiantes = ServiciosEstudiante.obtener_todos()
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'administrador/reportes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, estudiantes=estudiantes
+    )
+
+
 @administrador_bp.route('/reportes/informe/carga/horaria/mensual/<fecha>', methods=['GET'])
 @token_requerido
 def generar_reporte_informe_carga_horaria_mensual_pdf(datos_usuario, fecha):
@@ -898,4 +930,5 @@ def vista_sesiones_informes(datos_usuario):
 
 
     return render_template('administrador/informe_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+
 

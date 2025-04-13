@@ -49,3 +49,11 @@ class Estudiante(Usuario):
     
     def reservar_sesion(self, id_sesion):
         ''
+    
+    @property
+    def primer_nombre(self):
+        return self.nombres.split(' ')[0]
+
+    @property
+    def primer_apellido(self):
+        return self.apellidos.split(' ')[0]

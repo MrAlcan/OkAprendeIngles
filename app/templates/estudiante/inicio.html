@@ -11,7 +11,7 @@
 
         .inicio-container {
             text-align: center;
-            padding: 50px 20px;
+            padding: 10px 20px;
             color: white;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -29,28 +29,11 @@
             margin-bottom: 20px;
         }
 
-        .btn-reservar {
-            background: #FF6B6B;
-            color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-reservar:hover {
-            background: #ff3b3b;
-        }
-
         .beneficios {
             display: flex;
             justify-content: center;
             gap: 50px;
-            margin-top: 50px;
+            margin-top: 20px;
         }
 
         .beneficio {
@@ -67,20 +50,93 @@
         .beneficio p {
             font-size: 16px;
         }
+        .btn-inscribirse {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 8px;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+          }
+        
+          .btn-inscribirse.inscrito {
+            background-color: #28a745 !important; /* verde */
+            pointer-events: none;
+          }
+
+        .actividades-container {
+            padding: 0px 20px;
+            background-color: #f7f7f7;
+            margin-top: 40px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .grid-actividades {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+        
+        .actividad-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 500px;
+            text-align: left;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .actividad-card:hover {
+            transform: scale(1.02);
+        }
+        
+        .btn-inscribirse {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-inscribirse:hover {
+            background-color: #218838;
+        }
+        
+        .btn-lleno {
+            display: inline-block;
+            background-color: #ccc;
+            color: #666;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            border: none;
+        }
+        
+        
+        
     </style>
 {% endblock %}
 
 {% block titulo_contenido %}
-    <h3>Inicio</h3>
+    <h3>Bienvenid@ {{estudiante.nombres}} </h3>
 {% endblock %}
 
 {% block contenido %}
     <div class="inicio-container">
         <h2>¡Sigue aprendiendo inglés con los mejores!</h2>
         <p>Ya falta poco para dominar el idioma. Avanza a tu ritmo con nuestras clases interactivas.</p>
-        <a  class="btn-reservar">Reservar mi próxima clase</a>
-
-        <div class="beneficios">
+                <div class="beneficios">
             <div class="beneficio">
                 
                 <p>📚 Clases personalizadas</p>
@@ -100,11 +156,77 @@
         </div>
     </div>
 
+    <div class="sesion-container" style="margin: 30px auto; max-width: 800px; background: linear-gradient(to right, #6a11cb, #2575fc); padding: 30px; border-radius: 16px; color: white; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.2);">
+        <h4 style="font-size: 26px; font-weight: bold; margin-bottom: 20px;">📌 LA SESIÓN QUE TE CORRESPONDE ES:</h4>
+        <div class="lessons-container" style="font-size: 20px; line-height: 1.6; background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 12px;">
+            {% if estudiante.welcome_completado == 0 %}
+                <p>❤️ <strong>Reserva tu WELCOME</strong> – ¡Tu primera experiencia en inglés te espera!</p>
+    
+            {% elif estudiante.working_completado == estudiante.essential_completado and estudiante.essential_completado == estudiante.speakout_completado %}
+                <p>📘 <strong>ESSENTIAL {{ estudiante.essential_completado + 1 }}</strong> – ¡Construye tus cimientos en inglés!</p>
+    
+            {% elif estudiante.working_completado == estudiante.essential_completado %}
+                <p>🗣️ <strong>SPEAK OUT {{ estudiante.speakout_completado + 1 }}</strong> – ¡Exprésate con seguridad en inglés!</p>
+    
+            {% elif estudiante.working_completado == estudiante.speakout_completado %}
+                <p>💼 <strong>WORKING {{ estudiante.working_completado + 1 }}</strong> – ¡Habla inglés como un profesional!</p>
+            {% endif %}
+        </div>
+    </div>
+    
+
+
+    
+    </div>
+
+    <div class="actividades-container">
+        <h3>📌 Actividades disponibles</h3>
+        {% if actividades %}
+            <div class="grid-actividades">
+                {% for act in actividades %}
+                <div class="actividad-card">
+                    <h4>{{ act.descripcion }}</h4>
+                    <p><strong>Fecha:</strong> {{ act.fecha }}</p>
+                    <p><strong>Hora:</strong> {{ act.hora }}</p>
+                    <p><strong>Nivel:</strong> {{ act.nivel }}</p>
+                    <p><strong>Cupos disponibles:</strong> {{ act.cupos_disponibles }}</p>
+                  
+                    {% if act.cupos_disponibles > 0 %}
+                    <button 
+                        class="btn-inscribirse" 
+                        onclick="inscribirse(this, '{{ act.id_actividad }}')">Inscribirse</button>
+                    {% else %}
+                    <button class="btn-lleno" disabled>Actividad llena</button>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No hay actividades disponibles por el momento.</p>
+        {% endif %}
+    </div>
+    
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const nav_inicio = document.getElementById('nav_inicio');
             nav_inicio.classList.add('current-page');  
         });
     </script>
+    <script>
+        function inscribirse(boton, idActividad) {
+          // Cambia el texto y el color del botón
+          boton.textContent = "Inscrito";
+          boton.classList.add("inscrito");
+      
+          // Desactiva el botón para evitar clics múltiples
+          boton.disabled = true;
+      
+          // Redirige (simula clic al enlace real)
+          setTimeout(() => {
+            window.location.href = `/estudiante/actividades/inscribirse/${idActividad}`;
+          }, 500); // medio segundo
+        }
+      </script>
 {% endblock %}
 
