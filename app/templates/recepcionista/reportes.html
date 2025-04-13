@@ -1,4 +1,4 @@
-{% extends 'administrador/plantilla.html' %}
+{% extends 'recepcionista/plantilla.html' %}
 
 {% block cabecera %}
 
@@ -33,7 +33,7 @@
                 
                     <!-- Botón Reporte General -->
                     <div class="mb-3">
-                        <form method="GET" action="{{ url_for('administrador_bp.generar_pdf_estudiantes_completos') }}" target="_blank">
+                        <form method="GET" action="{{ url_for('recepcionista_bp.generar_pdf_estudiantes_completos') }}" target="_blank">
                             <button type="submit" class="btn btn-primary">
                                 📄 Generar Reporte General de Estudiantes
                             </button>
@@ -76,7 +76,7 @@
                                 <td>{{ estudiante.correo }}</td>
                                 <td>
                                     <!-- Botón descargar OK Card -->
-                                    <a href="{{ url_for('administrador_bp.generar_pdf_okcard_estudiante', id=estudiante.id_estudiante) }}" target="_blank">
+                                    <a href="{{ url_for('recepcionista_bp.generar_pdf_okcard_estudiante', id=estudiante.id_estudiante) }}" target="_blank">
                                         <button class="btn btn-success btn-xs">📄 OK Card</button>
                                     </a>
                                 </td>

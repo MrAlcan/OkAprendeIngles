@@ -370,6 +370,7 @@ def vista_lista_estudiantes(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
 
     estudiantes = ServiciosEstudiante.obtener_todos()
+    print(estudiantes)
 
     return render_template('administrador/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes, administrador=datos_usuario)
 
@@ -705,6 +706,7 @@ def generar_reporte_informe_mensual_pdf(datos_usuario, fecha):
 @administrador_bp.route('/reportes', methods=['GET'])
 @token_requerido
 def vista_reportes(datos_usuario):
+    estudiantes = ServiciosEstudiante.obtener_todos()
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
     primer_nombre = nombres.split(' ')[0]
@@ -713,5 +715,5 @@ def vista_reportes(datos_usuario):
     return render_template(
         'administrador/reportes.html',
         primer_nombre=primer_nombre,
-        primer_apellido=primer_apellido
+        primer_apellido=primer_apellido, estudiantes=estudiantes
     )

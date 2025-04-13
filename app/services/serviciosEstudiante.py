@@ -95,7 +95,7 @@ class ServiciosEstudiante():
         estudiante = Estudiante.query.get(id_estudiante)
         if estudiante:
             datos_requeridos = ['id_estudiante', 'nombres', 'apellidos', 'essential_completado', 
-                                'working_completado', 'speakout_completado', 'welcome_completado']
+                                'working_completado', 'speakout_completado', 'welcome_completado','carnet_identidad', 'telefono', 'correo']
             respuesta = SerializadorUniversal.serializar_unico(dato=estudiante, campos_requeridos=datos_requeridos)
             return respuesta
         return None

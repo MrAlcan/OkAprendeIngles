@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, make_response
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
@@ -555,3 +555,50 @@ def inscribir_estudiante(datos_usuario, id_actividad):
 def eliminar_actividad(datos_usuario, id_actividad):
     actividad = ServiciosActividad.eliminar(id_actividad)
     return redirect(url_for('recepcionista_bp.vista_lista_actividades'))
+
+
+@recepcionista_bp.route('/reportes', methods=['GET'])
+@token_requerido
+def vista_reportes(datos_usuario):
+    estudiantes = ServiciosEstudiante.obtener_todos()
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'recepcionista/reportes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, estudiantes=estudiantes
+    )
+@recepcionista_bp.route('/usuarios/estudiantes/pdf', methods=['GET'])
+@token_requerido
+def generar_pdf_estudiantes_completos(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_reporte_todos_estudiantes(nombre_usuario)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="informe_estudiantes.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/usuarios/estudiantes/okcard/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf_okcard_estudiante(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_ok_card_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response

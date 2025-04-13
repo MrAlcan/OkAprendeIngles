@@ -1,0 +1,93 @@
+{% extends 'estudiante/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Reportes</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4 shadow">
+                <h4 class="text-center mb-4">DATOS DEL ESTUDIANTE</h4>
+
+                <ul class="list-group mb-4">
+                    <li class="list-group-item"><strong>ID:</strong> {{ estudiante.id_estudiante }}</li>
+                    <li class="list-group-item"><strong>Nombres:</strong> {{ estudiante.nombres }}</li>
+                    <li class="list-group-item"><strong>Apellidos:</strong> {{ estudiante.apellidos }}</li>
+                    <li class="list-group-item"><strong>Teléfono:</strong> {{ estudiante.telefono }}</li>
+                    <li class="list-group-item"><strong>Carnet de Identidad:</strong> {{ estudiante.carnet_identidad }}</li>
+                    <li class="list-group-item"><strong>Correo:</strong> {{ estudiante.correo }}</li>
+                </ul>
+
+                <!-- Botón OK Card -->
+                <div class="text-center">
+                    <a href="{{ url_for('estudiante_bp.generar_pdf_okcard_estudiante', id=estudiante.id_estudiante) }}" target="_blank">
+                        <button class="btn btn-success">
+                            📄 Descargar OK Card
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_usuarios');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_usuarios ul');
+        bloque.setAttribute('style', 'display: block;');
+        const nav_administradores = document.getElementById('nav_recepcionistas');
+        nav_administradores.classList.add('current-page');
+    });
+</script>
+{% endblock %}
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+{% endblock %}

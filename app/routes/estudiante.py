@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, send_from_directory
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for, flash, current_app, send_from_directory, make_response
 
 from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosSesion import ServiciosSesion
@@ -274,3 +274,34 @@ def vista_actividades_disponibles(datos_usuario):
     
     # Renderizas la plantilla correspondiente
     return render_template('estudiante/inicio.html', actividades=actividades_ordenadas, estudiante = estudiante)
+
+@estudiante_bp.route('/reportes', methods=['GET'])
+@token_requerido
+def vista_reportes(datos_usuario):
+    estudiante = ServiciosEstudiante.obtener_por_id(datos_usuario['id_usuario'])
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'estudiante/reportes.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, estudiante=estudiante
+    )
+
+@estudiante_bp.route('/usuarios/estudiantes/okcard/pdf/<id>', methods=['GET'])
+@token_requerido
+def generar_pdf_okcard_estudiante(datos_usuario, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosEstudiante.obtener_ok_card_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="okcard_estudiantes.pdf"'
+
+    return response
