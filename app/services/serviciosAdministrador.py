@@ -82,6 +82,7 @@ class serviciosAdministrador():
             administrador.apellidos = apellidos
             administrador.carnet_identidad = carnet
             administrador.telefono = telefono
+            administrador.contrasena_hash = bcrypt.generate_password_hash(str(carnet)).decode('utf-8')
             
             db.session.commit()
 

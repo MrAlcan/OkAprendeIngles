@@ -1,5 +1,5 @@
 from app.models.recepcionista import Recepcionista
-from app.config.extensiones import db
+from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 
@@ -63,6 +63,7 @@ class ServiciosRecepcionista():
             recepcionista.apellidos = apellidos
             recepcionista.carnet_identidad = carnet
             recepcionista.telefono = telefono
+            recepcionista.contrasena_hash = bcrypt.generate_password_hash(str(carnet)).decode('utf-8')
             
             db.session.commit()
 

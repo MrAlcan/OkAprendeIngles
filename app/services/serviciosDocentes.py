@@ -6,7 +6,7 @@ from app.models.estudiante import Estudiante
 from app.models.tarea import Tarea
 from app.models.detalleTarea import DetalleTarea
 
-from app.config.extensiones import db
+from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.services.serviciosSesion import ServiciosSesion
@@ -92,6 +92,7 @@ class ServiciosDocente():
             docente.telefono = telefono
             docente.asignacion_tutor = asignacion_tutor
             docente.color = color
+            docente.contrasena_hash = bcrypt.generate_password_hash(str(carnet)).decode('utf-8')
 
             #db.session.commit()
 
