@@ -37,6 +37,7 @@ def create_app(config_class=Config):
     from app.routes.inicio import inicio_bp
     from app.routes.autenticacion import autenticar_bp
     from app.routes.actividad import actividad_bp
+    from app.routes.configuracion import crear_blueprint
 
     '''@app.before_request
     def verificar_cookie():
@@ -51,6 +52,12 @@ def create_app(config_class=Config):
         #print(direccion)
         return redirect(url_for('inicio_bp.vista_ingresar'))
         return redirect(url_for('pagina_no_encontrada'))
+    
+    perfil_administrador_bp = crear_blueprint('administrador_perfil')
+    perfil_recepcionista_bp = crear_blueprint('recepcionista_perfil')
+    perfil_docente_bp = crear_blueprint('docente_perfil')
+    perfil_estudiante_bp = crear_blueprint('estudiante_perfil')
+
 
     app.register_blueprint(administrador_bp, url_prefix='/administrador')
     app.register_blueprint(docente_bp, url_prefix='/docente')
@@ -59,6 +66,20 @@ def create_app(config_class=Config):
     app.register_blueprint(inicio_bp, url_prefix='/inicio')
     app.register_blueprint(autenticar_bp, url_prefix='/autenticacion')
     app.register_blueprint(actividad_bp, url_prefix='/actividad')
+
+    app.register_blueprint(perfil_administrador_bp, url_prefix='/administrador/perfil')
+    app.register_blueprint(perfil_recepcionista_bp, url_prefix='/recepcionista/perfil')
+    app.register_blueprint(perfil_docente_bp, url_prefix='/docente/perfil')
+    app.register_blueprint(perfil_estudiante_bp, url_prefix='/estudiante/perfil')
+
+
+
+
+
+    '''app.register_blueprint(configuracion_bp, url_prefix='/administrador')
+    app.register_blueprint(configuracion_bp, url_prefix='/recepcionista')
+    app.register_blueprint(configuracion_bp, url_prefix='/docente')
+    app.register_blueprint(configuracion_bp, url_prefix='/estudiante')'''
 
 
 

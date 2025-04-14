@@ -98,7 +98,7 @@ class ServiciosEstudiante():
 
         datos = Estudiante.query.filter_by(activo = 1)
 
-        datos_requeridos = ['id_estudiante', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'celular_titular', 'nombres_titular', 'nombre_nivel', 'rango_nivel', 'speakout_completado', 'working_completado', 'essential_completado', 'welcome_completado', 'activo']
+        datos_requeridos = ['id_estudiante', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'celular_titular', 'nombres_titular', 'nombre_nivel', 'rango_nivel', 'speakout_completado', 'working_completado', 'essential_completado', 'welcome_completado', 'activo', 'paso_examen']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
         return respuesta
     
@@ -106,7 +106,7 @@ class ServiciosEstudiante():
         estudiante = Estudiante.query.get(id_estudiante)
         if estudiante:
             datos_requeridos = ['id_estudiante', 'nombres', 'apellidos', 'essential_completado', 
-                                'working_completado', 'speakout_completado', 'welcome_completado','carnet_identidad', 'telefono', 'correo']
+                                'working_completado', 'speakout_completado', 'welcome_completado','carnet_identidad', 'telefono', 'correo', 'paso_examen']
             respuesta = SerializadorUniversal.serializar_unico(dato=estudiante, campos_requeridos=datos_requeridos)
             return respuesta
         return None
@@ -2429,7 +2429,7 @@ class ServiciosEstudiante():
 
         return buffer
     
-    def obtener_sesiones_disponibles_estudiante_id(id_estudiante):
+    def obtener_sesiones_disponibles_estudiante_id_2(id_estudiante):
         estudiante = Estudiante.query.get(id_estudiante)
 
         nivel_working = int(estudiante.working_completado)
@@ -2968,66 +2968,84 @@ class ServiciosEstudiante():
                     else: # anadir sesiones disponibles no canceladas
                         if sesiones_working:
                             for sesion in sesiones_working:
-                                flag = True
-                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
-                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
-                                        flag = False
-                                if sesion.id_sesion not in ids_cancelados and flag:
-                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
-                                    sesiones_disponibles.append(respuesta)
+                                nivel_inicial = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                if nivel_inicial >= working_actual and working_actual <= nivel_final:
+                                    flag = True
+                                    if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                        if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                            flag = False
+                                    if sesion.id_sesion not in ids_cancelados and flag:
+                                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                        sesiones_disponibles.append(respuesta)
                         if sesiones_working_hoy:
                             for sesion in sesiones_working_hoy:
-                                flag = True
-                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
-                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
-                                        flag = False
-                                if sesion.id_sesion not in ids_cancelados and flag:
-                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
-                                    sesiones_disponibles.append(respuesta)
+                                nivel_inicial = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                if nivel_inicial >= working_actual and working_actual <= nivel_final:
+                                    flag = True
+                                    if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                        if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                            flag = False
+                                    if sesion.id_sesion not in ids_cancelados and flag:
+                                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                        sesiones_disponibles.append(respuesta)
                 if menor == essential_actual: #MOSTRAR SESIONES ESSENTIAL
                     if sesiones_inscritas_essential or sesiones_asistidas_essential:
                         print("existen sesiones inscritas o que asistio pero no fue calificado del working")
                     else: # anadir sesiones disponibles no canceladas
                         if sesiones_essential:
                             for sesion in sesiones_essential:
-                                flag = True
-                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
-                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
-                                        flag = False
-                                if sesion.id_sesion not in ids_cancelados and flag:
-                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
-                                    sesiones_disponibles.append(respuesta)
+                                nivel_inicial = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                if nivel_inicial >= essential_actual and essential_actual <= nivel_final:
+                                    flag = True
+                                    if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                        if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                            flag = False
+                                    if sesion.id_sesion not in ids_cancelados and flag:
+                                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                        sesiones_disponibles.append(respuesta)
                         if sesiones_essential_hoy:
                             for sesion in sesiones_essential_hoy:
-                                flag = True
-                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
-                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
-                                        flag = False
-                                if sesion.id_sesion not in ids_cancelados and flag:
-                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
-                                    sesiones_disponibles.append(respuesta)
+                                nivel_inicial = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                if nivel_inicial >= essential_actual and essential_actual <= nivel_final:
+                                    flag = True
+                                    if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                        if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                            flag = False
+                                    if sesion.id_sesion not in ids_cancelados and flag:
+                                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                        sesiones_disponibles.append(respuesta)
                 if menor == speakout_actual: #MOSTRAR SESINOES SPEAK
                     if sesiones_inscritas_speakout or sesiones_asistidas_speakout:
                         print("existen sesiones inscritas o que asistio pero no fue calificado del working")
                     else: # anadir sesiones disponibles no canceladas
                         if sesiones_speakout:
                             for sesion in sesiones_speakout:
-                                flag = True
-                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
-                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
-                                        flag = False
-                                if sesion.id_sesion not in ids_cancelados and flag:
-                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
-                                    sesiones_disponibles.append(respuesta)
+                                nivel_inicial = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                if nivel_inicial >= speakout_actual and speakout_actual <= nivel_final:
+                                    flag = True
+                                    if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                        if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                            flag = False
+                                    if sesion.id_sesion not in ids_cancelados and flag:
+                                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                        sesiones_disponibles.append(respuesta)
                         if sesiones_speakout_hoy:
                             for sesion in sesiones_speakout_hoy:
-                                flag = True
-                                if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
-                                    if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
-                                        flag = False
-                                if sesion.id_sesion not in ids_cancelados and flag:
-                                    respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
-                                    sesiones_disponibles.append(respuesta)
+                                nivel_inicial = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                if nivel_inicial >= speakout_actual and speakout_actual <= nivel_final:
+                                    flag = True
+                                    if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
+                                        if sesion.hora.strftime("%H:%M:%S") in dias_fechas[sesion.fecha.strftime("%Y-%m-%d")]:
+                                            flag = False
+                                    if sesion.id_sesion not in ids_cancelados and flag:
+                                        respuesta = SerializadorUniversal.serializar_unico(dato=sesion, campos_requeridos=datos_requeridos)
+                                        sesiones_disponibles.append(respuesta)
 
         #aqui se deberia retornar los valores de las sesiones disponibles
 

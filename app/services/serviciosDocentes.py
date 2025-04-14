@@ -388,7 +388,13 @@ class ServiciosDocente():
                     estudiante_ob.essential_completado = nivel_inicial
                     estudiante_ob.welcome_completado = 1
                     estudiante_ob.paso_examen = 1
-                    estudiante_ob.nombre_nivel = 'Basico'
+                    if nivel_inicial + 1 >30:
+                        estudiante_ob.nombre_nivel = 'Avanzado'
+                    elif nivel_inicial + 1 >15:
+
+                        estudiante_ob.nombre_nivel = 'Intermedio'
+                    else:
+                        estudiante_ob.nombre_nivel = 'Basico'
                 elif seccion_sesion == 'Working':
                     nivel = int(estudiante_ob.working_completado)
                     nivel = nivel + 1
