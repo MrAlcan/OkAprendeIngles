@@ -6,7 +6,7 @@ from app.models.estudiante import Estudiante
 from app.models.tarea import Tarea
 from app.models.detalleTarea import DetalleTarea
 
-from app.config.extensiones import db
+from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.services.serviciosSesion import ServiciosSesion
@@ -92,6 +92,7 @@ class ServiciosDocente():
             docente.telefono = telefono
             docente.asignacion_tutor = asignacion_tutor
             docente.color = color
+            docente.contrasena_hash = bcrypt.generate_password_hash(str(carnet)).decode('utf-8')
 
             #db.session.commit()
 
@@ -387,7 +388,13 @@ class ServiciosDocente():
                     estudiante_ob.essential_completado = nivel_inicial
                     estudiante_ob.welcome_completado = 1
                     estudiante_ob.paso_examen = 1
-                    estudiante_ob.nombre_nivel = 'Basico'
+                    if nivel_inicial + 1 >30:
+                        estudiante_ob.nombre_nivel = 'Avanzado'
+                    elif nivel_inicial + 1 >15:
+
+                        estudiante_ob.nombre_nivel = 'Intermedio'
+                    else:
+                        estudiante_ob.nombre_nivel = 'Basico'
                 elif seccion_sesion == 'Working':
                     nivel = int(estudiante_ob.working_completado)
                     nivel = nivel + 1
