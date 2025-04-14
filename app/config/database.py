@@ -18,7 +18,7 @@ diccionario_sesiones = {}
 
 
 #direccion_actual = os.path.join(os.getcwd(), 'app', 'config')
-direccion_actual = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'config')
+#direccion_actual = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'config')
 
 def iniciar_datos():
 
@@ -36,7 +36,7 @@ def iniciar_datos():
 
         print("usuario admin creado")
     
-    if not docentes:
+    '''if not docentes:
         print("creando docentes")
         
         archivo_csv1 = 'tutores_unicos.csv'
@@ -92,13 +92,6 @@ def iniciar_datos():
             diccionario_docentes[tutor] = id_docente
             
         #
-
-        '''docentes_objs = Docente.query.all()
-
-        for docente_objs in docentes_objs:
-            id_docente = docente_objs.id_docente
-
-            diccionario_docentes[tutor] = id_docente'''
 
         print(diccionario_docentes)
     
@@ -334,7 +327,7 @@ def iniciar_datos():
                     estudiante.fin_contrato = ultima_sesion_est
             
 
-            db.session.commit()
+            db.session.commit()'''
 
 
 
