@@ -55,7 +55,7 @@ class ServiciosEstudiante():
         else:
             return None, None
 
-    def crear(correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato):
+    def crear(correo, nombres, apellidos, carnet, telefono, celular_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato):
 
 
         primer_nombre = str(nombres).split(' ')[0]
@@ -86,7 +86,7 @@ class ServiciosEstudiante():
                         break
 
 
-        estudiante = Estudiante(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, telefono_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato)
+        estudiante = Estudiante(nombre_usuario, str(carnet), correo, nombres, apellidos, carnet, telefono, celular_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato)
 
 
         db.session.add(estudiante)
@@ -106,7 +106,9 @@ class ServiciosEstudiante():
         estudiante = Estudiante.query.get(id_estudiante)
         if estudiante:
             datos_requeridos = ['id_estudiante', 'nombres', 'apellidos', 'essential_completado', 
-                                'working_completado', 'speakout_completado', 'welcome_completado','carnet_identidad', 'telefono', 'correo', 'paso_examen']
+
+                                'working_completado', 'speakout_completado', 'welcome_completado','carnet_identidad', 'telefono', 'correo', 'nombre_usuario', 'celular_titular', 'nombres_titular']
+
             respuesta = SerializadorUniversal.serializar_unico(dato=estudiante, campos_requeridos=datos_requeridos)
             return respuesta
         return None
@@ -1631,7 +1633,26 @@ class ServiciosEstudiante():
         
         return sesiones_pasadas
 
+    def actualizar(id_estudiante, correo, nombres, apellidos, carnet, telefono, nombres_titular, celular_titular, ocupacion_tutor):
+        try:
+
+            estudiante = Estudiante.query.get(id_estudiante)
             
+            estudiante.correo = correo
+            estudiante.nombres = nombres
+            estudiante.apellidos = apellidos
+            estudiante.carnet_identidad = carnet
+            estudiante.nombres_titular = nombres_titular
+            estudiante.telefono = telefono
+            estudiante.celular_titular = celular_titular
+            estudiante.ocupacion_tutor = ocupacion_tutor
+            db.session.commit()
+
+            return {"status": "success", "message": "Estudiantes modificados exitosamente"}
+    
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            return {"status": "error", "message": str(e)}
 
 # ---------------------------------------- NUEVAS FUNCIONES SESIONES -------------------------------------
 

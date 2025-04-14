@@ -356,3 +356,19 @@ def vista_lista_sesiones_pasadas(datos_usuario):
 
     return render_template('estudiante/sesiones_pasadas.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones_pasadas)
 
+
+
+@estudiante_bp.route('/perfil', methods=['GET'])
+@token_requerido
+def vista_perfil(datos_usuario):
+    estudiante = ServiciosEstudiante.obtener_por_id(datos_usuario['id_usuario'])
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    return render_template(
+        'estudiante/perfil.html',
+        primer_nombre=primer_nombre,
+        primer_apellido=primer_apellido, estudiante=estudiante
+    )
