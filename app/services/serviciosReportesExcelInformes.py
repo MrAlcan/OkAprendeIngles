@@ -1203,6 +1203,13 @@ class ServiciosReportesExcelInformes():
 
         dia_numero = int(dia_en_string)
 
+        fecha_lunes_s = mes_actual.day
+        fecha_martes_s = (mes_actual + timedelta(days=1)).day
+        fecha_miercoles_s = (mes_actual + timedelta(days=2)).day
+        fecha_jueves_s = (mes_actual + timedelta(days=3)).day
+        fecha_viernes_s = (mes_actual + timedelta(days=4)).day
+        fecha_sabado_s = (mes_actual + timedelta(days=5)).day
+
 
 
         fila = 2
@@ -1210,22 +1217,22 @@ class ServiciosReportesExcelInformes():
         worksheet.write(fila, 0, "TUTOR", formato_titulo_tutor)
 
         worksheet.write(fila, 1, "HORA", formato_titulo_total)
-        worksheet.merge_range(fila, 2, fila, 5, f"LUNES {dia_numero}", formato_titulo_total)
+        worksheet.merge_range(fila, 2, fila, 5, f"LUNES {fecha_lunes_s}", formato_titulo_total)
 
         worksheet.write(fila, 6, "HORA", formato_titulo_tutor)
-        worksheet.merge_range(fila, 7, fila, 10, f"MARTES {dia_numero + 1}", formato_titulo_tutor)
+        worksheet.merge_range(fila, 7, fila, 10, f"MARTES {fecha_martes_s}", formato_titulo_tutor)
 
         worksheet.write(fila, 11, "HORA", formato_titulo_total)
-        worksheet.merge_range(fila, 12, fila, 15, f"MIERCOLES {dia_numero + 2}", formato_titulo_total)
+        worksheet.merge_range(fila, 12, fila, 15, f"MIERCOLES {fecha_miercoles_s}", formato_titulo_total)
 
         worksheet.write(fila, 16, "HORA", formato_titulo_tutor)
-        worksheet.merge_range(fila, 17, fila, 20, f"JUEVES {dia_numero + 3}", formato_titulo_tutor)
+        worksheet.merge_range(fila, 17, fila, 20, f"JUEVES {fecha_jueves_s}", formato_titulo_tutor)
 
         worksheet.write(fila, 21, "HORA", formato_titulo_total)
-        worksheet.merge_range(fila, 22, fila, 25, f"VIERNES {dia_numero + 4}", formato_titulo_total)
+        worksheet.merge_range(fila, 22, fila, 25, f"VIERNES {fecha_viernes_s}", formato_titulo_total)
 
         worksheet.write(fila, 26, "HORA", formato_titulo_tutor)
-        worksheet.merge_range(fila, 27, fila, 30, f"SABADO {dia_numero + 5}", formato_titulo_tutor)
+        worksheet.merge_range(fila, 27, fila, 30, f"SABADO {fecha_sabado_s}", formato_titulo_tutor)
 
         worksheet.write(fila, 31, "TOTAL", formato_titulo_total)
 

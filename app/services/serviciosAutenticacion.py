@@ -51,7 +51,7 @@ def token_requerido(f):
         #print(cuerpo_token['access_token_cookie'])
         
         try:
-            data = jwt.decode(cuerpo_token['access_token_cookie'], os.environ.get('SECRET_KEY'), algorithms=['HS256'])
+            data = jwt.decode(cuerpo_token['access_token_cookie'], 'clave_secreta_super_segura', algorithms=['HS256'])
             if str(data['rol']) != str(rol_vista):
                 direccion = str(data['rol']) + '_bp.vista_inicio'
                 return redirect(url_for(direccion))

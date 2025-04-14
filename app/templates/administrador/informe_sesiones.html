@@ -95,15 +95,15 @@
 
                 <div>
                     <div class="row">
-                        <div class="col"><h4>Informe de Carga Horaria Detallada por Mes</h4></div>
+                        <div class="col"><h4>Informe de Carga Horaria Detallada por semana</h4></div>
                     </div>
                     <div class="row">
                         
                         <div class="col">
-                            <p>Elija un Mes y Año</p>
+                            <p>Elija una Semana</p>
                         </div>
                         <div class="col">
-                            <input type="month" class="form-control" id="input_fecha_mes_detallado"/>
+                            <input type="week" class="form-control" id="input_fecha_mes_detallado"/>
                         </div>
                         
                         <div class="col">
@@ -212,7 +212,16 @@
         const valor = this.value; // formato: YYYY-MM
         if (valor) {
             // Agregamos el día 01 manualmente
-            const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            const [year, week] = valor.split('-W');
+    
+            // Calcular el lunes de esa semana
+            const simpleDate = new Date(year, 0, 1 + (week - 1) * 7);
+            const day = simpleDate.getDay();
+            const mondayOffset = day <= 4 ? day - 1 : day - 8;
+            const monday = new Date(simpleDate);
+            monday.setDate(simpleDate.getDate() - mondayOffset);
+        
+            const fechaFormateada = formatearFecha(monday);
             document.getElementById('boton_fecha_mes_detallado').href = `/administrador/reportes/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
             document.getElementById('boton_fecha_mes_excel_detallado').href = `/administrador/reportes/excel/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
             document.getElementById('boton_fecha_mes_excel_detallado').hidden = false;

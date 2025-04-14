@@ -1078,7 +1078,15 @@ class ServiciosReportesInformes():
         dia_en_string = fecha_en_string.split('-')[0]
 
         dia_numero = int(dia_en_string)
-        cabecera = [Paragraph(f"TUTOR", estilo_titulos_tabla), Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"LUNES {dia_numero}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"MARTES {dia_numero+1}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"MIERCOLES {dia_numero+2}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"JUEVES {dia_numero+3}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"VIERNES {dia_numero+4}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"SABADO {dia_numero+5}", estilo_titulos_tabla), '', Paragraph(f"TOTAL", estilo_titulos_tabla)]
+        fecha_lunes_s = mes_actual.day
+        fecha_martes_s = (mes_actual + timedelta(days=1)).day
+        fecha_miercoles_s = (mes_actual + timedelta(days=2)).day
+        fecha_jueves_s = (mes_actual + timedelta(days=3)).day
+        fecha_viernes_s = (mes_actual + timedelta(days=4)).day
+        fecha_sabado_s = (mes_actual + timedelta(days=5)).day
+
+
+        cabecera = [Paragraph(f"TUTOR", estilo_titulos_tabla), Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"LUNES {fecha_lunes_s}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"MARTES {fecha_martes_s}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"MIERCOLES {fecha_miercoles_s}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"JUEVES {fecha_jueves_s}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"VIERNES {fecha_viernes_s}", estilo_titulos_tabla), '', Paragraph(f"HORA", estilo_titulos_tabla), Paragraph(f"SABADO {fecha_sabado_s}", estilo_titulos_tabla), '', Paragraph(f"TOTAL", estilo_titulos_tabla)]
 
         tabla_general.append(cabecera)
 
