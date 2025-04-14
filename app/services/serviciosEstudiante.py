@@ -781,7 +781,8 @@ class ServiciosEstudiante():
 
 
 
-        logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -907,7 +908,8 @@ class ServiciosEstudiante():
 
 
 
-        logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -2248,7 +2250,8 @@ class ServiciosEstudiante():
 
 
 
-        logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -2376,7 +2379,8 @@ class ServiciosEstudiante():
 
 
 
-        logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

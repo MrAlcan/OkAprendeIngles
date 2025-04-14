@@ -340,13 +340,15 @@ def asignar_tarea(datos_usuario, id):
 @docente_bp.route('/download/<filename>')
 def download_file_h(filename):
     # Validar que el archivo existe
-    file_path = os.path.join('app','static','tareas', filename)
+    #file_path = os.path.join('app','static','tareas', filename)
+    file_path = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'tareas', filename)
     #filename = str(filename).split('/')[1]
     print(filename)
     print(file_path)
     if os.path.exists(file_path):
         print("existes")
-        file_path = os.path.join(os.getcwd(),'app','static','tareas')
+        #file_path = os.path.join(os.getcwd(),'app','static','tareas')
+        file_path = os.path.join('var', 'www', 'OkAprendeIngles','app','static','tareas')
         # Usamos send_from_directory para enviar el archivo
         return send_from_directory(file_path, path=filename, as_attachment=False)
 
