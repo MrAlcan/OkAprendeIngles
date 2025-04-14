@@ -380,7 +380,8 @@ def vista_lista_estudiantes(datos_usuario):
     primer_apellido = apellidos.split(' ')[0]
 
     estudiantes = ServiciosEstudiante.obtener_todos()
-    print(estudiantes)
+    
+    #print(estudiantes)
 
     return render_template('administrador/estudiantes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, estudiantes = estudiantes, administrador=datos_usuario)
 

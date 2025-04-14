@@ -10,6 +10,7 @@ from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.services.serviciosSesion import ServiciosSesion
+from app.services.serviciosCorreo import ServiciosCorreo
 from datetime import datetime, timedelta, date
 
 DIAS_INGLES = {
@@ -59,6 +60,7 @@ class ServiciosDocente():
 
             db.session.add(nuevo_docente)
             db.session.commit()
+            respuesta = ServiciosCorreo.enviar_credenciales_nuevo_usuario(correo, nombre_usuario, str(carnet))
 
             id_docente = nuevo_docente.id_docente
 
@@ -361,6 +363,15 @@ class ServiciosDocente():
         obj_sesion.link = link
 
         db.session.commit()
+
+        detalles_estudiantes = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion).all()
+        if detalles_estudiantes:
+            for detalle in detalles_estudiantes:
+                id_est = detalle.id_estudiante
+                estudiante = Estudiante.query.filter(Estudiante.activo==1, Estudiante.id_estudiante==id_est).first()
+                if estudiante:
+                    correo = estudiante.correo
+                    respuesta = ServiciosCorreo.enviar_link_reunion(correo, link)
 
         return True
     

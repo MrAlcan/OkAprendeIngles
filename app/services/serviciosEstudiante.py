@@ -7,6 +7,8 @@ from app.models.detalleTarea import DetalleTarea
 from app.models.actividad import Actividad
 from app.models.docente import Docente
 
+from app.services.serviciosCorreo import ServiciosCorreo
+
 from sqlalchemy.exc import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.config.extensiones import db
@@ -91,6 +93,7 @@ class ServiciosEstudiante():
 
         db.session.add(estudiante)
         db.session.commit()
+        repuesta = ServiciosCorreo.enviar_credenciales_nuevo_usuario(correo, nombre_usuario, str(carnet))
 
         return True
     

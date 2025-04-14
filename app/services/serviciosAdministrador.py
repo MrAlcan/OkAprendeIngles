@@ -6,6 +6,7 @@ from app.models.detalleSesion import DetalleSesion
 from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
+from app.services.serviciosCorreo import ServiciosCorreo
 
 from datetime import date, datetime, timedelta
 
@@ -45,6 +46,8 @@ class serviciosAdministrador():
 
             db.session.add(nuevo_administrador)
             db.session.commit()
+
+            respuesta = ServiciosCorreo.enviar_credenciales_nuevo_usuario(correo, nombre_usuario, str(carnet))
             return {"status": "success", "message": "Administrador creado exitosamente"}
     
         except SQLAlchemyError as e:

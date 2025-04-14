@@ -2,6 +2,7 @@ from app.models.recepcionista import Recepcionista
 from app.config.extensiones import db, bcrypt
 from app import SQLAlchemyError
 from app.serializer.serializadorUniversal import SerializadorUniversal
+from app.services.serviciosCorreo import ServiciosCorreo
 
 class ServiciosRecepcionista():
 
@@ -41,6 +42,7 @@ class ServiciosRecepcionista():
 
             db.session.add(nuevo_recepcionista)
             db.session.commit()
+            respuesta = ServiciosCorreo.enviar_credenciales_nuevo_usuario(correo, nombre_usuario, str(carnet))
             return {"status": "success", "message": "Recepcionista creado exitosamente"}
     
         except SQLAlchemyError as e:
