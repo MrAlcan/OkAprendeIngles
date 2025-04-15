@@ -155,7 +155,7 @@ def llenado_asistencias(datos_usuario, id):
             'recomendacion': recomendacion
         })
 
-    print('/*-'*50)
+    #print('/*-'*50)
     print("datos_esto")
     print(estudiantes_data)
 

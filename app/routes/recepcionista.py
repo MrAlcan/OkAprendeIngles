@@ -844,7 +844,7 @@ def vista_sesiones_reporte(datos_usuario):
     for sesion in sesiones:
         sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
 
-    return render_template('receocionista/reporte_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones)
+    return render_template('recepcionista/reporte_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones)
 
 
 @recepcionista_bp.route('/docentes/reportes', methods=['GET'])
@@ -868,7 +868,7 @@ def vista_docentes_reporte(datos_usuario):
     #for sesion in sesiones:
         #sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
 
-    return render_template('receocionista/reporte_docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
+    return render_template('recepcionista/reporte_docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
 
 
 
@@ -969,6 +969,6 @@ def vista_sesiones_informes(datos_usuario):
     id_administrador = datos_usuario['id_usuario']
 
 
-    return render_template('receocionista/informe_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+    return render_template('recepcionista/informe_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
 
 

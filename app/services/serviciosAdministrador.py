@@ -229,7 +229,21 @@ class serviciosAdministrador():
 
         seccion = sesion.seccion
 
-        nuevo_detalle = DetalleSesion(id_sesion, id_estudiante, seccion)
+        estudiante = Estudiante.query.get(id_estudiante)
+
+        nivel_correspondido = 0
+        if seccion == 'Welcome':
+            nivel_correspondido = 0
+        elif seccion == 'Working':
+            nivel_correspondido = estudiante.working_completado
+        elif seccion == 'Essential':
+            nivel_correspondido = estudiante.essential_completado
+        elif seccion == 'Speak Out':
+            nivel_correspondido = estudiante.speakout_completado
+        elif str(seccion).startswith('Test'):
+            nivel_correspondido = estudiante.speakout_completado
+
+        nuevo_detalle = DetalleSesion(id_sesion, id_estudiante, nivel_correspondido)
 
         db.session.add(nuevo_detalle)
         db.session.commit()
