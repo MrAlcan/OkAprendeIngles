@@ -234,7 +234,6 @@
                             <th>Carnet</th>
                             <th>Nombre de Usuario</th>
                             <th>Correo</th>
-                            <th>Nombre de Usuario</th>
                             <th>Opciones</th>
                         </tr>
                     </thead>
@@ -242,13 +241,22 @@
                         {% if estudiantes %}
                             {% for estudiante in estudiantes %}
                             <tr>
-                                <td>{{recepcionista.id_estudiante}}</td>
-                                <td>{{recepcionista.nombres}}</td>
-                                <td>{{recepcionista.apellidos}}</td>
-                                <td>{{recepcionista.telefono}}</td>
-                                <td>{{recepcionista.carnet_identidad}}</td>
-                                <td>{{recepcionista.correo}}</td>
-                                <td><a>Eliminar</a><a>Editar</a></td>
+                                <td>{{estudiante.id_estudiante}}</td>
+                                <td>{{estudiante.nombres}}</td>
+                                <td>{{estudiante.apellidos}}</td>
+                                <td>{{estudiante.telefono}}</td>
+                                <td>{{estudiante.carnet_identidad}}</td>
+                                <td>{{estudiante.nombre_usuario}}</td>
+                                <td>{{estudiante.correo}}</td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                        data-target=".modal_editar_estudiante_{{ estudiante.id_estudiante }}">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <a href="/recepcionista/recepcionistas/eliminar/{{ estudiante.id_recepcionista }}">
+                                        <button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button>
+                                    </a>
+                                </td>
                             </tr>
 
                             {% endfor %}
