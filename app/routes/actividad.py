@@ -78,7 +78,7 @@ def vista_actividades_disponibles(datos_usuario):
                            primer_apellido=primer_apellido, 
                            actividades=actividades)
 
-@actividad_bp.route('/actividades/eliminar/<int:id_actividad>', methods=['POST'])
+@actividad_bp.route('/actividades/eliminar/<id_actividad>', methods=['POST'])
 @token_requerido
 def eliminar_actividad(datos_usuario, id_actividad):
     resultado = ServiciosActividad.eliminar(id_actividad)

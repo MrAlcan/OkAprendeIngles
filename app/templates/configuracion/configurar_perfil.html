@@ -1,0 +1,152 @@
+{% if datos_usuario %}
+
+{% if datos_usuario.rol == 'administrador' %}
+{% extends 'administrador/plantilla.html' %}
+{% elif datos_usuario.rol == 'recepcionista' %}
+{% extends 'recepcionista/plantilla.html' %}
+{% elif datos_usuario.rol == 'docente' %}
+{% extends 'docente/plantilla.html' %}
+{% elif datos_usuario.rol == 'estudiante' %}
+{% extends 'estudiante/plantilla.html' %}
+{% endif %}
+
+
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Configurar Perfil de Usuario</h3>
+{% endblock %}
+
+{% block contenido %}
+
+<div class="clearfix"></div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Perfil de Usuario</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-12 col-sm-12  profile_left">
+
+                    {% if datos_usuario %}
+                    
+                        <h3>{{datos_usuario.nombres}} {{datos_usuario.apellidos}}</h3>
+
+                        <form class="form-horizontal form-label-left" action="/{{datos_usuario.rol}}/perfil/configurar/datos" method="POST">
+
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Nombres <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <input type="text" name="nombres" required="required" class="form-control " value="{{datos_usuario.nombres}}" pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                    title="Solo se permiten letras y una sola separación por palabras"
+                                    onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')">
+                                </div>
+                            </div>
+
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Apellidos <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <input type="text" name="apellidos" required="required" class="form-control " value="{{datos_usuario.apellidos}}" pattern="^[A-Za-z]+(?: [A-Za-z]+)*$"
+                                    title="Solo se permiten letras y una sola separación por palabras"
+                                    onfocus="this.setAttribute('title', 'Ingrese solo letras y una sola separación entre palabras')">
+                                </div>
+                            </div>
+
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Telefono <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <input type="number" name="telefono" required="required" class="form-control " value="{{datos_usuario.telefono}}" pattern="[0-9]{8}" title="Solo números de 8 dígitos"
+                                    onfocus="this.setAttribute('title', 'Ingrese solo números de 8 dígitos')">
+                                </div>
+                            </div>
+
+                            <div class="item form-group">
+                                <label class="col-form-label col-md-3 col-sm-3 label-align" for="first-name">Correo <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 ">
+                                    <input type="email" name="correo" required="required" class="form-control " value="{{datos_usuario.correo}}" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                    title="Ingrese un correo válido con @" 
+                                    onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')">
+                                </div>
+                            </div>
+                            
+                            <div class="ln_solid"></div>
+                            <div class="item form-group">
+                                <div class="col-md-6 col-sm-6 offset-md-3">
+                                    <button class="btn btn-primary" type="button">Cancelar</button>
+                                    <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                                </div>
+                            </div>
+
+                        </form>
+
+
+                        <!--a class="btn btn-success btn-sm"><i class="fa fa-edit m-right-xs"></i>Editar Perfil</a-->
+                        <br />
+                    {% endif %}
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_usuarios');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_usuarios ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_administradores = document.getElementById('nav_administradores');
+        nav_administradores.classList.add('current-page');
+    });
+</script>
+<script>
+    function hideshow() {
+        var password = document.getElementById("password1");
+        var slash = document.getElementById("slash");
+        var eye = document.getElementById("eye");
+
+        if (password.type === 'password') {
+            password.type = "text";
+            slash.style.display = "block";
+            eye.style.display = "none";
+        }
+        else {
+            password.type = "password";
+            slash.style.display = "none";
+            eye.style.display = "block";
+        }
+
+    }
+
+
+</script>
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+
+{% endblock %}
+
+{% endif %}

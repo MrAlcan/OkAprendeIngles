@@ -1,0 +1,372 @@
+{% extends 'administrador/plantilla.html' %}
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+<!-- Datatables -->
+
+<link href="{{url_for('static', filename='vendors/datatables.net-bs/css/dataTables.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-fixedheader-bs/css/fixedHeader.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css')}}"
+    rel="stylesheet">
+<link href="{{url_for('static', filename='vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css')}}"
+    rel="stylesheet">
+
+    <!-- Bootstrap Colorpicker -->
+    <link href="{{url_for('static', filename='vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css')}}" rel="stylesheet">
+
+    <link href="{{url_for('static', filename='vendors/cropper/dist/cropper.min.css')}}" rel="stylesheet">
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Reportes de Docentes</h3>
+{% endblock %}
+
+{% block contenido %}
+<div class="x_content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card-box table-responsive">
+                <p class="text-muted font-13 m-b-30">
+                    Reporte de Sesiones por Docente
+                </p>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Docente</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Seleccione un Docente</p>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" id="select_docentes">
+                                <option value="#" selected>Selecciona un Docente</option>
+                                {% if docentes %}
+                                    {% for docente in docentes %}
+                                        <option value="{{docente.id_docente}}">{{docente.nombres}} {{docente.apellidos}}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        
+                    </div>
+                </div>
+
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Reporte de Sesiones por Día</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija una fecha</p>
+                        </div>
+                        <div class="col">
+                            <input type="date" class="form-control" id="input_fecha_dia"/>
+                        </div>
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_dia"><button class="btn btn-primary">Ver Reporte  <i class="fa fa-file-pdf-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Reporte de Sesiones por Semana</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija una fecha de una semana en específico</p>
+                        </div>
+                        <div class="col">
+                            <input type="week" class="form-control" id="input_fecha_semana"/>
+                        </div>
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_semana"><button class="btn btn-primary">Ver Reporte  <i class="fa fa-file-pdf-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="row">
+                        <div class="col"><h4>Reporte de Sesiones por Mes</h4></div>
+                    </div>
+                    <div class="row">
+                        
+                        <div class="col">
+                            <p>Elija un Mes y Año</p>
+                        </div>
+                        <div class="col">
+                            <input type="month" class="form-control" id="input_fecha_mes"/>
+                        </div>
+                        
+                        <div class="col">
+                            <a href="#" target="_blank" id="boton_fecha_mes"><button class="btn btn-primary">Ver Reporte  <i class="fa fa-file-pdf-o"></i></button></a>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <!--table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap"
+                    cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Nombres</th>
+                            <th>Apellidos</th>
+                            <th>Carnet</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Telefono</th>
+                            <th>Asignacion Tutor</th>
+                            <th>Horarios</th>
+                            <th>Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        {% if docentes %}
+                            {% for docente in docentes %}
+                            <tr>
+                                <td>{{docente.id_docente}}</td>
+                                <td>{{docente.nombres}}</td>
+                                <td>{{docente.apellidos}}</td>
+                                <td>{{docente.carnet_identidad}}</td>
+                                <td>{{docente.nombre_usuario}}</td>
+                                <td>{{docente.telefono}}</td>
+                                <td>{{docente.asignacion_tutor}}</td>
+                                <td>
+                                    {% if docente.horarios['Lunes'] %}
+                                        <p>
+                                            <strong>Lunes:</strong> De 
+                                            {% for horario in docente.horarios['Lunes'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Martes'] %}
+                                        <p>
+                                            <strong>Martes:</strong> De 
+                                            {% for horario in docente.horarios['Martes'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Miercoles'] %}
+                                        <p>
+                                            <strong>Miercoles:</strong> De 
+                                            {% for horario in docente.horarios['Miercoles'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Jueves'] %}
+                                        <p>
+                                            <strong>Jueves:</strong> De 
+                                            {% for horario in docente.horarios['Jueves'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Viernes'] %}
+                                        <p>
+                                            <strong>Viernes:</strong> De 
+                                            {% for horario in docente.horarios['Viernes'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Sabado'] %}
+                                        <p>
+                                            <strong>Sabado:</strong> De 
+                                            {% for horario in docente.horarios['Sabado'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                    {% if docente.horarios['Domingo'] %}
+                                        <p>
+                                            <strong>Domingo:</strong> De 
+                                            {% for horario in docente.horarios['Domingo'] %}
+                                                <em>{{horario['hora_inicio']}} a {{horario['hora_final']}}, </em>
+                                            {% endfor %}
+                                        </p>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal"
+                                        data-target=".modal_editar_docente_{{docente.id_docente}}"><i class="fa fa-edit"></i></button>
+                                        <a href="/administrador/administradores/eliminar/{{ docente.id_administrador }}" 
+                                        class="btn btn-danger btn-xs">
+                                         <i class="fa fa-trash"></i>
+                                     </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% endif %}
+
+                      
+                    </tbody>
+                </table-->
+
+                
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+{% endblock %}
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_usuarios');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_usuarios ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_administradores = document.getElementById('nav_docentes');
+        nav_administradores.classList.add('current-page');
+    });
+</script>
+
+<script>
+
+    let id_docente = "#";
+    let fecha_dia = '#';
+    let fecha_semana = '#';
+    let fecha_mes = '#';
+
+    function formatearFecha(dateObj) {
+        const y = dateObj.getFullYear();
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        return `${y}-${m}-${d}`;
+    }
+    
+
+    document.getElementById('input_fecha_dia').addEventListener('change', function() {
+        const valor = this.value; // ya está en formato YYYY-MM-DD
+        fecha_dia = valor;
+        if (valor) {
+            if(id_docente=='#'){
+                document.getElementById('boton_fecha_dia').href = "#";    
+            }else{
+                fecha_dia = valor;
+                document.getElementById('boton_fecha_dia').href = `/administrador/sesiones/fecha/docente/pdf/${valor}/${id_docente}`;
+            }
+            
+        }
+    });
+    
+
+    document.getElementById('input_fecha_semana').addEventListener('change', function() {
+        const valor = this.value;
+        const [year, week] = valor.split('-W');
+    
+        // Calcular el lunes de esa semana
+        const simpleDate = new Date(year, 0, 1 + (week - 1) * 7);
+        const day = simpleDate.getDay();
+        const mondayOffset = day <= 4 ? day - 1 : day - 8;
+        const monday = new Date(simpleDate);
+        monday.setDate(simpleDate.getDate() - mondayOffset);
+    
+        const fechaFormateada = formatearFecha(monday);
+        fecha_semana = fechaFormateada;
+        if(id_docente=='#'){
+            document.getElementById('boton_fecha_semana').href = "#";    
+        }else{
+            
+            document.getElementById('boton_fecha_semana').href = `/administrador/sesiones/semana/docente/pdf/${fechaFormateada}/${id_docente}`;
+        }
+        
+    });
+
+    document.getElementById('input_fecha_mes').addEventListener('change', function () {
+        const valor = this.value; // formato: YYYY-MM
+        if (valor) {
+            fecha_mes = fechaFormateada;
+            // Agregamos el día 01 manualmente
+            const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            if(id_docente=='#'){
+                document.getElementById('boton_fecha_mes').href = "#";    
+            }else{
+                
+                document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/docente/pdf/${fechaFormateada}/${id_docente}`;
+            }
+            
+        }
+    });
+
+    document.getElementById('select_docentes').addEventListener('change', function(){
+        const valor = this.value;
+        if(valor){
+            if (valor == '#' || fecha_dia == '#'){
+                document.getElementById('boton_fecha_dia').href = "#";
+            }else{
+                id_docente = valor;
+                document.getElementById('boton_fecha_dia').href = `/administrador/sesiones/fecha/docente/pdf/${fecha_dia}/${valor}`;
+            }
+
+            if (valor == '#' || fecha_semana == '#'){
+                document.getElementById('boton_fecha_semana').href = "#";
+            }else{
+                id_docente = valor;
+                document.getElementById('boton_fecha_semana').href = `/administrador/sesiones/semana/docente/pdf/${fecha_semana}/${valor}`;
+            }
+
+            if (valor == '#' || fecha_mes == '#'){
+                document.getElementById('boton_fecha_mes').href = "#";
+            }else{
+                id_docente = valor;
+                document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/docente/pdf/${fecha_mes}/${valor}`;
+            }
+        }
+    });
+</script>
+
+
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+<!-- Datatables -->
+<script src="{{url_for('static', filename='vendors/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons-bs/js/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.flash.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-buttons/js/buttons.print.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-keytable/js/dataTables.keyTable.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive/js/dataTables.responsive.min.js')}}"></script>
+<script
+    src="{{url_for('static', filename='vendors/datatables.net-responsive-bs/js/responsive.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/datatables.net-scroller/js/dataTables.scroller.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/jszip/dist/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='vendors/pdfmake/build/vfs_fonts.js')}}"></script>
+<!-- Bootstrap Colorpicker -->
+<script src="{{url_for('static', filename='vendors/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js')}}"></script>
+{% endblock %}

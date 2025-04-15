@@ -31,7 +31,10 @@ def vista_inicio(datos_usuario):
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
     actividades = ServiciosActividad.obtener_todos()
-    actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
+    if actividades:
+        actividades_ordenadas = sorted(actividades, key=lambda x: x['fecha'], reverse=True)
+    else:
+        actividades_ordenadas = None
 
     return render_template('estudiante/inicio.html',
                            primer_nombre = primer_nombre, primer_apellido = primer_apellido,
@@ -320,7 +323,7 @@ def vista_sesiones_disponibles_2(datos_usuario):
 
     id_estudiante = datos_usuario['id_usuario']
 
-    sesiones_disponibles, sesiones_calendario, hora_actual, dia_actual, f_lunes, f_sabado = ServiciosEstudiante.obtener_sesiones_disponibles_estudiante_id(id_estudiante) # obtener_sesiones_disponibles_2(id_estudiante)
+    sesiones_disponibles, sesiones_calendario, hora_actual, dia_actual, f_lunes, f_sabado = ServiciosEstudiante.obtener_sesiones_disponibles_estudiante_id_2(id_estudiante) # obtener_sesiones_disponibles_2(id_estudiante)
 
     lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00','13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
     fecha_lunes = datetime.strptime(f_lunes, "%Y-%m-%d")

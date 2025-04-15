@@ -21,7 +21,7 @@ class ServiciosActividad():
             return {"status": "error", "message": str(e)}
     
     def obtener_todos():
-        datos = Actividad.query.all()
+        datos = Actividad.query.filter(Actividad.activo==1).all()
         datos_requeridos = ['id_actividad', 'fecha', 'hora', 'id_docente', 'descripcion', 'nivel', 'cupos_disponibles']
         respuesta = SerializadorUniversal.serializar_lista(datos=datos, campos_requeridos = datos_requeridos)
         return respuesta
@@ -32,7 +32,7 @@ class ServiciosActividad():
         respuesta = SerializadorUniversal.serializar_unico(dato=dato, campos_requeridos= datos_requeridos)
         return respuesta
 
-    def obtener_por_docente(id_docentesdasdas):
+    def obtener_por_docente(id_docente):
         datos = Actividad.query.filter_by(id_docente=id_docente).all()
         datos_requeridos = ['id_actividad', 'fecha', 'hora', 'id_docente', 'descripcion', 'nivel', 'cupos_disponibles']
         respuesta = SerializadorUniversal.serializar_lista(datos=datos, campos_requeridos= datos_requeridos)

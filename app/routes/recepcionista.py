@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask import render_template, request, redirect, url_for, flash, make_response
+from flask import render_template, request, redirect, url_for, flash, make_response, send_file
 from app.services.serviciosAdministrador import serviciosAdministrador
 from app.services.serviciosRecepcionista import ServiciosRecepcionista
 from app.services.serviciosDocentes import ServiciosDocente
@@ -8,6 +8,9 @@ from app.services.serviciosUsuario import ServiciosUsuario
 from app.services.serviciosSesion import ServiciosSesion
 from app.services.serviciosActividad import ServiciosActividad
 from app.services.serviciosEstudiante import ServiciosEstudiante
+from app.services.serviciosReportes import ServiciosReportes
+from app.services.serviciosReportesInformes import ServiciosReportesInformes
+from app.services.serviciosReportesExcelInformes import ServiciosReportesExcelInformes
 from datetime import datetime
 
 recepcionista_bp = Blueprint('recepcionista_bp', __name__)
@@ -627,17 +630,345 @@ def generar_pdf_okcard_estudiante(datos_usuario, id):
 
     return response
 
-@recepcionista_bp.route('/perfil', methods=['GET'])
+
+
+
+
+
+@recepcionista_bp.route('/sesiones/pdf/<id>', methods=['GET'])
 @token_requerido
-def vista_perfil(datos_usuario):
-    recepcionista = ServiciosRecepcionista.obtener_por_id(datos_usuario['id_usuario'])
+def generar_reporte_sesion_pdf(datos_usuario, id):
     nombres = str(datos_usuario['primer_nombre'])
     apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesion_pdf(nombre_usuario, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesion.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/sesiones/fecha/pdf/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_dia_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_dia_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/sesiones/semana/pdf/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_semana_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_semana_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/sesiones/mes/pdf/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_mes_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_mes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES SESIONES DOCENTES ---------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@recepcionista_bp.route('/sesiones/fecha/docente/pdf/<fecha>/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_dia_docente_pdf(datos_usuario, fecha, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_dia_docente_pdf(nombre_usuario, fecha, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/sesiones/semana/docente/pdf/<fecha>/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_semana_docente_pdf(datos_usuario, fecha, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_semana_docente_pdf(nombre_usuario, fecha, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/sesiones/mes/docente/pdf/<fecha>/<id>', methods=['GET'])
+@token_requerido
+def generar_reporte_sesion_mes_docente_pdf(datos_usuario, fecha, id):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportes.generar_reporte_de_sesiones_por_mes_docente_pdf(nombre_usuario, fecha, id)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_sesiones.pdf"'
+
+    return response
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES INFORMES  -----------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@recepcionista_bp.route('/reportes/informe/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_mensual_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_mensual_estudiantes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/reportes/informe/carga/horaria/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_mensual_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_carga_horaria_docentes_mes_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+@recepcionista_bp.route('/reportes/informe/carga/horaria/semana/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_carga_horaria_docentes_semana_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+
+@recepcionista_bp.route('/reportes/informe/carga/horaria/semana/detallado/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_detallado_pdf(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesInformes.generar_informe_carga_horaria_docentes_semana_detallado_pdf(nombre_usuario, fecha)
+
+    response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response
+
+
+
+#---------------------------------------------- VISTAS REPORTES ----------------------------------------------------
+@recepcionista_bp.route('/sesiones/reportes', methods=['GET'])
+@token_requerido
+def vista_sesiones_reporte(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
     primer_nombre = nombres.split(' ')[0]
     primer_apellido = apellidos.split(' ')[0]
 
-    return render_template(
-        'recepcionista/perfil.html',
-        primer_nombre=primer_nombre,
-        primer_apellido=primer_apellido, recepcionista=recepcionista
-    )
+    id_administrador = datos_usuario['id_usuario']
+
+    sesiones = ServiciosSesion.obtener_todos()
+
+    docentes = ServiciosDocente.obtener_todos()
+    lista_docentes = {}
+    for docente in docentes:
+        lista_docentes[docente['id_docente']] = docente['nombres'] + " " + docente['apellidos']
+    
+    for sesion in sesiones:
+        sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
+
+    return render_template('receocionista/reporte_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones)
+
+
+@recepcionista_bp.route('/docentes/reportes', methods=['GET'])
+@token_requerido
+def vista_docentes_reporte(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_administrador = datos_usuario['id_usuario']
+
+    #sesiones = ServiciosSesion.obtener_todos()
+
+    docentes = ServiciosDocente.obtener_todos()
+    #lista_docentes = {}
+    #for docente in docentes:
+        #lista_docentes[docente['id_docente']] = docente['nombres'] + " " + docente['apellidos']
+    
+    #for sesion in sesiones:
+        #sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
+
+    return render_template('receocionista/reporte_docentes.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes)
+
+
+
+#-------------------------------------------------------------------------------------------------------------
+#------------------------------------ REPORTES INFORMES  EXCELS -----------------------------------------------------
+#-------------------------------------------------------------------------------------------------------------
+
+@recepcionista_bp.route('/reportes/excel/informe/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_mensual_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_mensual_estudiantes_excel(nombre_usuario, fecha)
+
+    '''response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response'''
+    return send_file(buffer,
+                     download_name="Reporte_Estudiantes.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+@recepcionista_bp.route('/reportes/excel/informe/carga/horaria/mensual/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_mensual_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_carga_horaria_docentes_mes_excel(nombre_usuario, fecha)
+
+    '''response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response'''
+    return send_file(buffer,
+                     download_name="Reporte_Carga_Horaria_Mensual.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+@recepcionista_bp.route('/reportes/excel/informe/carga/horaria/semana/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_carga_horaria_docentes_semana_excel(nombre_usuario, fecha)
+
+    '''response = make_response(buffer.getvalue())
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'inline; filename="reporte_informe_mensual.pdf"'
+
+    return response'''
+    return send_file(buffer,
+                     download_name="Reporte_Carga_Horaria_Semanal.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+@recepcionista_bp.route('/reportes/excel/informe/carga/horaria/semana/detallado/<fecha>', methods=['GET'])
+@token_requerido
+def generar_reporte_informe_carga_horaria_semana_detallado_excel(datos_usuario, fecha):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    nombre_usuario = nombres + " " + apellidos
+
+    buffer = ServiciosReportesExcelInformes.generar_informe_carga_horaria_docentes_semana_detallado_excel(nombre_usuario, fecha)
+
+    return send_file(buffer,
+                     download_name="Reporte_Carga_Horaria_Semanal_Detallado.xlsx",
+                     as_attachment=True,
+                     mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+
+
+
+#---------------------------------------------- VISTAS INFORMES ----------------------------------------------------
+@recepcionista_bp.route('/sesiones/informes', methods=['GET'])
+@token_requerido
+def vista_sesiones_informes(datos_usuario):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    id_administrador = datos_usuario['id_usuario']
+
+
+    return render_template('receocionista/informe_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido)
+
+

@@ -1,0 +1,161 @@
+{% if datos_usuario %}
+
+{% if datos_usuario.rol == 'administrador' %}
+{% extends 'administrador/plantilla.html' %}
+{% elif datos_usuario.rol == 'recepcionista' %}
+{% extends 'recepcionista/plantilla.html' %}
+{% elif datos_usuario.rol == 'docente' %}
+{% extends 'docente/plantilla.html' %}
+{% elif datos_usuario.rol == 'estudiante' %}
+{% extends 'estudiante/plantilla.html' %}
+{% endif %}
+
+
+
+{% block cabecera %}
+
+<!-- Bootstrap -->
+<link href="cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<!-- iCheck -->
+<link href="{{url_for('static', filename='vendors/iCheck/skins/flat/green.css')}}" rel="stylesheet">
+
+
+
+{% endblock %}
+
+{% block titulo_contenido %}
+<h3>Perfil de Usuario</h3>
+{% endblock %}
+
+{% block contenido %}
+
+<div class="clearfix"></div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 ">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>Perfil de Usuario</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="col-md-12 col-sm-12  profile_left">
+
+                    {% if datos_usuario %}
+                    
+                        <h3>{{datos_usuario.nombres}} {{datos_usuario.apellidos}}</h3>
+
+                        <ul class="list-unstyled user_data">
+                            {% if datos_usuario.nombres %}
+                                <li><b>Nombres:</b> {{datos_usuario.nombres}}</li>
+                            {% endif %}
+                            {% if datos_usuario.apellidos %}
+                                <li><b>Apellidos:</b> {{datos_usuario.apellidos}}</li>
+                            {% endif %}
+                            {% if datos_usuario.correo %}
+                                <li><b>Correo:</b> {{datos_usuario.correo}}</li>
+                            {% endif %}
+                            {% if datos_usuario.nombre_usuario %}
+                                <li><b>Nombre de Usuario:</b> {{datos_usuario.nombre_usuario}}</li>
+                            {% endif %}
+                            {% if datos_usuario.carnet_identidad %}
+                                <li><b>Carnet de Identidad:</b> {{datos_usuario.carnet_identidad}}</li>
+                            {% endif %}
+                            {% if datos_usuario.extension %}
+                                <li><b>Extension:</b> {{datos_usuario.extension}}</li>
+                            {% endif %}
+                            {% if datos_usuario.telefono %}
+                                <li><b>Telefono:</b> {{datos_usuario.telefono}}</li>
+                            {% endif %}
+                            {% if datos_usuario.rol %}
+                                <li><b>Rol:</b> {{datos_usuario.rol}}</li>
+                            {% endif %}
+                            {% if datos_usuario.asignacion_tutor %}
+                                <li><b>N° de Tutor:</b> {{datos_usuario.asignacion_tutor}}</li>
+                            {% endif %}
+                            <br />
+                            <br />
+                            {% if datos_usuario.nombres_titular %}
+                                <h4>Datos del Titular</h4>
+                                <li><b>Nombres y Apellidos del Titular:</b> {{datos_usuario.nombres_titular}}</li>
+                            {% endif %}
+                            {% if datos_usuario.celular_titular %}
+                                <li><b>Telefono del Titular:</b> {{datos_usuario.celular_titular}}</li>
+                            {% endif %}
+                            {% if datos_usuario.ocupacion_tutor %}
+                                <li><b>Ocupación del Titular:</b> {{datos_usuario.ocupacion_tutor}}</li>
+                            {% endif %}
+                            {% if datos_usuario.parentesco_tutor %}
+                                <li><b>Parentesco con el Titular:</b> {{datos_usuario.parentesco_tutor}}</li>
+                            {% endif %}
+                            <br />
+                            <br />
+                            {% if datos_usuario.numero_cuenta %}
+                                <h4>Datos del Servicio</h4>
+                                <li><b>Numero de Cuenta:</b> {{datos_usuario.numero_cuenta}}</li>
+                            {% endif %}
+                            {% if datos_usuario.numero_contrato %}
+                                <li><b>Numero de Contrato:</b> {{datos_usuario.numero_contrato}}</li>
+                            {% endif %}
+                            {% if datos_usuario.inicio_contrato %}
+                                <li><b>Fecha de Inicio del Contrato:</b> {{datos_usuario.inicio_contrato}}</li>
+                            {% endif %}
+                            {% if datos_usuario.fin_contrato %}
+                                <li><b>Fecha de Finalización del Contrato:</b> {{datos_usuario.fin_contrato}}</li>
+                            {% endif %}
+                            
+                            
+                        </ul>
+
+                        <!--a class="btn btn-success btn-sm"><i class="fa fa-edit m-right-xs"></i>Editar Perfil</a-->
+                        <br />
+                    {% endif %}
+
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts_final %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav_grupo = document.getElementById('nav_grupo_usuarios');
+        nav_grupo.classList.add('active');
+        const bloque = document.querySelector('#nav_grupo_usuarios ul');
+        bloque.setAttribute('style', 'display: block;')
+        const nav_administradores = document.getElementById('nav_administradores');
+        nav_administradores.classList.add('current-page');
+    });
+</script>
+<script>
+    function hideshow() {
+        var password = document.getElementById("password1");
+        var slash = document.getElementById("slash");
+        var eye = document.getElementById("eye");
+
+        if (password.type === 'password') {
+            password.type = "text";
+            slash.style.display = "block";
+            eye.style.display = "none";
+        }
+        else {
+            password.type = "password";
+            slash.style.display = "none";
+            eye.style.display = "block";
+        }
+
+    }
+
+
+</script>
+
+<!-- iCheck -->
+<script src="{{url_for('static', filename='vendors/iCheck/icheck.min.js')}}"></script>
+
+{% endblock %}
+
+{% endif %}
