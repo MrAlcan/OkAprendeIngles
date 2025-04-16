@@ -2997,7 +2997,7 @@ class ServiciosEstudiante():
                         if sesiones_working:
                             for sesion in sesiones_working:
                                 nivel_inicial = int(str(sesion.nivel).split('-')[0])
-                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[1])
                                 if nivel_inicial <= working_actual and working_actual <= nivel_final:
                                     flag = True
                                     if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
@@ -3009,7 +3009,7 @@ class ServiciosEstudiante():
                         if sesiones_working_hoy:
                             for sesion in sesiones_working_hoy:
                                 nivel_inicial = int(str(sesion.nivel).split('-')[0])
-                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[1])
                                 if nivel_inicial <= working_actual and working_actual <= nivel_final:
                                     flag = True
                                     if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
@@ -3025,7 +3025,7 @@ class ServiciosEstudiante():
                         if sesiones_essential:
                             for sesion in sesiones_essential:
                                 nivel_inicial = int(str(sesion.nivel).split('-')[0])
-                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[1])
                                 if nivel_inicial <= essential_actual and essential_actual <= nivel_final:
                                     flag = True
                                     if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
@@ -3037,7 +3037,7 @@ class ServiciosEstudiante():
                         if sesiones_essential_hoy:
                             for sesion in sesiones_essential_hoy:
                                 nivel_inicial = int(str(sesion.nivel).split('-')[0])
-                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[1])
                                 if nivel_inicial <= essential_actual and essential_actual <= nivel_final:
                                     flag = True
                                     if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
@@ -3053,7 +3053,7 @@ class ServiciosEstudiante():
                         if sesiones_speakout:
                             for sesion in sesiones_speakout:
                                 nivel_inicial = int(str(sesion.nivel).split('-')[0])
-                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[1])
                                 if nivel_inicial <= speakout_actual and speakout_actual <= nivel_final:
                                     flag = True
                                     if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
@@ -3065,7 +3065,7 @@ class ServiciosEstudiante():
                         if sesiones_speakout_hoy:
                             for sesion in sesiones_speakout_hoy:
                                 nivel_inicial = int(str(sesion.nivel).split('-')[0])
-                                nivel_final = int(str(sesion.nivel).split('-')[0])
+                                nivel_final = int(str(sesion.nivel).split('-')[1])
                                 if nivel_inicial <= speakout_actual and speakout_actual <= nivel_final:
                                     flag = True
                                     if sesion.fecha.strftime("%Y-%m-%d") in dias_fechas:
