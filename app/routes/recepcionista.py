@@ -225,7 +225,7 @@ def eliminar_recepcionista(datos_usuario, id):
 @recepcionista_bp.route('/sesiones', methods=['GET'])
 @token_requerido
 def vista_lista_sesiones(datos_usuario):
-    docentes = ServiciosDocente.obtener_todos()
+    docentes = ServiciosDocente.obtener_todos(True)
     print('/*-'*100)
     print(docentes)
     nombres = str(datos_usuario['primer_nombre'])
@@ -241,6 +241,8 @@ def vista_lista_sesiones(datos_usuario):
     
     for sesion in sesiones:
         sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
+
+    docentes = ServiciosDocente.obtener_todos()
         
     return render_template('recepcionista/sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones)
 
@@ -836,14 +838,16 @@ def vista_sesiones_reporte(datos_usuario):
 
     sesiones = ServiciosSesion.obtener_todos()
 
-    docentes = ServiciosDocente.obtener_todos()
+    docentes = ServiciosDocente.obtener_todos(True)
     lista_docentes = {}
     for docente in docentes:
         lista_docentes[docente['id_docente']] = docente['nombres'] + " " + docente['apellidos']
     
     for sesion in sesiones:
         sesion['nombre_docente'] = lista_docentes[sesion['id_docente']]
-
+    
+    docentes = ServiciosDocente.obtener_todos()
+    
     return render_template('recepcionista/reporte_sesiones.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, sesiones = sesiones)
 
 

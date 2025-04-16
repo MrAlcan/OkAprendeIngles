@@ -82,15 +82,14 @@
                                 <div class="col-md-6 col-sm-6 ">
                                     <input type="email" name="correo" required="required" class="form-control " value="{{datos_usuario.correo}}" pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
                                     title="Ingrese un correo válido con @" 
-                                    onfocus="this.setAttribute('title', 'Ejemplo: usuario@email.com')">
+                                    onfocus="this.setAttribute('title', 'Ejemplo: usuario@gmail.com')">
                                 </div>
                             </div>
                             
                             <div class="ln_solid"></div>
                             <div class="item form-group">
                                 <div class="col-md-6 col-sm-6 offset-md-3">
-                                    <button class="btn btn-primary" type="button">Cancelar</button>
-                                    <button class="btn btn-primary" type="reset">Limpiar Formulario</button>
+                                    <a href="/inicio/ingresar"><button class="btn btn-danger" type="button">Cancelar</button></a>
                                     <button type="submit" class="btn btn-success">Guardar Cambios</button>
                                 </div>
                             </div>

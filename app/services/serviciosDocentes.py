@@ -143,8 +143,14 @@ class ServiciosDocente():
 
 
         
-    def obtener_todos():
-        datos = Docente.query.filter_by(activo = 1)
+    def obtener_todos(bandera = None):
+        if not bandera:
+            datos = Docente.query.filter_by(activo = 1)
+        else:
+            if bandera:
+                datos = Docente.query.all()
+            else:
+                datos = Docente.query.filter_by(activo = 1)
         
 
         datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor', 'color']
