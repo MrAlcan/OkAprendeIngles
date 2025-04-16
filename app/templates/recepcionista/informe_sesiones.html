@@ -170,8 +170,8 @@
             monday.setDate(simpleDate.getDate() - mondayOffset);
         
             const fechaFormateada = formatearFecha(monday);
-            document.getElementById('boton_fecha_semana').href = `/administrador/reportes/informe/carga/horaria/semana/${fechaFormateada}`;
-            document.getElementById('boton_fecha_semana_excel').href = `/administrador/reportes/excel/informe/carga/horaria/semana/${fechaFormateada}`;
+            document.getElementById('boton_fecha_semana').href = `/recepcionista/reportes/informe/carga/horaria/semana/${fechaFormateada}`;
+            document.getElementById('boton_fecha_semana_excel').href = `/recepcionista/reportes/excel/informe/carga/horaria/semana/${fechaFormateada}`;
             document.getElementById('boton_fecha_semana_excel').hidden = false;
             
         }else{
@@ -187,8 +187,8 @@
         if (valor) {
             // Agregamos el día 01 manualmente
             const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
-            document.getElementById('boton_fecha_mes').href = `/administrador/reportes/informe/carga/horaria/mensual/${fechaFormateada}`;
-            document.getElementById('boton_fecha_mes_excel').href = `/administrador/reportes/excel/informe/carga/horaria/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes').href = `/recepcionista/reportes/informe/carga/horaria/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel').href = `/recepcionista/reportes/excel/informe/carga/horaria/mensual/${fechaFormateada}`;
             document.getElementById('boton_fecha_mes_excel').hidden = false;
         }else{
             document.getElementById('boton_fecha_mes_excel').hidden = true;
@@ -200,8 +200,8 @@
         if (valor) {
             // Agregamos el día 01 manualmente
             const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
-            document.getElementById('boton_fecha_mes_estudiantes').href = `/administrador/reportes/informe/mensual/${fechaFormateada}`;
-            document.getElementById('boton_fecha_mes_excel_estudiantes').href = `/administrador/reportes/excel/informe/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_estudiantes').href = `/recepcionista/reportes/informe/mensual/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel_estudiantes').href = `/recepcionista/reportes/excel/informe/mensual/${fechaFormateada}`;
             document.getElementById('boton_fecha_mes_excel_estudiantes').hidden = false;
         }else{
             document.getElementById('boton_fecha_mes_excel_estudiantes').hidden = true;
@@ -222,8 +222,8 @@
             monday.setDate(simpleDate.getDate() - mondayOffset);
         
             const fechaFormateada = formatearFecha(monday);
-            document.getElementById('boton_fecha_mes_detallado').href = `/administrador/reportes/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
-            document.getElementById('boton_fecha_mes_excel_detallado').href = `/administrador/reportes/excel/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_detallado').href = `/recepcionista/reportes/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes_excel_detallado').href = `/recepcionista/reportes/excel/informe/carga/horaria/semana/detallado/${fechaFormateada}`;
             document.getElementById('boton_fecha_mes_excel_detallado').hidden = false;
         }else{
             document.getElementById('boton_fecha_mes_excel_detallado').hidden = true;

@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, date
 DIAS_INGLES = {
     "Monday": "Lunes",
     "Tuesday": "Martes",
-    "Wednesday": "Miércoles",
+    "Wednesday": "Miercoles",
     "Thursday": "Jueves",
     "Friday": "Viernes",
     "Saturday": "Sabado",
@@ -677,6 +677,8 @@ class ServiciosDocente():
         lista_sesiones.append(sesiones_jueves)
         lista_sesiones.append(sesiones_viernes)
         lista_sesiones.append(sesiones_sabado)
+
+        #print(lista_sesiones)
 
         f_lunes = lunes.strftime("%d-%m-%Y")
         f_sabado = sabado.strftime("%d-%m-%Y")
