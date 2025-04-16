@@ -320,6 +320,8 @@
     document.getElementById('select_docentes').addEventListener('change', function(){
         const valor = this.value;
         if(valor){
+
+            id_docente = valor;
             if (valor == '#' || fecha_dia == '#'){
                 document.getElementById('boton_fecha_dia').href = "#";
             }else{
@@ -340,6 +342,8 @@
                 id_docente = valor;
                 document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/docente/pdf/${fecha_mes}/${valor}`;
             }
+        }else{
+            id_docente = '#';
         }
     });
 </script>
