@@ -124,10 +124,12 @@
                                     </p>
                                     <p class="text-muted font-13 m-b-30"></p>
                                     
+                                {% elif detalle_sesion.estado_registro == 'Cancelado' %}
+                                    <p class="text-muted font-13 m-b-30">Estado de Registro: <strong style="color: red;"> Cancelado</strong></p>
+                                    <!--p class="text-muted font-13 m-b-30"><strong>Calificación: </strong><span style="color: red;">0</span></p-->
                                 {% else %}
                                     <p class="text-muted font-13 m-b-30">Estado de Registro: <strong style="color: red;"> Falto</strong></p>
                                     <p class="text-muted font-13 m-b-30"><strong>Calificación: </strong><span style="color: red;">0</span></p>
-                                    
                                     
                                 {% endif %}
                             
