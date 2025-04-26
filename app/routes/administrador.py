@@ -392,6 +392,8 @@ def vista_lista_estudiantes(datos_usuario):
 @token_requerido
 def crear_estudiante(datos_usuario):
     datos = request.form
+    nivel_correspondiente = datos['nivel_seccion_correspondiente']
+    seccion_correspondiente = datos['seccion_correspondiente']
 
     estudiante = ServiciosEstudiante.crear(datos['correo'],
                                            datos['nombres'],
@@ -408,7 +410,9 @@ def crear_estudiante(datos_usuario):
                                            datos.get('numero_cuenta', ''),
                                            datos.get('numero_contrato', ''),
                                            datos.get('inicio_contrato', ''),
-                                           datos.get('fin_contrato', '')
+                                           datos.get('fin_contrato', ''),
+                                           seccion_correspondiente,
+                                           nivel_correspondiente
                                            )
     
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
@@ -417,8 +421,10 @@ def crear_estudiante(datos_usuario):
 @token_requerido
 def editar_estudiante(datos_usuario, id):
     datos = request.form
+    nivel_correspondiente = datos['nivel_seccion_correspondiente']
+    seccion_correspondiente = datos['seccion_correspondiente']
 
-    estudiante = ServiciosEstudiante.actualizar(id, datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['nombres_titular'], datos.get('celular_titular'), datos.get('ocupacion_tutor'))
+    estudiante = ServiciosEstudiante.actualizar(id, datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['nombres_titular'], datos.get('celular_titular'), datos.get('ocupacion_tutor'), seccion_correspondiente, nivel_correspondiente)
 
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 

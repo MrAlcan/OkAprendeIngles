@@ -1,4 +1,4 @@
-{% extends 'administrador/plantilla.html' %}
+{% extends 'recepcionista/plantilla.html' %}
 
 {% block cabecera %}
 
@@ -272,7 +272,7 @@
                 document.getElementById('boton_fecha_dia').href = "#";    
             }else{
                 fecha_dia = valor;
-                document.getElementById('boton_fecha_dia').href = `/administrador/sesiones/fecha/docente/pdf/${valor}/${id_docente}`;
+                document.getElementById('boton_fecha_dia').href = `/recepcionista/sesiones/fecha/docente/pdf/${valor}/${id_docente}`;
             }
             
         }
@@ -296,7 +296,7 @@
             document.getElementById('boton_fecha_semana').href = "#";    
         }else{
             
-            document.getElementById('boton_fecha_semana').href = `/administrador/sesiones/semana/docente/pdf/${fechaFormateada}/${id_docente}`;
+            document.getElementById('boton_fecha_semana').href = `/recepcionista/sesiones/semana/docente/pdf/${fechaFormateada}/${id_docente}`;
         }
         
     });
@@ -304,14 +304,15 @@
     document.getElementById('input_fecha_mes').addEventListener('change', function () {
         const valor = this.value; // formato: YYYY-MM
         if (valor) {
-            fecha_mes = fechaFormateada;
+            
             // Agregamos el día 01 manualmente
             const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            fecha_mes = fechaFormateada;
             if(id_docente=='#'){
                 document.getElementById('boton_fecha_mes').href = "#";    
             }else{
                 
-                document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/docente/pdf/${fechaFormateada}/${id_docente}`;
+                document.getElementById('boton_fecha_mes').href = `/recepcionista/sesiones/mes/docente/pdf/${fechaFormateada}/${id_docente}`;
             }
             
         }
@@ -320,26 +321,30 @@
     document.getElementById('select_docentes').addEventListener('change', function(){
         const valor = this.value;
         if(valor){
+
+            id_docente = valor;
             if (valor == '#' || fecha_dia == '#'){
                 document.getElementById('boton_fecha_dia').href = "#";
             }else{
                 id_docente = valor;
-                document.getElementById('boton_fecha_dia').href = `/administrador/sesiones/fecha/docente/pdf/${fecha_dia}/${valor}`;
+                document.getElementById('boton_fecha_dia').href = `/recepcionista/sesiones/fecha/docente/pdf/${fecha_dia}/${valor}`;
             }
 
             if (valor == '#' || fecha_semana == '#'){
                 document.getElementById('boton_fecha_semana').href = "#";
             }else{
                 id_docente = valor;
-                document.getElementById('boton_fecha_semana').href = `/administrador/sesiones/semana/docente/pdf/${fecha_semana}/${valor}`;
+                document.getElementById('boton_fecha_semana').href = `/recepcionista/sesiones/semana/docente/pdf/${fecha_semana}/${valor}`;
             }
 
             if (valor == '#' || fecha_mes == '#'){
                 document.getElementById('boton_fecha_mes').href = "#";
             }else{
                 id_docente = valor;
-                document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/docente/pdf/${fecha_mes}/${valor}`;
+                document.getElementById('boton_fecha_mes').href = `/recepcionista/sesiones/mes/docente/pdf/${fecha_mes}/${valor}`;
             }
+        }else{
+            id_docente = '#';
         }
     });
 </script>

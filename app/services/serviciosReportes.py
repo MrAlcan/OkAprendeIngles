@@ -44,6 +44,8 @@ def hex_to_color(hex_str):
 
     return colors.Color(r, g, b)
 
+#logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
 class ServiciosReportes():
     def generar_reporte_de_sesion_pdf(nombre_usuario, id_sesion):
 
@@ -122,7 +124,7 @@ class ServiciosReportes():
 
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -207,7 +209,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -271,10 +273,10 @@ class ServiciosReportes():
                             estudiantes_totales = estudiantes_totales + 1
                             estudiantes_asistio = estudiantes_asistio + 1
                         elif detalle.estado_registro == 'Falto':
-                            tabla_registros[ind][3] = "S/N"
+                            tabla_registros[ind][3] = "Falto"
                             estudiantes_totales = estudiantes_totales + 1
-                        elif detalle.estado_registro == 'Cancelo':
-                            tabla_registros[ind][3] = "S/N"
+                        elif detalle.estado_registro == 'Cancelado':
+                            tabla_registros[ind][3] = "Cancelo"
                         ind = ind + 1
                 
                 imagen_clase = ''
@@ -330,7 +332,7 @@ class ServiciosReportes():
                     calificacion = tabla_registros[i][3]
                     if calificacion == '':
                         continue
-                    if calificacion == 'S/N':
+                    if calificacion == 'Falto' or calificacion == 'Cancelo':
                         color = naranja_suave
                     elif float(calificacion)>=85.0:
                         color = verde_claro
@@ -392,7 +394,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -495,10 +497,10 @@ class ServiciosReportes():
                             estudiantes_totales = estudiantes_totales + 1
                             estudiantes_asistio = estudiantes_asistio + 1
                         elif detalle.estado_registro == 'Falto':
-                            tabla_registros[ind][3] = "S/N"
+                            tabla_registros[ind][3] = "Falto"
                             estudiantes_totales = estudiantes_totales + 1
-                        elif detalle.estado_registro == 'Cancelo':
-                            tabla_registros[ind][3] = "S/N"
+                        elif detalle.estado_registro == 'Cancelado':
+                            tabla_registros[ind][3] = "Cancelo"
                         ind = ind + 1
                 
                 imagen_clase = ''
@@ -554,7 +556,7 @@ class ServiciosReportes():
                     calificacion = tabla_registros[i][3]
                     if calificacion == '':
                         continue
-                    if calificacion == 'S/N':
+                    if calificacion == 'Falto' or calificacion == 'Cancelo':
                         color = naranja_suave
                     elif float(calificacion)>=85.0:
                         color = verde_claro
@@ -617,7 +619,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -734,10 +736,10 @@ class ServiciosReportes():
                             estudiantes_totales = estudiantes_totales + 1
                             estudiantes_asistio = estudiantes_asistio + 1
                         elif detalle.estado_registro == 'Falto':
-                            tabla_registros[ind][3] = "S/N"
+                            tabla_registros[ind][3] = "Falto"
                             estudiantes_totales = estudiantes_totales + 1
-                        elif detalle.estado_registro == 'Cancelo':
-                            tabla_registros[ind][3] = "S/N"
+                        elif detalle.estado_registro == 'Cancelado':
+                            tabla_registros[ind][3] = "Cancelo"
                         
                         ind = ind + 1
                 
@@ -794,7 +796,7 @@ class ServiciosReportes():
                     calificacion = tabla_registros[i][3]
                     if calificacion == '':
                         continue
-                    if calificacion == 'S/N':
+                    if calificacion == 'Falto' or calificacion == 'Cancelo':
                         color = naranja_suave
                     elif float(calificacion)>=85.0:
                         color = verde_claro
@@ -859,7 +861,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -923,10 +925,10 @@ class ServiciosReportes():
                             estudiantes_totales = estudiantes_totales + 1
                             estudiantes_asistio = estudiantes_asistio + 1
                         elif detalle.estado_registro == 'Falto':
-                            tabla_registros[ind][3] = "S/N"
+                            tabla_registros[ind][3] = "Falto"
                             estudiantes_totales = estudiantes_totales + 1
-                        elif detalle.estado_registro == 'Cancelo':
-                            tabla_registros[ind][3] = "S/N"
+                        elif detalle.estado_registro == 'Cancelado':
+                            tabla_registros[ind][3] = "Cancelo"
                         ind = ind + 1
                 
                 imagen_clase = ''
@@ -982,7 +984,7 @@ class ServiciosReportes():
                     calificacion = tabla_registros[i][3]
                     if calificacion == '':
                         continue
-                    if calificacion == 'S/N':
+                    if calificacion == 'Falto' or calificacion == 'Cancelo':
                         color = naranja_suave
                     elif float(calificacion)>=85.0:
                         color = verde_claro
@@ -1044,7 +1046,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1147,10 +1149,10 @@ class ServiciosReportes():
                             estudiantes_totales = estudiantes_totales + 1
                             estudiantes_asistio = estudiantes_asistio + 1
                         elif detalle.estado_registro == 'Falto':
-                            tabla_registros[ind][3] = "S/N"
+                            tabla_registros[ind][3] = "Falto"
                             estudiantes_totales = estudiantes_totales + 1
-                        elif detalle.estado_registro == 'Cancelo':
-                            tabla_registros[ind][3] = "S/N"
+                        elif detalle.estado_registro == 'Cancelado':
+                            tabla_registros[ind][3] = "Cancelo"
                         ind = ind + 1
                 
                 imagen_clase = ''
@@ -1206,7 +1208,7 @@ class ServiciosReportes():
                     calificacion = tabla_registros[i][3]
                     if calificacion == '':
                         continue
-                    if calificacion == 'S/N':
+                    if calificacion == 'Falto' or calificacion == 'Cancelo':
                         color = naranja_suave
                     elif float(calificacion)>=85.0:
                         color = verde_claro
@@ -1269,7 +1271,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1386,10 +1388,10 @@ class ServiciosReportes():
                             estudiantes_totales = estudiantes_totales + 1
                             estudiantes_asistio = estudiantes_asistio + 1
                         elif detalle.estado_registro == 'Falto':
-                            tabla_registros[ind][3] = "S/N"
+                            tabla_registros[ind][3] = "Falto"
                             estudiantes_totales = estudiantes_totales + 1
-                        elif detalle.estado_registro == 'Cancelo':
-                            tabla_registros[ind][3] = "S/N"
+                        elif detalle.estado_registro == 'Cancelado':
+                            tabla_registros[ind][3] = "Cancelo"
                         
                         ind = ind + 1
                 
@@ -1446,7 +1448,7 @@ class ServiciosReportes():
                     calificacion = tabla_registros[i][3]
                     if calificacion == '':
                         continue
-                    if calificacion == 'S/N':
+                    if calificacion == 'Falto' or calificacion == 'Cancelo':
                         color = naranja_suave
                     elif float(calificacion)>=85.0:
                         color = verde_claro

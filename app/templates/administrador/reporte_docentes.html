@@ -304,9 +304,10 @@
     document.getElementById('input_fecha_mes').addEventListener('change', function () {
         const valor = this.value; // formato: YYYY-MM
         if (valor) {
-            fecha_mes = fechaFormateada;
+            
             // Agregamos el día 01 manualmente
             const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
+            fecha_mes = fechaFormateada;
             if(id_docente=='#'){
                 document.getElementById('boton_fecha_mes').href = "#";    
             }else{

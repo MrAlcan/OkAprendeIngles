@@ -33,6 +33,9 @@ from datetime import datetime
 import queue
 from io import BytesIO
 
+#logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
+logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+
 class ServiciosEstudiante():
 
 
@@ -57,8 +60,56 @@ class ServiciosEstudiante():
         else:
             return None, None
 
-    def crear(correo, nombres, apellidos, carnet, telefono, celular_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato):
+    #def crear(correo, nombres, apellidos, carnet, telefono, celular_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato):
+    def crear(correo, nombres, apellidos, carnet, telefono, celular_titular, nombres_titular, nombre_nivel, rango_nivel, extension, ocupacion_tutor, parentesco_tutor, numero_cuenta, numero_contrato, inicio_contrato, fin_contrato, seccion_correspondiente, nivel_correspondiente):
 
+        wel_nvl_corr = 0
+        wor_nvl_corr = 0
+        ess_nvl_corr = 0
+        spk_nvl_corr = 0
+        paso_examen = 0
+
+        sec_corr = str(seccion_correspondiente)
+
+        nivel_correspondiente = int(nivel_correspondiente)
+        
+
+        if nivel_correspondiente==0:
+            wel_nvl_corr = 0
+            wor_nvl_corr = 0
+            ess_nvl_corr = 0
+            spk_nvl_corr = 0
+            paso_examen = 0
+        elif (nivel_correspondiente%5==0 and sec_corr.startswith('Test')):
+            wel_nvl_corr = 1
+            wor_nvl_corr = int(nivel_correspondiente)
+            ess_nvl_corr = int(nivel_correspondiente)
+            spk_nvl_corr = int(nivel_correspondiente)
+            paso_examen = 0
+        elif (sec_corr=='Essential' and nivel_correspondiente%5==1):
+            wel_nvl_corr = 1
+            wor_nvl_corr = int(nivel_correspondiente) - 1
+            ess_nvl_corr = int(nivel_correspondiente) - 1
+            spk_nvl_corr = int(nivel_correspondiente) - 1
+            paso_examen = 1
+        elif (sec_corr=='Essential'):
+            wel_nvl_corr = 1
+            wor_nvl_corr = int(nivel_correspondiente) - 1
+            ess_nvl_corr = int(nivel_correspondiente) - 1
+            spk_nvl_corr = int(nivel_correspondiente) - 1
+            paso_examen = 0
+        elif (sec_corr=='Working'):
+            wel_nvl_corr = 1
+            wor_nvl_corr = int(nivel_correspondiente)
+            ess_nvl_corr = int(nivel_correspondiente) - 1
+            spk_nvl_corr = int(nivel_correspondiente) - 1
+            paso_examen = 0
+        elif (sec_corr=='Speak Out'):
+            wel_nvl_corr = 1
+            wor_nvl_corr = int(nivel_correspondiente)
+            ess_nvl_corr = int(nivel_correspondiente)
+            spk_nvl_corr = int(nivel_correspondiente) - 1
+            paso_examen = 0
 
         primer_nombre = str(nombres).split(' ')[0]
         primer_apellido = str(apellidos).split(' ')[0]
@@ -93,6 +144,15 @@ class ServiciosEstudiante():
 
         db.session.add(estudiante)
         db.session.commit()
+
+        estudiante.welcome_completado = wel_nvl_corr
+        estudiante.working_completado = wor_nvl_corr
+        estudiante.essential_completado = ess_nvl_corr
+        estudiante.speakout_completado = spk_nvl_corr
+        estudiante.paso_examen = paso_examen
+        db.session.commit()
+
+
         repuesta = ServiciosCorreo.enviar_credenciales_nuevo_usuario(correo, nombre_usuario, str(carnet))
 
         return True
@@ -103,6 +163,43 @@ class ServiciosEstudiante():
 
         datos_requeridos = ['id_estudiante', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'celular_titular', 'nombres_titular', 'nombre_nivel', 'rango_nivel', 'speakout_completado', 'working_completado', 'essential_completado', 'welcome_completado', 'activo', 'paso_examen']
         respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+
+        if respuesta:
+            for resp in respuesta:
+                n_working = int(resp['working_completado'])
+                n_speakout = int(resp['speakout_completado'])
+                n_welcome = int(resp['welcome_completado'])
+                n_essential = int(resp['essential_completado'])
+                flag_examen = int(resp['paso_examen'])
+                seccion_correspondiente = ''
+                nivel_correspondiente = ''
+                if n_welcome == 0:
+                    seccion_correspondiente = 'Welcome'
+                    nivel_correspondiente = '0'
+                elif (n_essential==n_working and n_working==n_speakout and n_speakout%5==0 and flag_examen==0):
+                    nivel_correspondiente = str(n_speakout)
+                    sesiones = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==n_speakout, DetalleSesion.calificacion>=85.0).all()
+                    if sesiones:
+                        seccion_correspondiente = 'Test Oral'
+                    else:
+                        seccion_correspondiente = 'Test Escrito'
+                elif (n_essential==n_working and n_working==n_speakout and n_speakout%5==0 and flag_examen==1):
+                    nivel_correspondiente = str(n_speakout+1)
+                    seccion_correspondiente = 'Essential'
+                elif (n_essential==n_working and n_working==n_speakout):
+                    nivel_correspondiente = str(n_speakout+1)
+                    seccion_correspondiente = 'Essential'
+                elif (n_working==n_speakout):
+                    nivel_correspondiente = str(n_speakout+1)
+                    seccion_correspondiente = 'Working'
+                elif (n_essential==n_working):
+                    nivel_correspondiente = str(n_speakout+1)
+                    seccion_correspondiente = 'Speak Out'
+                
+                resp['nivel_correspondiente'] =nivel_correspondiente
+                resp['seccion_correspondiente'] =seccion_correspondiente
+
+
         return respuesta
     
     def obtener_por_id(id_estudiante):
@@ -762,6 +859,11 @@ class ServiciosEstudiante():
 
     def obtener_reporte_todos_estudiantes(nombre_usuario):
 
+        margin_left = 1.0 * inch
+        margin_right = 1.0 * inch
+        margin_top = 5 * inch  # Deja espacio para el carimbo
+        margin_bottom = 1 * inch
+
         estudiantes = Estudiante.query.filter(Estudiante.activo==1).all()
 
         tabla_estudiantes = [['Id Estudiante', 'Nombres', 'Apellidos', 'Carnet de Identidad']]
@@ -770,7 +872,12 @@ class ServiciosEstudiante():
             tabla_estudiantes.append(fila_tabla)
 
         buffer = BytesIO()
-        pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        #pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        pdf = SimpleDocTemplate(buffer, pagesize=letter, 
+                            leftMargin=margin_left,
+                            rightMargin=margin_right,
+                            topMargin=margin_top,
+                            bottomMargin=margin_bottom)
         elementos = []
 
         estilos = getSampleStyleSheet()
@@ -782,7 +889,7 @@ class ServiciosEstudiante():
 
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -805,7 +912,7 @@ class ServiciosEstudiante():
             generado_por.drawOn(canvas, posicion_texto_x, posicion_texto_y)
 
         
-        elementos.append(Spacer(1, 20))
+        #elementos.append(Spacer(1, 20))
 
         tabla_estudiantes_pdf = Table(tabla_estudiantes)
 
@@ -909,7 +1016,7 @@ class ServiciosEstudiante():
 
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1638,8 +1745,56 @@ class ServiciosEstudiante():
         
         return sesiones_pasadas
 
-    def actualizar(id_estudiante, correo, nombres, apellidos, carnet, telefono, nombres_titular, celular_titular, ocupacion_tutor):
+    def actualizar(id_estudiante, correo, nombres, apellidos, carnet, telefono, nombres_titular, celular_titular, ocupacion_tutor, seccion_correspondiente, nivel_correspondiente):
         try:
+
+            wel_nvl_corr = 0
+            wor_nvl_corr = 0
+            ess_nvl_corr = 0
+            spk_nvl_corr = 0
+            paso_examen = 0
+
+            sec_corr = str(seccion_correspondiente)
+
+            nivel_correspondiente = int(nivel_correspondiente)
+            
+
+            if nivel_correspondiente==0:
+                wel_nvl_corr = 0
+                wor_nvl_corr = 0
+                ess_nvl_corr = 0
+                spk_nvl_corr = 0
+                paso_examen = 0
+            elif (nivel_correspondiente%5==0 and sec_corr.startswith('Test')):
+                wel_nvl_corr = 1
+                wor_nvl_corr = int(nivel_correspondiente)
+                ess_nvl_corr = int(nivel_correspondiente)
+                spk_nvl_corr = int(nivel_correspondiente)
+                paso_examen = 0
+            elif (sec_corr=='Essential' and nivel_correspondiente%5==1):
+                wel_nvl_corr = 1
+                wor_nvl_corr = int(nivel_correspondiente) - 1
+                ess_nvl_corr = int(nivel_correspondiente) - 1
+                spk_nvl_corr = int(nivel_correspondiente) - 1
+                paso_examen = 1
+            elif (sec_corr=='Essential'):
+                wel_nvl_corr = 1
+                wor_nvl_corr = int(nivel_correspondiente) - 1
+                ess_nvl_corr = int(nivel_correspondiente) - 1
+                spk_nvl_corr = int(nivel_correspondiente) - 1
+                paso_examen = 0
+            elif (sec_corr=='Working'):
+                wel_nvl_corr = 1
+                wor_nvl_corr = int(nivel_correspondiente)
+                ess_nvl_corr = int(nivel_correspondiente) - 1
+                spk_nvl_corr = int(nivel_correspondiente) - 1
+                paso_examen = 0
+            elif (sec_corr=='Speak Out'):
+                wel_nvl_corr = 1
+                wor_nvl_corr = int(nivel_correspondiente)
+                ess_nvl_corr = int(nivel_correspondiente)
+                spk_nvl_corr = int(nivel_correspondiente) - 1
+                paso_examen = 0
 
             estudiante = Estudiante.query.get(id_estudiante)
             
@@ -1651,6 +1806,11 @@ class ServiciosEstudiante():
             estudiante.telefono = telefono
             estudiante.celular_titular = celular_titular
             estudiante.ocupacion_tutor = ocupacion_tutor
+            estudiante.welcome_completado = wel_nvl_corr
+            estudiante.working_completado = wor_nvl_corr
+            estudiante.essential_completado = ess_nvl_corr
+            estudiante.speakout_completado = spk_nvl_corr
+            estudiante.paso_examen = paso_examen
             db.session.commit()
 
             return {"status": "success", "message": "Estudiantes modificados exitosamente"}
@@ -2231,35 +2391,42 @@ class ServiciosEstudiante():
 
     def obtener_reporte_todos_estudiantes(nombre_usuario):
 
+        margin_left = 0.5 * inch
+        margin_right = 0.5 * inch
+        margin_top = 2.2 * inch  # Deja espacio para el carimbo
+        margin_bottom = 1 * inch
+
         estudiantes = Estudiante.query.filter(Estudiante.activo==1).all()
 
-        tabla_estudiantes = [['Id Estudiante', 'Nombres', 'Apellidos', 'Carnet de Identidad']]
-        for estudiante in estudiantes:
-            fila_tabla = [str(estudiante.id_estudiante), str(estudiante.nombres), str(estudiante.apellidos), str(estudiante.carnet_identidad)]
-            tabla_estudiantes.append(fila_tabla)
+        
 
         buffer = BytesIO()
-        pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        #pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        pdf = SimpleDocTemplate(buffer, pagesize=letter, 
+                            leftMargin=margin_left,
+                            rightMargin=margin_right,
+                            topMargin=margin_top,
+                            bottomMargin=margin_bottom)
         elementos = []
 
         estilos = getSampleStyleSheet()
         estilo_titulo = ParagraphStyle('Titulo', fontSize=18, alignment=1, fontName="Helvetica-Bold", underline=True)
-        estilo_subtitulo_2 = ParagraphStyle('Subtitulo', fontSize=15, alignment=0)  
+        estilo_subtitulo_2 = ParagraphStyle('Subtitulo', fontSize=12, alignment=1, fontName="Helvetica-Bold")  
         estilo_subtitulo = ParagraphStyle('Subtitulo', fontSize=10, alignment=0) 
-        estilo_datos = estilos['Normal']
+        estilo_datos = ParagraphStyle('datos_tabla', fontSize=10, alignment=0)
 
 
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         generado_por = Paragraph(f"<b>Generado por:</b> {nombre_usuario}<br/><b>Fecha de generación:</b> {fecha_actual}", estilo_subtitulo)
         # Agregar elementos al PDF
-        elementos.append(Spacer(1, 55))
+        #elementos.append(Spacer(1, 55))
        
-        elementos.append(Spacer(1, 20))
+        #elementos.append(Spacer(1, 20))
 
         def add_header(canvas, doc):
             width, height = letter
@@ -2274,15 +2441,34 @@ class ServiciosEstudiante():
             generado_por.drawOn(canvas, posicion_texto_x, posicion_texto_y)
 
         
-        elementos.append(Spacer(1, 20))
+        #elementos.append(Spacer(1, 20))
 
-        tabla_estudiantes_pdf = Table(tabla_estudiantes)
+        tabla_estudiantes = [[
+            Paragraph('Id', estilo_subtitulo_2),
+            Paragraph('Nombres', estilo_subtitulo_2),
+            Paragraph('Apellidos', estilo_subtitulo_2),
+            Paragraph('Carnet de Identidad', estilo_subtitulo_2),
+            Paragraph('Fecha de Inicio de Contrato', estilo_subtitulo_2),
+            Paragraph('Fecha de Finalizacion de Contrato', estilo_subtitulo_2)]
+            ]
+        for estudiante in estudiantes:
+            fila_tabla = [
+                Paragraph(f'{str(estudiante.id_estudiante)}', estilo_datos),
+                Paragraph(f'{str(estudiante.nombres)}', estilo_datos),
+                Paragraph(f'{str(estudiante.apellidos)}', estilo_datos),
+                Paragraph(f'{str(estudiante.carnet_identidad)}', estilo_datos),
+                Paragraph(f'{estudiante.inicio_contrato.strftime("%d-%m-%Y")}', estilo_datos),
+                Paragraph(f'{estudiante.fin_contrato.strftime("%d-%m-%Y")}', estilo_datos)]
+            tabla_estudiantes.append(fila_tabla)
+        tamano_columnas = [0.8 * inch, 1.0 * inch, 1.0 * inch, 1.1 * inch, 1.1 * inch, 1.3 * inch]
+
+        tabla_estudiantes_pdf = Table(tabla_estudiantes, colWidths=tamano_columnas)
 
         estilo_tabla = TableStyle([('BACKGROUND', (0, 0), (-1, 0), colors.gray),
                                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                                    #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
                                    ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                                   ('FONTSIZE', (0, 1), (-1, -1), 12),
+                                   ('FONTSIZE', (0, 1), (-1, -1), 10),
                                    ('GRID', (0, 0), (-1, -1), 1, colors.black)])
         
         tabla_estudiantes_pdf.setStyle(estilo_tabla)
@@ -2297,6 +2483,11 @@ class ServiciosEstudiante():
 
 
     def obtener_ok_card_pdf(nombre_usuario, id_estudiante):
+        margin_left = 1.0 * inch
+        margin_right = 1.0 * inch
+        margin_top = 1.8 * inch  # Deja espacio para el carimbo
+        margin_bottom = 1 * inch
+
         estudiante = Estudiante.query.get(id_estudiante)
         if not estudiante:
             return None
@@ -2313,7 +2504,12 @@ class ServiciosEstudiante():
 
         
         buffer = BytesIO()
-        pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        #pdf = SimpleDocTemplate(buffer, pagesize=letter)
+        pdf = SimpleDocTemplate(buffer, pagesize=letter, 
+                            leftMargin=margin_left,
+                            rightMargin=margin_right,
+                            topMargin=margin_top,
+                            bottomMargin=margin_bottom)
         elementos = []
 
         estilos = getSampleStyleSheet()
@@ -2354,7 +2550,9 @@ class ServiciosEstudiante():
             for sesion, detalle in detalles_sesion:
                 nota = 'NO'
                 if detalle.estado_registro == 'Falto':
-                    nota = 'NO'
+                    nota = 'Falto'
+                elif detalle.estado_registro == 'Cancelado':
+                    nota = 'Cancelo'
                 else:
                     nota = str(int(detalle.calificacion))
                 fila = [Paragraph(f"{detalle.nivel_seccion+1}", estilo_subtitulo_3),
@@ -2380,15 +2578,15 @@ class ServiciosEstudiante():
 
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         generado_por = Paragraph(f"<b>Generado por:</b> {nombre_usuario}<br/><b>Fecha de generación:</b> {fecha_actual}", estilo_subtitulo)
         # Agregar elementos al PDF
-        elementos.append(Spacer(1, 55))
+        #elementos.append(Spacer(1, 55))
        
-        elementos.append(Spacer(1, 20))
+        #elementos.append(Spacer(1, 20))
 
         def add_header(canvas, doc):
             width, height = letter
@@ -2403,7 +2601,7 @@ class ServiciosEstudiante():
             generado_por.drawOn(canvas, posicion_texto_x, posicion_texto_y)
 
         
-        elementos.append(Spacer(1, 20))
+        #elementos.append(Spacer(1, 20))
 
         tabla_carimbo = Table([[Paragraph(f"FULL NAME: <b>{str(estudiante.nombres).upper()} {str(estudiante.apellidos).upper()}</b>", estilo_subtitulo), '', ''],
                                [Paragraph(f"I.D. NUMBER: <b>{estudiante.carnet_identidad} {estudiante.extension}</b>", estilo_subtitulo), Paragraph(f"REG. DATE: <b>{estudiante.inicio_contrato.strftime('%d/%m/%Y')}</b>", estilo_subtitulo), ''],

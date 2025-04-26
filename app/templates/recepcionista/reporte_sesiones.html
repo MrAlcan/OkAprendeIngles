@@ -1,4 +1,4 @@
-{% extends 'administrador/plantilla.html' %}
+{% extends 'recepcionista/plantilla.html' %}
 
 {% block cabecera %}
 
@@ -122,7 +122,7 @@
                                     <td>
                                         <!--button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target=".modal_editar_sesion_{{sesion.id_sesion}}"><i class="fa fa-edit"></i></button>
                                         <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a-->
-                                        <a href="/administrador/sesiones/pdf/{{sesion.id_sesion}}" target="_blank"><button class="btn btn-primary btn-sm">Reporte Sesión <i class="fa fa-file-o"></i></button></a>
+                                        <a href="/recepcionista/sesiones/pdf/{{sesion.id_sesion}}" target="_blank"><button class="btn btn-primary btn-sm">Reporte Sesión <i class="fa fa-file-o"></i></button></a>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -179,7 +179,7 @@
     document.getElementById('input_fecha_dia').addEventListener('change', function() {
         const valor = this.value; // ya está en formato YYYY-MM-DD
         if (valor) {
-            document.getElementById('boton_fecha_dia').href = `/administrador/sesiones/fecha/pdf/${valor}`;
+            document.getElementById('boton_fecha_dia').href = `/recepcionista/sesiones/fecha/pdf/${valor}`;
         }
     });
     
@@ -196,7 +196,7 @@
         monday.setDate(simpleDate.getDate() - mondayOffset);
     
         const fechaFormateada = formatearFecha(monday);
-        document.getElementById('boton_fecha_semana').href = `/administrador/sesiones/semana/pdf/${fechaFormateada}`;
+        document.getElementById('boton_fecha_semana').href = `/recepcionista/sesiones/semana/pdf/${fechaFormateada}`;
     });
 
     document.getElementById('input_fecha_mes').addEventListener('change', function () {
@@ -204,7 +204,7 @@
         if (valor) {
             // Agregamos el día 01 manualmente
             const fechaFormateada = `${valor}-01`; // Resultado: YYYY-MM-01
-            document.getElementById('boton_fecha_mes').href = `/administrador/sesiones/mes/pdf/${fechaFormateada}`;
+            document.getElementById('boton_fecha_mes').href = `/recepcionista/sesiones/mes/pdf/${fechaFormateada}`;
         }
     });
 </script>
