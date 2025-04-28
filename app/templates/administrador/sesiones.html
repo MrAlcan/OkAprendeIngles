@@ -178,6 +178,7 @@
                                         <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target=".modal_editar_sesion_{{sesion.id_sesion}}"><i class="fa fa-edit"></i></button>
                                         <a href="/administrador/sesiones/eliminar/{{sesion.id_sesion}}"><button class="btn btn-danger btn-xs"><i class="fa fa-trash"></i></button></a>
                                         <a href="/administrador/sesiones/pdf/{{sesion.id_sesion}}" target="_blank"><button class="btn btn-primary btn-sm">Reportes Sesion</button></a>
+                                        <a href="/administrador/sesiones/ver/{{sesion.id_sesion}}"><button class="btn btn-warning btn-xs"><i class="fa fa-eye"></i></button></a>
                                     </td>
                                 </tr>
                             {% endfor %}

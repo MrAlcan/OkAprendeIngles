@@ -100,8 +100,8 @@ class ServiciosEstudiante():
             paso_examen = 0
         elif (sec_corr=='Working'):
             wel_nvl_corr = 1
-            wor_nvl_corr = int(nivel_correspondiente)
-            ess_nvl_corr = int(nivel_correspondiente) - 1
+            wor_nvl_corr = int(nivel_correspondiente) - 1
+            ess_nvl_corr = int(nivel_correspondiente)
             spk_nvl_corr = int(nivel_correspondiente) - 1
             paso_examen = 0
         elif (sec_corr=='Speak Out'):
