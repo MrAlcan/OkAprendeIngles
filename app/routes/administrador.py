@@ -423,8 +423,12 @@ def editar_estudiante(datos_usuario, id):
     datos = request.form
     nivel_correspondiente = datos['nivel_seccion_correspondiente']
     seccion_correspondiente = datos['seccion_correspondiente']
+    #print(f"Seccion enviada: {seccion_correspondiente}")
+    #print(f"Nivel enviado: {nivel_correspondiente}")
 
     estudiante = ServiciosEstudiante.actualizar(id, datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['nombres_titular'], datos.get('celular_titular'), datos.get('ocupacion_tutor'), seccion_correspondiente, nivel_correspondiente)
+
+    #print(f"respuesta estudiante modificado: {estudiante}")
 
     return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
 

@@ -178,7 +178,8 @@ class ServiciosEstudiante():
                     nivel_correspondiente = '0'
                 elif (n_essential==n_working and n_working==n_speakout and n_speakout%5==0 and flag_examen==0):
                     nivel_correspondiente = str(n_speakout)
-                    sesiones = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==n_speakout, DetalleSesion.calificacion>=85.0).all()
+                    sesiones = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==n_speakout, DetalleSesion.calificacion>=85.0, DetalleSesion.id_estudiante==resp['id_estudiante']).all()
+                    #print(sesiones)
                     if sesiones:
                         seccion_correspondiente = 'Test Oral'
                     else:
@@ -1757,6 +1758,10 @@ class ServiciosEstudiante():
             sec_corr = str(seccion_correspondiente)
 
             nivel_correspondiente = int(nivel_correspondiente)
+
+            '''print("estamos en servicios estudiantes")
+            print(f"Seccion enviada: {sec_corr}")
+            print(f"Nivel enviado: {nivel_correspondiente}")'''
             
 
             if nivel_correspondiente==0:
@@ -1785,8 +1790,8 @@ class ServiciosEstudiante():
                 paso_examen = 0
             elif (sec_corr=='Working'):
                 wel_nvl_corr = 1
-                wor_nvl_corr = int(nivel_correspondiente)
-                ess_nvl_corr = int(nivel_correspondiente) - 1
+                wor_nvl_corr = int(nivel_correspondiente) - 1
+                ess_nvl_corr = int(nivel_correspondiente)
                 spk_nvl_corr = int(nivel_correspondiente) - 1
                 paso_examen = 0
             elif (sec_corr=='Speak Out'):
