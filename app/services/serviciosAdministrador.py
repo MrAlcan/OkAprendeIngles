@@ -171,7 +171,7 @@ class serviciosAdministrador():
                 elif seccion_sesion == 'Speak Out':
                     estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.speakout_completado<nivel_superior, Estudiante.speakout_completado>=nivel_inferior).all()
                 else:
-                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.paso_examen==0, Estudiante.welcome_completado!=0).all()
+                    estudiantes = Estudiante.query.filter(Estudiante.activo==1, Estudiante.paso_examen==0, Estudiante.welcome_completado!=0, Estudiante.speakout_completado%5==0).all()
                 
 
                 estudiantes_disponibles = []
@@ -192,8 +192,9 @@ class serviciosAdministrador():
                         if(nivel_welcome == 0):
                             seccion_dada = 'Welcome'
                         elif(nivel_essential == nivel_working and nivel_working == nivel_speakout and nivel_speakout%5==0 and paso_examen==0):
-                            detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==nivel_speakout, DetalleSesion.calificacion>=85).all()
-                            if detalles:
+                            detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==nivel_speakout, DetalleSesion.calificacion>=85, DetalleSesion.id_estudiante==id_est).all()
+                            detalles_sn = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.activo==1, Sesion.seccion=='Test', DetalleSesion.nivel_seccion==nivel_speakout, DetalleSesion.calificacion>=85, DetalleSesion.id_estudiante==id_est).all()
+                            if detalles or detalles_sn:
                                 seccion_dada = 'Test Oral'
                             else:
                                 seccion_dada = 'Test Escrito'
