@@ -12,6 +12,7 @@ from app.serializer.serializadorUniversal import SerializadorUniversal
 from app.services.serviciosSesion import ServiciosSesion
 from app.services.serviciosCorreo import ServiciosCorreo
 from datetime import datetime, timedelta, date
+import re
 
 DIAS_INGLES = {
     "Monday": "Lunes",
@@ -205,6 +206,14 @@ class ServiciosDocente():
     
     def obtener_sesiones_por_fecha(fecha):
 
+        def extraer_numero(tutor_str):
+            """
+            Extrae el número de un string con formato 'Tutor <número>'.
+            Si no encuentra un número, devuelve 0 por defecto.
+            """
+            match = re.search(r'(\d+)', tutor_str)
+            return int(match.group(1)) if match else 0
+
         fecha_format = datetime.strptime(fecha, "%Y-%m-%d")
 
         dia_hoy = fecha_format.strftime("%A")
@@ -226,8 +235,13 @@ class ServiciosDocente():
         #sesiones = ServiciosSesion.obtener_por_fecha(fecha)
 
         datos_requeridos = ['id_docente', 'nombre_usuario', 'correo', 'nombres', 'apellidos', 'carnet_identidad', 'telefono', 'rol', 'asignacion_tutor', 'color']
-        respuesta = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
-        
+        respuesta_of = SerializadorUniversal.serializar_lista(datos= datos, campos_requeridos= datos_requeridos)
+
+        respuesta = sorted(
+                respuesta_of,
+                key=lambda d: extraer_numero(d.get('asignacion_tutor', 'Tutor 0'))
+            )
+
         for docente in respuesta:
             horarios = Horario.query.filter_by(id_docente = docente['id_docente'], activo = 1, dia=dia).order_by(Horario.hora_inicio).all() # para descendente -> Horario.hora_inicio.desc()
             datos_requeridos_h = ['id_horario', 'dia', 'hora_inicio', 'hora_final']

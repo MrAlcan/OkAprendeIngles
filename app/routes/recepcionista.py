@@ -282,7 +282,7 @@ def editar_sesion(datos_usuario, id):
 def eliminar_sesion(datos_usuario, id):
     sesion = ServiciosSesion.eliminar(id)
 
-    return redirect(url_for('administrador_bp.vista_lista_sesiones'))
+    return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
 
 @recepcionista_bp.route('/sesiones/dia', methods = ['GET'])
 @token_requerido
