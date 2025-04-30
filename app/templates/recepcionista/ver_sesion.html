@@ -62,7 +62,7 @@
                             {% if detalle_sesion %}
                                 <div class="row">
                                     <div class="col-6"><h2>Estudiantes Inscritos: {{detalle_sesion.inscritos}}</h2></div>
-                                    <div class="col-6"><h2>Estudiantes que Cancelaron: {{detalle_sesion.cancelados}}</h2></div>
+                                    <div class="col-6"><h2>Estudiantes que Cancelaron: {{detalle_sesion.cancelados_cant}}</h2></div>
                                 </div>
                                 {% if detalle_sesion.asistieron > 0 or detalle_sesion.faltaron > 0 %}
                                     <div class="row">
@@ -145,6 +145,7 @@
                                                     <th>Asistio</th>
                                                     <th>Calificación</th>
                                                     <th>Notas</th>
+                                                    <th>Opciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -159,7 +160,7 @@
                                                                 {% if estudiante_s.estado == 'Asistio' %}
                                                                     <td><i class="fa fa-check" style="color: green;"></i></td>
                                                                     <td>{{estudiante_s.calificacion}}</td>
-                                                                    <td>{{estudiante_s.recomendacion}}</td>
+                                                                    <td>{{estudiante_s.recomendacion or 'Ninguna'}}</td>
                                                                     <!--td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" checked disabled></td>
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" disabled></td>
                                                                     <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}"></td-->
@@ -175,6 +176,7 @@
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" readonly disabled></td>
                                                                     <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}" readonly disabled></td-->
                                                                 {% endif %}
+                                                                <td><a href="/recepcionista/cancelar/estudiante/{{estudiante_s.id_estudiante}}/{{sesion.id_sesion}}" class="btn btn-danger btn-sm">Cancelar Inscripción</a></td>
                                                                 
                                                                 
                                                             </tr>
@@ -184,12 +186,14 @@
                                                     {% if detalle_sesion.cancelados %}
                                                         {% for estudiante_s in detalle_sesion.cancelados %}
                                                             <tr>
-                                                                <td style="background-color: #990000;">{{estudiante_s.id_estudiante}}</td>
+                                                                <td style="background-color: #ce9243;">{{estudiante_s.id_estudiante}}</td>
                                                                 <td>{{estudiante_s.nombres}}</td>
                                                                 <td>{{estudiante_s.apellidos}}</td>
+                                                                <td>{{estudiante_s.nivel}}</td>
                                                                 <td>Cancelado</td>
                                                                 <td>0</td>
                                                                 <td></td>
+                                                                
                                                             </tr>
                                                         {% endfor %}
                                                     {% endif %}

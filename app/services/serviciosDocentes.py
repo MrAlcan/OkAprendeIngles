@@ -370,7 +370,7 @@ class ServiciosDocente():
                     faltaron = faltaron + 1
             
             detalle_sesion['inscritos'] = inscritos
-            detalle_sesion['cancelados'] = cancelados
+            detalle_sesion['cancelados_cant'] = cancelados
             detalle_sesion['asistieron'] = asistieron
             detalle_sesion['faltaron'] = faltaron
             return detalle_sesion

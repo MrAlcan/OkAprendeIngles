@@ -62,7 +62,7 @@
                             {% if detalle_sesion %}
                                 <div class="row">
                                     <div class="col-6"><h2>Estudiantes Inscritos: {{detalle_sesion.inscritos}}</h2></div>
-                                    <div class="col-6"><h2>Estudiantes que Cancelaron: {{detalle_sesion.cancelados}}</h2></div>
+                                    <div class="col-6"><h2>Estudiantes que Cancelaron: {{detalle_sesion.cancelados_cant}}</h2></div>
                                 </div>
                                 {% if detalle_sesion.asistieron > 0 or detalle_sesion.faltaron > 0 %}
                                     <div class="row">
@@ -148,6 +148,7 @@
                                                                 <td style="background-color: #990000;">{{estudiante_s.id_estudiante}}</td>
                                                                 <td>{{estudiante_s.nombres}}</td>
                                                                 <td>{{estudiante_s.apellidos}}</td>
+                                                                <td>{{estudiante_s.nivel}}</td>
                                                                 <td>Cancelado</td>
                                                                 <td><input type="number" value="0" disabled></td>
                                                                 <td></td>
