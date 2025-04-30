@@ -132,11 +132,16 @@ def asignar_link(datos_usuario, id):
 def llenado_asistencias(datos_usuario, id):
 
     estudiantes_asistieron = request.form.getlist('asistencias[]')
+    estudiantes_faltaron = request.form.getlist('faltas[]')
 
     estudiantes_data = []
 
     estudiantes_asistencia = {}
+    estudiantes_faltas = {}
     estudiantes_notas = {}
+
+    for estudiante_id_str in estudiantes_faltaron:
+        estudiantes_faltas[estudiante_id_str] = 'Falto'
 
     # Recoger la nota y recomendación solo de los estudiantes que asistieron
     for estudiante_id_str in estudiantes_asistieron:
@@ -159,7 +164,7 @@ def llenado_asistencias(datos_usuario, id):
     print("datos_esto")
     print(estudiantes_data)
 
-    llenado = ServiciosDocente.asignar_asistencias_notas(estudiantes_data, id)
+    llenado = ServiciosDocente.asignar_asistencias_notas(estudiantes_data, id, estudiantes_faltaron)
 
     referer = request.referrer
 

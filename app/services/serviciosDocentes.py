@@ -395,7 +395,7 @@ class ServiciosDocente():
 
         return True
     
-    def asignar_asistencias_notas(estudiantes, sesion):
+    def asignar_asistencias_notas(estudiantes, sesion, faltantes):
 
         ob_sesion = Sesion.query.filter(Sesion.activo==1, Sesion.id_sesion==sesion).first()
         
@@ -475,7 +475,18 @@ class ServiciosDocente():
             
         db.session.commit()
 
-        detalles = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.estado_registro=='Inscrito').all()
+        for estudiante_f in faltantes:
+            detalle = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.id_estudiante==estudiante_f).first()
+            if detalle:
+                detalle.estado_registro = 'Falto'
+                detalle.calificacion = 0
+                detalle.recomendacion = None
+        
+        db.session.commit()
+
+
+
+        '''detalles = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_sesion==sesion, DetalleSesion.estado_registro=='Inscrito').all()
 
         if detalles:
             for detall in detalles:
@@ -483,7 +494,7 @@ class ServiciosDocente():
                 detall.calificacion = 0
                 detall.recomendacion = None
 
-            db.session.commit()
+            db.session.commit()''' # ORIGINAL DEL 30/04/2025 CAMBIO ESTA FECHA POR DOBLE CHECK
         
         return True
     

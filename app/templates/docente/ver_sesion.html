@@ -114,6 +114,7 @@
                                                     <th>Apellidos</th>
                                                     <th>Nivel</th>
                                                     <th>Asistio</th>
+                                                    <th>Falto</th>
                                                     <th>Calificación</th>
                                                     <th>Notas</th>
                                                 </tr>
@@ -129,10 +130,17 @@
                                                                 <td>{{estudiante_s.nivel}}</td>
                                                                 {% if estudiante_s.estado == 'Asistio' %}
                                                                     <td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" checked></td>
+                                                                    <td><input type="checkbox" name="faltas[]" class="checkbox-faltas" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}"></td>
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}"></td>
                                                                     <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}"></td>
+                                                                {% elif estudiante_s.estado == 'Falto' %}
+                                                                    <td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}"></td>
+                                                                    <td><input type="checkbox" name="faltas[]" class="checkbox-faltas" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}" checked></td>
+                                                                    <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" readonly></td>
+                                                                    <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}" readonly></td>
                                                                 {% else %}
                                                                     <td><input type="checkbox" name="asistencias[]" class="checkbox-asistencia" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}"></td>
+                                                                    <td><input type="checkbox" name="faltas[]" class="checkbox-faltas" value="{{estudiante_s.id_estudiante}}" data-estudiante-id="{{estudiante_s.id_estudiante}}"></td>
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" readonly></td>
                                                                     <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}" readonly></td>
                                                                 {% endif %}
@@ -149,9 +157,10 @@
                                                                 <td>{{estudiante_s.nombres}}</td>
                                                                 <td>{{estudiante_s.apellidos}}</td>
                                                                 <td>{{estudiante_s.nivel}}</td>
-                                                                <td>Cancelado</td>
+                                                                <td colspan="2">Cancelado</td>
                                                                 <td><input type="number" value="0" disabled></td>
                                                                 <td></td>
+                                                                
                                                             </tr>
                                                         {% endfor %}
                                                     {% endif %}
@@ -371,14 +380,14 @@
 
 {% block scripts_final %}
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    /*document.addEventListener('DOMContentLoaded', () => {
         const nav_grupo = document.getElementById('nav_grupo_sesiones');
         nav_grupo.classList.add('active');
         const bloque = document.querySelector('#nav_grupo_sesiones ul');
         bloque.setAttribute('style', 'display: block;')
         const nav_sesiones = document.getElementById('nav_sesiones_dia');
         nav_sesiones.classList.add('current-page');
-    });
+    });*/
 </script>
 
 
@@ -425,6 +434,54 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtenemos NodeLists de ambos tipos de checkbox
+        const asistencias = document.querySelectorAll('.checkbox-asistencia');
+        const faltas      = document.querySelectorAll('.checkbox-faltas');
+      
+        // Para cada checkbox de asistencia, añadimos el listener
+        asistencias.forEach(chkAsis => {
+          chkAsis.addEventListener('change', function() {
+            if (this.checked) {
+              // Buscamos el checkbox de falta con el mismo estudiante
+                const id = this.dataset.estudianteId;
+                const chkFalta = document.querySelector(
+                    `.checkbox-faltas[data-estudiante-id="${id}"]`
+                );
+                const inputNota = document.getElementById(`nota-${id}`);
+                const inputRecomendacion = document.getElementById(`recomendacion-${id}`);
+                if (chkFalta && chkFalta.checked) {
+                    chkFalta.checked = false;
+                    inputNota.removeAttribute('readonly');
+                    inputRecomendacion.removeAttribute('readonly');
+                }
+            }
+            // si se desmarca, no hace falta hacer nada
+          });
+        });
+      
+        // Para cada checkbox de falta, añadimos el listener análogo
+        faltas.forEach(chkFalta => {
+          chkFalta.addEventListener('change', function() {
+            if (this.checked) {
+              // Buscamos el checkbox de asistencia con el mismo estudiante
+                const id = this.dataset.estudianteId;
+                const chkAsis = document.querySelector(
+                    `.checkbox-asistencia[data-estudiante-id="${id}"]`
+                );
+                const inputNota = document.getElementById(`nota-${id}`);
+                const inputRecomendacion = document.getElementById(`recomendacion-${id}`);
+                if (chkAsis && chkAsis.checked) {
+                    chkAsis.checked = false;
+                    inputNota.setAttribute('readonly', true);
+                    inputRecomendacion.setAttribute('readonly', true);
+                }
+            }
+            // si se desmarca, tampoco hace falta hacer nada
+          });
+        });
+      });
 </script>
 
 
