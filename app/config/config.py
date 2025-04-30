@@ -9,7 +9,7 @@ class Config:
     UPLOAD_FOLDER_CLASES = '/var/www/OkAprendeIngles/app/static/clases'
     UPLOAD_FOLDER_TAREAS = '/var/www/OkAprendeIngles/app/static/tareas'
     SECRET_KEY = 'clave_secreta_super_segura'
-    SQLALCHEMY_DATABASE_URI = 'mysql://usuario_ok:usuario_ok_seguro@localhost/gestion_ok'
+    SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/okaprendeingles'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_TOKEN_LOCATION = ['cookies']
     JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=60)

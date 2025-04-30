@@ -91,7 +91,7 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Carnet</label>
                                         <div class="col-md-6 col-sm-6">
-                                            <input type="number" class="form-control" placeholder="Número de Carnet" name="carnet" min="1" max="9999999999" title="Ingresa tu número de carnet (máximo 10 dígitos)">
+                                            <input type="text" class="form-control" placeholder="Número de Carnet" name="carnet" title="Ingresa tu número de carnet (máximo 10 dígitos)" required>
                                         </div>
                                         <div class="col-md-3 col-sm-3">
                                             <select class="form-control" name="departamento_carnet" title="Selecciona el departamento donde se emitió tu carnet">
@@ -170,14 +170,14 @@
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Número de Cuenta</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="number" class="form-control" placeholder="Ejemplo: 10000" name="numero_cuenta" min="1" title="Ingresa solo números para el número de contrato">
+                                            <input type="text" class="form-control" placeholder="Ejemplo: 10000" name="numero_cuenta" title="Ingresa solo números para el número de contrato" required>
                                         </div>
                                     </div>
 
                                     <div class="form-group row">
                                         <label class="col-form-label col-md-3 col-sm-3 ">Número de Contrato</label>
                                         <div class="col-md-9 col-sm-9">
-                                            <input type="number" class="form-control" placeholder="Ejemplo: 266" name="numero_contrato" min="1" title="Ingresa solo números para el número de contrato">
+                                            <input type="text" class="form-control" placeholder="Ejemplo: 266" name="numero_contrato" title="Ingresa solo números para el número de contrato" required>
                                         </div>
                                     </div>
                                     
@@ -379,7 +379,7 @@
                                         <div class="row">
                                             <div class="col-md-6 form-group">
                                                 <label>Carnet</label>
-                                                <input type="number" class="form-control" name="carnet" min="1" max="9999999999" value="{{ estudiante.carnet_identidad }}">
+                                                <input type="text" class="form-control" name="carnet" value="{{ estudiante.carnet_identidad }}" required>
                                             </div>
                                             <div class="col-md-6 form-group">
                                                 <label>Departamento</label>

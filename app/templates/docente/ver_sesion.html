@@ -481,7 +481,38 @@
             // si se desmarca, tampoco hace falta hacer nada
           });
         });
-      });
+    });
+
+    const preview = document.getElementById('contenedor_imagen');
+    const imageInput = document.getElementById('image-input');
+
+    document.addEventListener('paste', function(event){
+        const clipboardItems = event.clipboardData.items;
+        for (let i = 0; i< clipboardItems.length; i++){
+            const item = clipboardItems[i];
+            if (item.type.startsWith('image/')){
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(e){
+                    preview.innerText = ""
+                    const obj_imagen = document.createElement("img");
+                    obj_imagen.setAttribute("width", "200px");
+                    obj_imagen.src = e.target.result;
+                    preview.appendChild(obj_imagen)
+
+                    /*preview.src = e.target.result;
+                    preview.style.display = 'block';*/
+                    const file = new File([blob], 'imagen_pasteada.png', {type: blob.type});
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    imageInput.files = dataTransfer.files;
+                };
+                reader.readAsDataURL(blob);
+                break;
+            }
+        }
+    });
+    
 </script>
 
 
