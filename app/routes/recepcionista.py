@@ -395,7 +395,7 @@ def editar_estudiante(datos_usuario, id):
     estudiante = ServiciosEstudiante.actualizar(id, datos['correo'], datos['nombres'], datos['apellidos'], datos['carnet'], datos['telefono'], datos['nombres_titular'], datos.get('celular_titular'), datos.get('ocupacion_tutor'), seccion_correspondiente,
                                            nivel_correspondiente)
 
-    return redirect(url_for('administrador_bp.vista_lista_estudiantes'))
+    return redirect(url_for('recepcionista_bp.vista_lista_estudiantes'))
 #----------------------------------- GESTION ACTIVIDADES ------------------------------------------------
 
 @recepcionista_bp.route('/actividades', methods=['GET'])
