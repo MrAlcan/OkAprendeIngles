@@ -221,10 +221,12 @@
             
                                                                             {% if docente.horarios[hora_d]=='horario' %}
                                                                                 <td style="background-color: {{docente.color}}">
-                                                                                {% if hora_d > hora_actual%}
-                                                                                    <button type="button" class="agregar_{{docente.id_docente}}_{{hora_d}}_{{fecha_actual}}_{{dia_actual}} btn btn-warning btn-sm ">Agregar<i class="fa fa-edit"></i>
+                                                                                <!--{% if hora_d > hora_actual%}-->
+                                                                                    <!--button type="button" class="agregar_{{docente.id_docente}}_{{hora_d}}_{{fecha_actual}}_{{dia_actual}} btn btn-warning btn-sm ">Agregar<i class="fa fa-edit"></i>
+                                                                                    </button-->
+                                                                                <!--{% endif %}-->
+                                                                                <button type="button" class="agregar_{{docente.id_docente}}_{{hora_d}}_{{fecha_actual}}_{{dia_actual}} btn btn-warning btn-sm ">Agregar<i class="fa fa-edit"></i>
                                                                                     </button>
-                                                                                {% endif %}
                                                                                 
                                                                                 
                                                                                     
@@ -236,11 +238,14 @@
                                                                                     {{docente.horarios[hora_d].seccion}} {{docente.horarios[hora_d].nivel}}<br>
                                                                                     Cupos: {{docente.horarios[hora_d].cupos_disponibles}}<br>
                                                                                     <a href="/recepcionista/sesiones/ver/{{docente.horarios[hora_d].id_sesion}}"><button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
-                                                                                    {% if hora_d > hora_actual%}
-                                                                                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                                                    <!--{% if hora_d > hora_actual%}-->
+                                                                                        <!--button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                                                                            data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
+                                                                                        </button-->
+                                                                                    <!--{% endif %}-->
+                                                                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                                                                             data-target=".modal_editar_sesion_{{docente.horarios[hora_d].id_sesion}}"><i class="fa fa-edit"></i>
                                                                                         </button>
-                                                                                    {% endif %}
                                                                                 </td>
                                                                             {% endif %}
             
