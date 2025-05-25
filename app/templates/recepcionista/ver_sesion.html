@@ -176,7 +176,11 @@
                                                                     <td><input type="number" id="nota-{{estudiante_s.id_estudiante}}" name="nota_{{estudiante_s.id_estudiante}}" min="0" max="100" step="1" value="{{estudiante_s.calificacion or 0}}" readonly disabled></td>
                                                                     <td><input type="text" id="recomendacion-{{estudiante_s.id_estudiante}}" name="recomendacion_{{estudiante_s.id_estudiante}}" placeholder="Notas o Recomendaciones para el siguiente tutor" value="{{estudiante_s.recomendacion or ''}}" readonly disabled></td-->
                                                                 {% endif %}
-                                                                <td><a href="/recepcionista/cancelar/estudiante/{{estudiante_s.id_estudiante}}/{{sesion.id_sesion}}" class="btn btn-danger btn-sm">Cancelar Inscripción</a></td>
+                                                                <td>
+                                                                    <a href="/recepcionista/cancelar/estudiante/{{estudiante_s.id_estudiante}}/{{sesion.id_sesion}}" class="btn btn-danger btn-sm">Cancelar Inscripción</a>
+                                                                    <br />
+                                                                    <a href="/recepcionista/cancelar/eliminar/estudiante/{{estudiante_s.id_estudiante}}/{{sesion.id_sesion}}" class="btn btn-danger btn-sm">Eliminar Inscripción</a>
+                                                                </td>
                                                                 
                                                                 
                                                             </tr>

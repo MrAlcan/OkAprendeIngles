@@ -1123,3 +1123,25 @@ def vista_material(datos_usuario):
     ]
 
     return render_template('recepcionista/material.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, enlaces_archivos=enlaces_archivos, enlaces_audios=enlaces_audios)
+
+
+# --------------- ELIMINAR SESION ----------------
+
+@recepcionista_bp.route('/cancelar/eliminar/estudiante/<id_estudiante>/<id_sesion>', methods=['GET'])
+@token_requerido
+def cancelar_eliminar_inscripcion_estudiante(datos_usuario, id_estudiante, id_sesion):
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    cancelado = ServiciosEstudiante.eliminar_estudiante_de_sesion(id_estudiante, id_sesion)
+
+    referer = request.referrer
+
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))

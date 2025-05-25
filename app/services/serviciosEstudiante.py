@@ -3329,5 +3329,15 @@ class ServiciosEstudiante():
             sesiones_pasadas.append(dict_sesion)
         
         return sesiones_pasadas
+    
+    def eliminar_estudiante_de_sesion(id_estudiante, id_sesion):
+        detalle_sesion = DetalleSesion.query.filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, DetalleSesion.id_sesion==id_sesion).first()
+
+        if not detalle_sesion:
+            return None
+        
+        detalle_sesion.activo = 0
+        db.session.commit()
+        return True
 
 
