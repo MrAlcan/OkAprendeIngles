@@ -178,7 +178,7 @@ class ServiciosEstudiante():
                     nivel_correspondiente = '0'
                 elif (n_essential==n_working and n_working==n_speakout and n_speakout%5==0 and flag_examen==0):
                     nivel_correspondiente = str(n_speakout)
-                    sesiones = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==n_speakout, DetalleSesion.calificacion>=85.0, DetalleSesion.id_estudiante==resp['id_estudiante']).all()
+                    sesiones = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, Sesion.seccion=='Test Escrito', DetalleSesion.nivel_seccion==n_speakout, DetalleSesion.calificacion>=85.0, DetalleSesion.id_estudiante==resp['id_estudiante']).all()
                     #print(sesiones)
                     if sesiones:
                         seccion_correspondiente = 'Test Oral'
@@ -1722,7 +1722,7 @@ class ServiciosEstudiante():
         
         fecha_actual = datetime.now()
         fecha_string = fecha_actual.strftime("%Y-%m-%d")
-        sesiones_detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.id_estudiante==id_estudiante, Sesion.fecha<=fecha_string).order_by(Sesion.fecha, Sesion.hora).all()
+        sesiones_detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.fecha<=fecha_string).order_by(Sesion.fecha, Sesion.hora).all()
 
         if not sesiones_detalles:
             return None
@@ -3306,7 +3306,7 @@ class ServiciosEstudiante():
         
         fecha_actual = datetime.now()
         fecha_string = fecha_actual.strftime("%Y-%m-%d")
-        sesiones_detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.id_estudiante==id_estudiante, Sesion.fecha<=fecha_string).order_by(Sesion.fecha, Sesion.hora).all()
+        sesiones_detalles = db.session.query(Sesion, DetalleSesion).join(DetalleSesion, DetalleSesion.id_sesion==Sesion.id_sesion).filter(DetalleSesion.activo==1, DetalleSesion.id_estudiante==id_estudiante, Sesion.fecha<=fecha_string).order_by(Sesion.fecha, Sesion.hora).all()
 
         if not sesiones_detalles:
             return None
