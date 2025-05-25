@@ -403,6 +403,27 @@
                 obj_imagen.setAttribute("width", "200px");
                 obj_imagen.src = e.target.result;
                 contenedor_imagen.appendChild(obj_imagen)
+
+                /*----------------- LOGICA PARA BOTON DE ELIMINAR FOTO SUBIDA ------------------------*/
+
+                const btnEliminarImagen = document.createElement('button');
+                const inputImag = document.getElementById("image-input")
+                btnEliminarImagen.classList.add('btn');
+                btnEliminarImagen.classList.add('btn-danger');
+                btnEliminarImagen.textContent = 'Eliminar Imagen';
+                btnEliminarImagen.addEventListener('click', ()=> {
+                    contenedor_imagen.innerHTML = '<p>Sin Imagen Cargada</p>';
+
+                    inputImag.value = '';
+
+                    btnEliminarImagen.remove();
+                });
+
+                contenedor_imagen.appendChild(btnEliminarImagen)
+
+                /*----------------- FIN DE LOGICA PARA BOTON DE ELIMINAR FOTO SUBIDA ------------------------*/
+
+
                 //document.getElementById("image-preview").src = e.target.result;
             };
             reader.readAsDataURL(file);
@@ -499,6 +520,24 @@
                     obj_imagen.setAttribute("width", "200px");
                     obj_imagen.src = e.target.result;
                     preview.appendChild(obj_imagen)
+
+                    /*----------------- LOGICA PARA BOTON DE ELIMINAR FOTO SUBIDA ------------------------*/
+
+                    const btnEliminarImagen = document.createElement('button');
+                    btnEliminarImagen.classList.add('btn');
+                    btnEliminarImagen.classList.add('btn-danger');
+                    btnEliminarImagen.textContent = 'Eliminar Imagen';
+                    btnEliminarImagen.addEventListener('click', ()=> {
+                        preview.innerHTML = '<p>Sin Imagen Cargada</p>';
+
+                        imageInput.value = '';
+
+                        btnEliminarImagen.remove();
+                    });
+
+                    preview.appendChild(btnEliminarImagen)
+
+                    /*----------------- FIN DE LOGICA PARA BOTON DE ELIMINAR FOTO SUBIDA ------------------------*/
 
                     /*preview.src = e.target.result;
                     preview.style.display = 'block';*/
