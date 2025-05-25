@@ -1047,7 +1047,7 @@ class ServiciosEstudiante():
                                [Paragraph(f"DATE OF BIRTH: <b>0/0/0</b>", estilo_subtitulo), Paragraph(f"DUE. DATE: <b>{estudiante.fin_contrato.strftime('%d/%m/%Y')}</b>", estilo_subtitulo), ''],
                                [Paragraph(f"OCCUPATION: <b>{str(estudiante.ocupacion_tutor).upper()}</b>", estilo_subtitulo), '', ''],
                                [Paragraph(f"HOME ADDRESS: <b>{estudiante.telefono}</b>", estilo_subtitulo), '', Paragraph(f"INVOICE: <b>{estudiante.numero_cuenta}</b>", estilo_subtitulo)],
-                               [Paragraph(f"E-MAIL: <b>{estudiante.correo}</b>", estilo_subtitulo), '', Paragraph(f"REGISTTER: <b>{estudiante.numero_contrato}</b>", estilo_subtitulo)]])
+                               [Paragraph(f"TITULAR: <b>{estudiante.nombres_titular}</b>", estilo_subtitulo), '', Paragraph(f"REGISTTER: <b>{estudiante.numero_contrato}</b>", estilo_subtitulo)]])
         
         estilo_tabla = TableStyle([('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                                    #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
@@ -2613,7 +2613,7 @@ class ServiciosEstudiante():
                                [Paragraph(f"DATE OF BIRTH: <b>0/0/0</b>", estilo_subtitulo), Paragraph(f"DUE. DATE: <b>{estudiante.fin_contrato.strftime('%d/%m/%Y')}</b>", estilo_subtitulo), ''],
                                [Paragraph(f"OCCUPATION: <b>{str(estudiante.ocupacion_tutor).upper()}</b>", estilo_subtitulo), '', ''],
                                [Paragraph(f"HOME ADDRESS: <b>{estudiante.telefono}</b>", estilo_subtitulo), '', Paragraph(f"INVOICE: <b>{estudiante.numero_cuenta}</b>", estilo_subtitulo)],
-                               [Paragraph(f"E-MAIL: <b>{estudiante.correo}</b>", estilo_subtitulo), '', Paragraph(f"REGISTTER: <b>{estudiante.numero_contrato}</b>", estilo_subtitulo)]])
+                               [Paragraph(f"TITULAR: <b>{estudiante.nombres_titular}</b>", estilo_subtitulo), '', Paragraph(f"REGISTTER: <b>{estudiante.numero_contrato}</b>", estilo_subtitulo)]])
         
         estilo_tabla = TableStyle([('ALIGN', (0, 0), (-1, -1), 'LEFT'),
                                    #('ALIGN', (1, 0), (-1, -1), 'CENTER'),
