@@ -11,7 +11,7 @@ from app.services.serviciosEstudiante import ServiciosEstudiante
 from app.services.serviciosReportes import ServiciosReportes
 from app.services.serviciosReportesInformes import ServiciosReportesInformes
 from app.services.serviciosReportesExcelInformes import ServiciosReportesExcelInformes
-from datetime import datetime
+from datetime import datetime, timedelta
 
 recepcionista_bp = Blueprint('recepcionista_bp', __name__)
 
@@ -282,6 +282,14 @@ def editar_sesion(datos_usuario, id):
 def eliminar_sesion(datos_usuario, id):
     sesion = ServiciosSesion.eliminar(id)
 
+    referer = request.referrer
+
+    if referer:
+        return redirect(referer)
+    else:
+        # Si no hay referencia, rediriges a una página predeterminada
+        return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
+
     return redirect(url_for('recepcionista_bp.vista_lista_sesiones'))
 
 @recepcionista_bp.route('/sesiones/dia', methods = ['GET'])
@@ -289,6 +297,102 @@ def eliminar_sesion(datos_usuario, id):
 def vista_lista_sesiones_dia(datos_usuario):
     
     fecha_actual = datetime.now()
+    dia_hoy = fecha_actual.strftime("%A")
+    hora_actual = fecha_actual.strftime("%H:%M") 
+    fecha_actual = fecha_actual.strftime("%Y-%m-%d")
+    
+    dias_espanol = {
+        'Monday': 'Lunes',
+        'Tuesday': 'Martes',
+        'Wednesday': 'Miercoles',
+        'Thursday': 'Jueves',
+        'Friday': 'Viernes',
+        'Saturday': 'Sabado',
+        'Sunday': 'Domingo'
+    }
+
+    dia_actual = dias_espanol[dia_hoy]
+    #fecha_actual = '2025-03-24'
+    #dia_actual = 'Lunes'
+    print(dia_actual)
+    print(fecha_actual)
+    docentes = ServiciosDocente.obtener_por_dia(dia_actual)
+    print('/*-'*100)
+    print(docentes)
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+
+    sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
+
+    #pruebaa docentes
+
+    docentes = ServiciosDocente.obtener_sesiones_por_fecha(fecha_actual)
+
+    docentes_horarios = ServiciosDocente.obtener_todos()
+
+
+
+    print(sesiones)
+    return render_template('recepcionista/sesion_dia.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas, docentes_horarios = docentes_horarios, hora_actual = hora_actual)
+
+@recepcionista_bp.route('/sesiones/dia/siguiente', methods = ['GET'])
+@token_requerido
+def vista_lista_sesiones_dia_siguiente(datos_usuario):
+    
+    fecha_actual = datetime.now()
+    fecha_actual = fecha_actual + timedelta(days=1)
+    dia_hoy = fecha_actual.strftime("%A")
+    hora_actual = fecha_actual.strftime("%H:%M") 
+    fecha_actual = fecha_actual.strftime("%Y-%m-%d")
+    
+    dias_espanol = {
+        'Monday': 'Lunes',
+        'Tuesday': 'Martes',
+        'Wednesday': 'Miercoles',
+        'Thursday': 'Jueves',
+        'Friday': 'Viernes',
+        'Saturday': 'Sabado',
+        'Sunday': 'Domingo'
+    }
+
+    dia_actual = dias_espanol[dia_hoy]
+    #fecha_actual = '2025-03-24'
+    #dia_actual = 'Lunes'
+    print(dia_actual)
+    print(fecha_actual)
+    docentes = ServiciosDocente.obtener_por_dia(dia_actual)
+    print('/*-'*100)
+    print(docentes)
+    nombres = str(datos_usuario['primer_nombre'])
+    apellidos = str(datos_usuario['primer_apellido'])
+    primer_nombre = nombres.split(' ')[0]
+    primer_apellido = apellidos.split(' ')[0]
+
+    lista_horas = ['07:30', '08:30', '09:30', '10:30', '11:30', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+
+    sesiones = ServiciosSesion.obtener_por_fecha(fecha_actual)
+
+    #pruebaa docentes
+
+    docentes = ServiciosDocente.obtener_sesiones_por_fecha(fecha_actual)
+
+    docentes_horarios = ServiciosDocente.obtener_todos()
+
+
+
+    print(sesiones)
+    return render_template('recepcionista/sesion_dia.html', primer_nombre = primer_nombre, primer_apellido = primer_apellido, docentes = docentes, sesiones = sesiones, dia_actual = dia_actual, fecha_actual = fecha_actual, lista_horas = lista_horas, docentes_horarios = docentes_horarios, hora_actual = hora_actual)
+
+@recepcionista_bp.route('/sesiones/dia/subsiguiente', methods = ['GET'])
+@token_requerido
+def vista_lista_sesiones_dia_subsiguiente(datos_usuario):
+    
+    fecha_actual = datetime.now()
+    fecha_actual = fecha_actual + timedelta(days=2)
     dia_hoy = fecha_actual.strftime("%A")
     hora_actual = fecha_actual.strftime("%H:%M") 
     fecha_actual = fecha_actual.strftime("%Y-%m-%d")
