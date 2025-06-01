@@ -373,7 +373,7 @@ def crear_estudiante(datos_usuario):
                                            datos['rango_nivel'],
                                            datos['departamento_carnet'],
                                            datos.get('ocupacion_titular', ''),  
-                                           datos.get('parentesco_titular', ''),
+                                           datos.get('parentesco_tutor', ''),
                                            datos.get('numero_cuenta', ''),
                                            datos.get('numero_contrato', ''),
                                            datos.get('fecha_inicio_contrato', ''),
