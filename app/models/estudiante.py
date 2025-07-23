@@ -15,7 +15,7 @@ class Estudiante(Usuario):
     essential_completado = db.Column(db.Integer, nullable=True, default=0)
     welcome_completado = db.Column(db.Integer, nullable=True, default = 0)
     activo = db.Column(db.Integer, nullable=False, default=1)
-    ocupacion_tutor = db.Column(db.String(30), nullable=True)
+    ocupacion_tutor = db.Column(db.String(100), nullable=True)
     parentesco_tutor = db.Column(db.String(7), nullable=False)
     numero_cuenta = db.Column(db.String(20), nullable=False)
     numero_contrato = db.Column(db.String(20), nullable=False)

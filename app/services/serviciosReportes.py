@@ -45,7 +45,7 @@ def hex_to_color(hex_str):
     return colors.Color(r, g, b)
 
 #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
 class ServiciosReportes():
     def generar_reporte_de_sesion_pdf(nombre_usuario, id_sesion):
 
@@ -97,7 +97,7 @@ class ServiciosReportes():
         imagen_clase = ''
         if sesion.imagen_url:
             #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-            ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+            ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
             imagen_clase = Image(ruta_imagen)
             imagen_width = imagen_clase.drawWidth
             imagen_height = imagen_clase.drawHeight
@@ -124,7 +124,7 @@ class ServiciosReportes():
 
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 1 * inch, 1 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -209,7 +209,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -282,7 +282,7 @@ class ServiciosReportes():
                 imagen_clase = ''
                 if sesion.imagen_url:
                     #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-                    ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+                    ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
                     imagen_clase = Image(ruta_imagen)
                     imagen_width = imagen_clase.drawWidth
                     imagen_height = imagen_clase.drawHeight
@@ -394,7 +394,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -506,7 +506,7 @@ class ServiciosReportes():
                 imagen_clase = ''
                 if sesion.imagen_url:
                     #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-                    ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+                    ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
                     imagen_clase = Image(ruta_imagen)
                     imagen_width = imagen_clase.drawWidth
                     imagen_height = imagen_clase.drawHeight
@@ -619,7 +619,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -746,7 +746,7 @@ class ServiciosReportes():
                 imagen_clase = ''
                 if sesion.imagen_url:
                     #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-                    ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+                    ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
                     imagen_clase = Image(ruta_imagen)
                     imagen_width = imagen_clase.drawWidth
                     imagen_height = imagen_clase.drawHeight
@@ -861,7 +861,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -934,7 +934,7 @@ class ServiciosReportes():
                 imagen_clase = ''
                 if sesion.imagen_url:
                     #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-                    ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+                    ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
                     imagen_clase = Image(ruta_imagen)
                     imagen_width = imagen_clase.drawWidth
                     imagen_height = imagen_clase.drawHeight
@@ -1046,7 +1046,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1158,7 +1158,7 @@ class ServiciosReportes():
                 imagen_clase = ''
                 if sesion.imagen_url:
                     #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-                    ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+                    ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
                     imagen_clase = Image(ruta_imagen)
                     imagen_width = imagen_clase.drawWidth
                     imagen_height = imagen_clase.drawHeight
@@ -1271,7 +1271,7 @@ class ServiciosReportes():
         
 
         #logo_direccion = os.path.join(os.getcwd(), 'app', 'static', 'img', 'logo.jpeg')
-        #logo_direccion = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', 'img', 'logo.jpeg')
+        #logo_direccion = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', 'img', 'logo.jpeg')
         imagen_logo = Image(logo_direccion, 0.8 * inch, 0.8 * inch)  
 
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -1398,7 +1398,7 @@ class ServiciosReportes():
                 imagen_clase = ''
                 if sesion.imagen_url:
                     #ruta_imagen = os.path.join(os.getcwd(), 'app', 'static', str(sesion.imagen_url))
-                    ruta_imagen = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'static', str(sesion.imagen_url))
+                    ruta_imagen = os.path.join('var', 'www', 'okaprendeingles', 'app', 'static', str(sesion.imagen_url))
                     imagen_clase = Image(ruta_imagen)
                     imagen_width = imagen_clase.drawWidth
                     imagen_height = imagen_clase.drawHeight

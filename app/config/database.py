@@ -18,7 +18,7 @@ diccionario_sesiones = {}
 
 
 #direccion_actual = os.path.join(os.getcwd(), 'app', 'config')
-#direccion_actual = os.path.join('var', 'www', 'OkAprendeIngles', 'app', 'config')
+#direccion_actual = os.path.join('var', 'www', 'okaprendeingles', 'app', 'config')
 
 def iniciar_datos():
 
